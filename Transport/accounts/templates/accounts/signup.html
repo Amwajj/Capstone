@@ -1,0 +1,116 @@
+{% extends "main/base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="card-title text-center mb-2">Create Account</h2>
+                    <p class="text-center text-muted mb-4">Join RIDERS today</p>
+                    
+                    <form method="POST" action="{% url 'accounts:sign_up' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <h5 class="text-primary mb-3 border-bottom pb-2">Account Information</h5>
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username *</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="Enter your username" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password *</label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Enter your password (min 8 characters)" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="confirm_password" class="form-label">Confirm Password *</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                   placeholder="Confirm your password" required>
+                        </div>
+                        
+                        <h5 class="text-primary mb-3 border-bottom pb-2">Personal Information</h5>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" name="gender">
+                                    <option value="">Select Gender</option>
+                                    <option value="m">Male</option>
+                                    <option value="f">Female</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="birth_date" class="form-label">Birth Date</label>
+                                <input type="date" class="form-control" id="birth_date" name="birth_date">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   placeholder="05xxxxxxxx or 9665xxxxxxxx">
+                            <small class="form-text text-muted">Format: 05xxxxxxxx or 9665xxxxxxxx</small>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_type" class="form-label">ID Type</label>
+                                <select class="form-select" id="id_type" name="id_type">
+                                    <option value="">Select ID Type</option>
+                                    <option value="national">National ID</option>
+                                    <option value="iqama">Iqama</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="id_number" class="form-label">ID Number</label>
+                                <input type="text" class="form-control" id="id_number" name="id_number" 
+                                       placeholder="Enter your ID number">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" name="location" 
+                                   placeholder="Enter your city">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="3" 
+                                      placeholder="Tell us about yourself (optional)"></textarea>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="avatar" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 py-2">Create Account</button>
+                    </form>
+                    
+                    <p class="text-center mt-4 mb-0">
+                        Already have an account? 
+                        <a href="{% url 'accounts:sign_in' %}" class="text-decoration-none">Sign In</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
