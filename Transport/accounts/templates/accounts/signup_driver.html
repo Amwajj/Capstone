@@ -1,26 +1,64 @@
 {% extends "main/base.html" %}
+{% load static %}
 
-{% block title %}Sign Up{% endblock %}
+{% block title %}Sign Up - Driver{% endblock %}
 
 {% block content %}
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card shadow-lg">
-                <div class="card-body p-5">
-                    <h2 class="card-title text-center mb-2">Create Account</h2>
-                    <p class="text-center text-muted mb-4">Join RIDERS today</p>
-                    
-                    <form method="POST" action="{% url 'accounts:sign_up' %}" enctype="multipart/form-data">
+
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-7">
+                <div class="auth-card">
+                    <div class="card-body p-4 p-md-5">
+                        
+                        <!-- Icon & Header -->
+                        <div class="auth-header">
+                            <div class="auth-icon">
+                                <i class="fa-solid fa-car"></i>
+                            </div>
+                            <h2>Create Driver Account</h2>
+                            <p>Join RIDERS as a Professional Driver</p>
+                        </div>
+                        
+                        <!-- Info Alert -->
+                        <div class="alert-custom alert-info-custom">
+                            <i class="fa-solid fa-info-circle"></i>
+                            <span>Your driver account will be reviewed and approved by our team.</span>
+                        </div>
+                        
+                        <!-- Messages -->
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert-custom alert-{{ message.tags }}-custom">
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                    <span>{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <form method="POST" action="{% url 'accounts:sign_up_driver' %}" enctype="multipart/form-data" class="auth-form">
                         {% csrf_token %}
                         
-                        <h5 class="text-primary mb-3 border-bottom pb-2">Account Information</h5>
+                        <h5 class="form-section-title">
+                            <i class="fa-solid fa-user-circle"></i> Account Information
+                        </h5>
                         
                         <div class="mb-3">
                             <label for="username" class="form-label">Username *</label>
                             <input type="text" class="form-control" id="username" name="username" 
                                    placeholder="Enter your username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First name</label>
+                            <input type="text" class="form-control" name="first_name" 
+                                   placeholder="Enter your first name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last name</label>
+                            <input type="text" class="form-control" name="last_name" 
+                                   placeholder="Enter your last name" required>
                         </div>
                         
                         <div class="mb-3">
@@ -41,7 +79,9 @@
                                    placeholder="Confirm your password" required>
                         </div>
                         
-                        <h5 class="text-primary mb-3 border-bottom pb-2">Personal Information</h5>
+                        <h5 class="form-section-title">
+                            <i class="fa-solid fa-id-card"></i> Personal Information
+                        </h5>
                         
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -60,16 +100,16 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
+                            <label for="phone" class="form-label">Phone Number *</label>
                             <input type="tel" class="form-control" id="phone" name="phone" 
-                                   placeholder="05xxxxxxxx or 9665xxxxxxxx">
+                                   placeholder="05xxxxxxxx or 9665xxxxxxxx" required>
                             <small class="form-text text-muted">Format: 05xxxxxxxx or 9665xxxxxxxx</small>
                         </div>
                         
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="id_type" class="form-label">ID Type</label>
-                                <select class="form-select" id="id_type" name="id_type">
+                                <label for="id_type" class="form-label">ID Type *</label>
+                                <select class="form-select" id="id_type" name="id_type" required>
                                     <option value="">Select ID Type</option>
                                     <option value="national">National ID</option>
                                     <option value="iqama">Iqama</option>
@@ -77,9 +117,9 @@
                             </div>
                             
                             <div class="col-md-6">
-                                <label for="id_number" class="form-label">ID Number</label>
+                                <label for="id_number" class="form-label">ID Number *</label>
                                 <input type="text" class="form-control" id="id_number" name="id_number" 
-                                       placeholder="Enter your ID number">
+                                       placeholder="Enter your ID number" required>
                             </div>
                         </div>
                         
@@ -92,7 +132,7 @@
                         <div class="mb-3">
                             <label for="bio" class="form-label">Bio</label>
                             <textarea class="form-control" id="bio" name="bio" rows="3" 
-                                      placeholder="Tell us about yourself (optional)"></textarea>
+                                      placeholder="Tell us about yourself and your driving experience"></textarea>
                         </div>
                         
                         <div class="mb-4">
@@ -100,13 +140,23 @@
                             <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
                         </div>
                         
-                        <button type="submit" class="btn btn-primary w-100 py-2">Create Account</button>
+                        <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-4">
+                            <i class="fa-solid fa-car-side me-2"></i>Create Driver Account
+                        </button>
                     </form>
                     
-                    <p class="text-center mt-4 mb-0">
-                        Already have an account? 
-                        <a href="{% url 'accounts:sign_in' %}" class="text-decoration-none">Sign In</a>
-                    </p>
+                    <!-- Footer Links -->
+                    <div class="auth-footer">
+                        <p>Already have an account? 
+                            <a href="{% url 'accounts:sign_in' %}" class="text-decoration-none fw-bold">Sign In</a>
+                        </p>
+                        <p>Just need a ride? 
+                            <a href="{% url 'accounts:sign_up_rider' %}" class="text-decoration-none fw-bold text-primary">
+                                <i class="fa-solid fa-user"></i> Sign Up as Rider
+                            </a>
+                        </p>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>

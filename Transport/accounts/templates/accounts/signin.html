@@ -1,39 +1,71 @@
 {% extends "main/base.html" %}
+{% load static %}
 
 {% block title %}Sign In{% endblock %}
 
 {% block content %}
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5 col-lg-4">
-            <div class="card shadow-lg">
-                <div class="card-body p-5">
-                    <h2 class="card-title text-center mb-2">Welcome Back</h2>
-                    <p class="text-center text-muted mb-4">Sign in to your account</p>
-                    
-                    <form method="POST" action="{% url 'accounts:sign_in' %}">
-                        {% csrf_token %}
+
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-7">
+                <div class="auth-card">
+                    <div class="card-body p-4 p-md-5">
                         
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" 
-                                   placeholder="Enter your username" required>
+                        <!-- Icon & Header -->
+                        <div class="auth-header">
+                            <div class="auth-icon">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                            </div>
+                            <h2>Welcome Back</h2>
+                            <p>Sign in to your RIDERS account</p>
                         </div>
                         
-                        <div class="mb-4">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" 
-                                   placeholder="Enter your password" required>
-                        </div>
+                        <!-- Messages -->
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert-custom alert-{{ message.tags }}-custom">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                         
-                        <button type="submit" class="btn btn-primary w-100 py-2">Sign In</button>
-                    </form>
-                    
-                    <p class="text-center mt-4 mb-0">
-                        Don't have an account? 
-                        <a href="{% url 'accounts:sign_up' %}" class="text-decoration-none">Sign Up</a>
-                    </p>
+                        <!-- Form -->
+                        <form method="POST" action="{% url 'accounts:sign_in' %}" class="auth-form">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       placeholder="Enter your username" required autofocus>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" 
+                                       placeholder="Enter your password" required>
+                            </div>
+                            
+                            <button type="submit" class="btn auth-btn auth-btn-primary w-100">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
+                            </button>
+                        </form>
+                        
+                        <!-- Footer Links -->
+                        <div class="auth-footer">
+                            <p>Don't have an account?</p>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'accounts:sign_up_rider' %}" class="btn btn-outline-primary btn-sm flex-fill">
+                                    <i class="fa-solid fa-user"></i> Rider
+                                </a>
+                                <a href="{% url 'accounts:sign_up_driver' %}" class="btn btn-outline-success btn-sm flex-fill">
+                                    <i class="fa-solid fa-car"></i> Driver
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
