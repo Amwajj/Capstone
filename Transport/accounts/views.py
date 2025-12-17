@@ -114,7 +114,7 @@ def sign_in(request: HttpRequest):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('accounts:profile_view')
+            return redirect('main:home_view')
         else:
             messages.error(request, 'Invalid username or password.', "alert-danger")
             return redirect('accounts:sign_in')
