@@ -54,6 +54,15 @@
 
 
 <main>
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert-custom alert-{{ message.tags }}-custom">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}    
     {% block content %}
     {% endblock %}
 </main>
