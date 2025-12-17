@@ -8,6 +8,4 @@ urlpatterns=[
     path('signup/driver/', views.sign_up_driver, name='sign_up_driver'),
     path('signin/', views.sign_in, name='sign_in'),
     path('logout/', views.log_out, name='log_out'),
-    path('profile/', views.profile_view, name='profile_view'),
-    path('update_profile/', views.update_profile, name='update_profile'),
 ]

@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpRequest, HttpResponse
-from .models import Profile
+from django.contrib.auth.models import User
 from riders.models import Rider
 from drivers.models import Driver
 from django.contrib import messages
-from django.contrib.auth.models import User
-
-
+from drivers.forms import DriverForm
 # Create your views here.
 
 def sign_up_rider(request: HttpRequest):
@@ -26,22 +24,19 @@ def sign_up_rider(request: HttpRequest):
             return redirect('accounts:sign_up_rider')
         
         if len(password) < 8:
-            messages.error(request, 'Password must be at least 8 characters.')
+            messages.error(request, 'Password must be at least 8 characters.', "alert-warning")
             return redirect('accounts:sign_up_rider')
         
         if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already exists.')
+            messages.error(request, 'Username already exists.', "alert-warning")
             return redirect('accounts:sign_up_rider')
         
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email already exists.')
+            messages.error(request, 'Email already exists.', "alert-warning")
             return redirect('accounts:sign_up_rider')
         
         # إنشاء User
         user = User.objects.create_user(username=username, password=password, email=email)
-        
-        # إنشاء Profile
-        Profile.objects.create(user=user)
         
         # إنشاء Rider (بدون بيانات إضافية الآن)
         Rider.objects.create(user=user)
@@ -82,18 +77,29 @@ def sign_up_driver(request: HttpRequest):
         
         # إنشاء User
         user = User.objects.create_user(username=username, password=password, email=email)
+        user.first_name = request.POST.get('first_name', '')
+        user.last_name = request.POST.get('last_name', '')
+        user.save()
         
-        # إنشاء Profile
-        Profile.objects.create(user=user)
-        
-        # إنشاء Driver (بدون بيانات إضافية الآن - status = PENDING)
-        Driver.objects.create(user=user, status='PENDING')
+        # إنشاء Driver باستخدام الفورم
+        driver_form = DriverForm(request.POST, request.FILES)
+        if driver_form.is_valid():
+            driver = driver_form.save(commit=False)
+            driver.user = user
+            driver.status = 'PENDING'
+            driver.save()
+            driver_form.save_m2m()  # حفظ ManyToMany fields (city)
+        else:
+            # إذا الفورم مو صحيح، انشئ Driver فاضي
+            Driver.objects.create(user=user, status='PENDING')
         
         login(request, user)
         messages.success(request, f'Welcome {username}! You are registered as a Driver. Your account is pending approval.', "alert-info")
         return redirect('main:home_view')
     
-    return render(request, 'accounts/signup_driver.html')
+    # GET request
+    form = DriverForm()
+    return render(request, 'accounts/signup_driver.html', {'form': form})
 
 def sign_in(request: HttpRequest):
 
@@ -118,90 +124,3 @@ def log_out(request: HttpRequest):
 
     return redirect('main:home_view')
 
-def profile_view(request: HttpRequest):
-    
-    # التحقق من تسجيل الدخول
-    if not request.user.is_authenticated:
-        messages.error(request, 'Please login to view your profile.', "alert-warning")
-        return redirect('accounts:sign_in')
-    
-    # جلب Profile
-    try:
-        profile = Profile.objects.get(user=request.user)
-    except Profile.DoesNotExist:
-        profile = None
-    
-    # جلب Rider إذا موجود
-    try:
-        rider = Rider.objects.get(user=request.user)
-    except Rider.DoesNotExist:
-        rider = None
-    
-    # جلب Driver إذا موجود
-    try:
-        driver = Driver.objects.get(user=request.user)
-    except Driver.DoesNotExist:
-        driver = None
-    
-    return render(request, 'accounts/profile.html', {'profile': profile, 'rider': rider, 'driver': driver, })
-
-def update_profile(request: HttpRequest):
-    """تحديث الملف الشخصي"""
-    
-    # التحقق من تسجيل الدخول
-    if not request.user.is_authenticated:
-        messages.error(request, 'Please login to update your profile.', "alert-warning")
-        return redirect('accounts:sign_in')
-    
-    # التحقق من نوع المستخدم (راكب أو سائق)
-    try:
-        rider = Rider.objects.get(user=request.user)
-        is_rider = True
-        is_driver = False
-    except Rider.DoesNotExist:
-        rider = None
-        is_rider = False
-    
-    try:
-        driver = Driver.objects.get(user=request.user)
-        is_driver = True
-    except Driver.DoesNotExist:
-        driver = None
-    
-    if request.method == 'POST':
-        # إذا كان راكب
-        if is_rider and rider:
-            rider.phone = request.POST.get('phone', '')
-            rider.national_id_or_iqama = request.POST.get('national_id_or_iqama', '')
-            rider.gender = request.POST.get('gender', 'female')
-            rider.date_of_birth = request.POST.get('date_of_birth')
-            rider.size_car = request.POST.get('size_car', 'medium')
-            
-            # تحديث الصورة إذا موجودة
-            if request.FILES.get('avatar'):
-                rider.avatar = request.FILES['avatar']
-            
-            rider.save()
-            messages.success(request, 'Profile updated successfully!')
-            return redirect('accounts:profile_view')
-        
-        # إذا كان سائق
-        elif is_driver and driver:
-            driver.phone = request.POST.get('phone', '')
-            driver.national_id_or_iqama = request.POST.get('national_id_or_iqama', '')
-            driver.gender = request.POST.get('gender', 'female')
-            driver.date_of_birth = request.POST.get('date_of_birth')
-            
-            # تحديث الصورة إذا موجودة
-            if request.FILES.get('avatar'):
-                driver.avatar = request.FILES['avatar']
-            
-            # تحديث الرخصة إذا موجودة
-            if request.FILES.get('licenses'):
-                driver.licenses = request.FILES['licenses']
-            
-            driver.save()
-            messages.success(request, 'Profile updated successfully!', "alert-success")
-            return redirect('accounts:profile_view')
-    
-    return render(request, 'accounts/update_profile.html', { 'rider': rider, 'driver': driver, 'is_rider': is_rider, 'is_driver': is_driver, })

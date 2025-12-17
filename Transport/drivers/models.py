@@ -36,13 +36,13 @@ class Driver (models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
-    national_id_or_iqama = models.CharField(max_length=20)
+    national_id_or_iqama = models.CharField(max_length=20, blank=True, null=True)
     gender = models.CharField(max_length=6, choices=Gender.choices, default=Gender.F)
     avatar = models.ImageField(upload_to="images/avatars/",default="images/avatars/avatar.webp")
-    date_of_birth = models.DateField()
-    city = models.ManyToManyField(City)
-    licenses = models.ImageField(upload_to="images/")
-    car = models.OneToOneField(Car, on_delete=models.CASCADE)
+    date_of_birth = models.DateField(blank=True, null=True)
+    cities = models.ManyToManyField(City, blank=True)
+    licenses = models.ImageField(upload_to="images/", blank=True, null=True)
+    car = models.OneToOneField(Car, on_delete=models.CASCADE, blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
 
 

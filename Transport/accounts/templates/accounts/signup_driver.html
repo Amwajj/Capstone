@@ -71,6 +71,8 @@
                             <label for="password" class="form-label">Password *</label>
                             <input type="password" class="form-control" id="password" name="password" 
                                    placeholder="Enter your password (min 8 characters)" required>
+                            <div class="password-strength" id="password-strength"></div>
+                            <small class="form-text" id="password-text"></small>
                         </div>
                         
                         <div class="mb-4">
@@ -163,4 +165,8 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/password-strength.js' %}"></script>
 {% endblock %}
