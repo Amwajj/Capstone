@@ -90,8 +90,8 @@
                                 <label for="gender" class="form-label">Gender</label>
                                 <select class="form-select" id="gender" name="gender">
                                     <option value="">Select Gender</option>
-                                    <option value="m">Male</option>
-                                    <option value="f">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
                                 </select>
                             </div>
                             
@@ -129,17 +129,11 @@
                             <label for="location" class="form-label">Location</label>
                             <input type="text" class="form-control" id="location" name="location" 
                                    placeholder="Enter your city">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="bio" class="form-label">Bio</label>
-                            <textarea class="form-control" id="bio" name="bio" rows="3" 
-                                      placeholder="Tell us about yourself and your driving experience"></textarea>
-                        </div>
-                        
+                        </div>                       
                         <div class="mb-4">
-                            <label for="avatar" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                            <label for="car_registration" class="form-label">Car Registration (Istimara) 🚗 *</label>
+                            <input type="file" class="form-control" id="car_registration" name="car_registration" accept="image/*" required>
+                            <small class="text-muted">Upload a photo of your car registration document (Required)</small>
                         </div>
                         
                         <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-4">

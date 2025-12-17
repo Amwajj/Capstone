@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Document</title>
 </head>
 
@@ -23,7 +23,8 @@
             <nav class="nav-menu">
                 <ul class="nav-list">
                     <li class="nav-item"><a href="{% url 'main:home_view' %}" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="{% url 'main:about_view' %}" class="nav-link">About</a></li> 
+
                     <li class="nav-item"><a href="{% url 'main:contact_view' %}" class="nav-link">Contact</a></li>
                     <li class="nav-item dropdown">
                         {% if user.is_authenticated %}

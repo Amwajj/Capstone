@@ -6,6 +6,7 @@ from riders.models import Rider
 from drivers.models import Driver
 from django.contrib import messages
 from drivers.forms import DriverForm
+from drivers.models import Car, CarCompany
 # Create your views here.
 
 def sign_up_rider(request: HttpRequest):
@@ -88,13 +89,16 @@ def sign_up_driver(request: HttpRequest):
             driver.user = user
             driver.status = 'PENDING'
             driver.save()
-            driver_form.save_m2m()  # حفظ ManyToMany fields (city)
+            driver_form.save_m2m()  # حفظ ManyToMany fields (cities)
         else:
-            # إذا الفورم مو صحيح، انشئ Driver فاضي
-            Driver.objects.create(user=user, status='PENDING')
+            print("❌ Driver form errors:", driver_form.errors)
+            messages.error(request, "Driver information is invalid.")
+            user.delete()  # مهم عشان ما يننشأ User بدون Driver
+            return redirect('accounts:sign_up_driver')
         
         login(request, user)
         messages.success(request, f'Welcome {username}! You are registered as a Driver. Your account is pending approval.', "alert-info")
+
         return redirect('main:home_view')
     
     # GET request
@@ -110,7 +114,7 @@ def sign_in(request: HttpRequest):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('accounts:profile_view')
+            return redirect('main:home_view')
         else:
             messages.error(request, 'Invalid username or password.', "alert-danger")
             return redirect('accounts:sign_in')
