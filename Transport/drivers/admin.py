@@ -20,7 +20,7 @@ class DriverAdmin(admin.ModelAdmin):
             'fields': ('phone', 'national_id_or_iqama', 'gender', 'date_of_birth', 'avatar')
         }),
         ('Driver Details', {
-            'fields': ('licenses', 'car', 'city')
+            'fields': ('licenses', 'car', 'cities')
         }),
     )
 

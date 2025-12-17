@@ -4,7 +4,7 @@ from .models import Driver
 class DriverForm(forms.ModelForm):
     class Meta:
         model = Driver
-        exclude = ['user', 'status']  # استثناء user و status
+        exclude = ['user', 'status']  # استثناء user و status 
         
         # Labels
         labels = {
@@ -13,7 +13,7 @@ class DriverForm(forms.ModelForm):
             'gender': 'Gender',
             'avatar': 'Profile Picture',
             'date_of_birth': 'Date of Birth',
-            'city': 'Cities',
+            'cities': 'Cities',
             'licenses': 'Driving License',
             'car': 'Car',
         }
@@ -44,7 +44,7 @@ class DriverForm(forms.ModelForm):
             'car': forms.Select(attrs={
                 'class': 'form-select'
             }),
-            'city': forms.SelectMultiple(attrs={
+            'cities': forms.SelectMultiple(attrs={
                 'class': 'form-select',
                 'size': '5'
             }),
@@ -53,5 +53,5 @@ class DriverForm(forms.ModelForm):
         # help texts
         help_texts = {
             'phone': 'Format: 9665xxxxxxxx or 05xxxxxxxx',
-            'city': 'Hold Ctrl/Cmd to select multiple cities',
+            'cities': 'Hold Ctrl/Cmd to select multiple cities',
         }

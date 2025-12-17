@@ -6,6 +6,7 @@ from riders.models import Rider
 from drivers.models import Driver
 from django.contrib import messages
 from drivers.forms import DriverForm
+from drivers.models import Car, CarCompany
 # Create your views here.
 
 def sign_up_rider(request: HttpRequest):
@@ -87,14 +88,34 @@ def sign_up_driver(request: HttpRequest):
             driver = driver_form.save(commit=False)
             driver.user = user
             driver.status = 'PENDING'
+            
+            # إذا رفع السائق صورة الاستمارة، ننشئ Car object
+            car_registration_file = request.FILES.get('car_registration')
+            if car_registration_file:
+                # نستخدم شركة افتراضية (ننشئها لو ما موجودة)
+                unknown_company, _ = CarCompany.objects.get_or_create(name="Unknown")
+                car = Car.objects.create(
+                    company=unknown_company,  # مؤقت - بعدين يعدلها من البروفايل
+                    model='Pending',
+                    year=None,
+                    color='',
+                    plate_number='',
+                    seats_count=None,
+                    car_registration=car_registration_file
+                )
+                driver.car = car
+            
             driver.save()
-            driver_form.save_m2m()  # حفظ ManyToMany fields (city)
+            driver_form.save_m2m()  # حفظ ManyToMany fields (cities)
         else:
-            # إذا الفورم مو صحيح، انشئ Driver فاضي
-            Driver.objects.create(user=user, status='PENDING')
+            print("❌ Driver form errors:", driver_form.errors)
+            messages.error(request, "Driver information is invalid.")
+            user.delete()  # مهم عشان ما يننشأ User بدون Driver
+            return redirect('accounts:sign_up_driver')
         
         login(request, user)
         messages.success(request, f'Welcome {username}! You are registered as a Driver. Your account is pending approval.', "alert-info")
+
         return redirect('main:home_view')
     
     # GET request
