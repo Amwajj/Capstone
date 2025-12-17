@@ -29,3 +29,8 @@ def contact_message_view(request:HttpRequest):
     msg = Contact.objects.all().order_by("-created_at")
 
     return render(request, "main/message.html", {"msg":msg})
+
+
+# About Us view
+def about_view(request: HttpRequest):
+    return render(request, "main/about.html")

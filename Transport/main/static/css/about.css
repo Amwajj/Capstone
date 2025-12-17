@@ -1,0 +1,165 @@
+.about-page {
+    background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
+    padding: 120px 20px 80px;
+}
+
+/* Hero */
+.about-hero {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+
+
+.about-icon {
+    width: 85px;
+    height: 85px;
+    background: linear-gradient(135deg, #f2c235, #e0b020);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 6px 20px rgba(242, 194, 53, 0.4);
+}
+
+.about-icon i {
+    font-size: 2.5rem;
+    color: #474341;
+}
+
+
+.about-hero h1 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #474341;
+}
+
+.about-hero p {
+    color: #a3a2a2;
+    font-size: 1.1rem;
+}
+
+/* Container */
+.about-container {
+    max-width: 1100px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.55);
+    border-radius: 18px;
+    padding: 70px 80px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+}
+
+/* Intro */
+.about-intro {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #474341;
+    line-height: 1.9;
+    margin-bottom: 70px;
+}
+
+/* Cards */
+.about-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 70px;
+}
+
+.about-card {
+    background: rgba(255,255,255,0.7);
+    border-radius: 14px;
+    padding: 35px 25px;
+    text-align: center;
+}
+
+.about-card i {
+    font-size: 2rem;
+    color: #f2c235;
+    margin-bottom: 15px;
+}
+
+.about-card h3 {
+    color: #474341;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.about-card p {
+    color: #6b6765;
+    line-height: 1.7;
+}
+
+/* Vision & Mission */
+.about-split {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 70px;
+}
+
+.about-box {
+    background: rgba(242, 194, 53, 0.1);
+    border-radius: 14px;
+    padding: 30px;
+}
+
+.about-box h3 {
+    color: #474341;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.about-box p {
+    color: #6b6765;
+    line-height: 1.8;
+}
+
+/* Values */
+.about-values {
+    margin-bottom: 60px;
+}
+
+.about-values h3 {
+    color: #474341;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.about-values ul {
+    color: #6b6765;
+    padding-left: 20px;
+}
+
+.about-values li {
+    margin-bottom: 8px;
+}
+
+/* Pride */
+.about-pride {
+    background: #fffbf0;
+    border-left: 5px solid #f2c235;
+    padding: 20px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #474341;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .about-cards {
+        grid-template-columns: 1fr;
+    }
+    .about-split {
+        grid-template-columns: 1fr;
+    }
+    .about-container {
+        padding: 45px 30px;
+    }
+}
