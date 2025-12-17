@@ -88,23 +88,6 @@ def sign_up_driver(request: HttpRequest):
             driver = driver_form.save(commit=False)
             driver.user = user
             driver.status = 'PENDING'
-            
-            # إذا رفع السائق صورة الاستمارة، ننشئ Car object
-            car_registration_file = request.FILES.get('car_registration')
-            if car_registration_file:
-                # نستخدم شركة افتراضية (ننشئها لو ما موجودة)
-                unknown_company, _ = CarCompany.objects.get_or_create(name="Unknown")
-                car = Car.objects.create(
-                    company=unknown_company,  # مؤقت - بعدين يعدلها من البروفايل
-                    model='Pending',
-                    year=None,
-                    color='',
-                    plate_number='',
-                    seats_count=None,
-                    car_registration=car_registration_file
-                )
-                driver.car = car
-            
             driver.save()
             driver_form.save_m2m()  # حفظ ManyToMany fields (cities)
         else:

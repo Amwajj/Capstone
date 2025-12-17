@@ -15,6 +15,7 @@ class DriverForm(forms.ModelForm):
             'date_of_birth': 'Date of Birth',
             'cities': 'Cities',
             'licenses': 'Driving License',
+            'car_registration': 'Car Registration (Istimara)',
             'car': 'Car',
         }
         
@@ -41,6 +42,9 @@ class DriverForm(forms.ModelForm):
             'licenses': forms.FileInput(attrs={
                 'class': 'form-control'
             }),
+            'car_registration': forms.FileInput(attrs={
+                'class': 'form-control'
+            }),
             'car': forms.Select(attrs={
                 'class': 'form-select'
             }),
@@ -54,4 +58,5 @@ class DriverForm(forms.ModelForm):
         help_texts = {
             'phone': 'Format: 9665xxxxxxxx or 05xxxxxxxx',
             'cities': 'Hold Ctrl/Cmd to select multiple cities',
+            'car_registration': 'Upload a photo of your car registration document',
         }
