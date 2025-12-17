@@ -1,0 +1,26 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="row  align-items-center">
+    
+    <div class="col  pt-3">
+        <h1>Contact Messages</h1>
+        <div class="d-flex flex-column gap-4">
+
+            {% for contact in msg %}
+
+            <div class="d-flex flex-column gap-1 shadow p-3">
+                <div class="d-flex justify-content-between">
+                    <h5>{{ contact.first_name }}</h5>
+                    <h5>{{ contact.email }}</h5>
+                </div>
+                <p>{{ contact.message }}</p>
+                <p class="text-muted">{{ contact.created_at }}</p>
+            </div>
+
+            {% endfor %}
+        </div>
+        
+
+</div>
+{% endblock %}

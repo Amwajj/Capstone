@@ -1,16 +1,26 @@
 {% extends "main/base.html" %}
 
-{%block title%} Contact Us - RIDERS {% endblock %}
+{%block title%} Contact Us - Wesal {% endblock %}
 
 {% load static %}
 {% block content %}
 
 
-<div class="contact-bg">
-  <div class="contact-overlay">
+<div class="contact-bg id">
+  <div class="contact-overlay d-flex flex-row gap-2 justify-content-center" >
+    <div class="contact-info-side">
+      <h3>Information</h3>
+      <ul class="contact-info-list" type="none">
+        <li><i class="fa fa-envelope"></i> info@Wesal.com</li>
+        <li><i class="fa fa-phone"></i> +966 555 123 456</li>
+        <li><i class="fa fa-map-marker"></i> Riyadh, Saudi Arabia</li>
+        <li><i class="fa fa-globe"></i> www.Wesal.com</li>
+      </ul>
+      <div style="margin-top:32px; color:#000000; font-size:1.05rem;">We are here to help you with all your RIDERS needs. Reach out to us anytime!</div>
+    </div>    
     <div class="contact-form-side">
       <h2>Contact Us</h2>
-      <form method="post" action="{% url 'main:contact_view' %}">
+      <form method="post" action="{% url 'main:contact_view' %}" >
         {% csrf_token %}
         <div class="input-group">
           <label for="first_name"><i class="fa fa-user"></i> First Name</label>
@@ -30,16 +40,6 @@
         </div>
         <button type="submit" class="btn-main w-100 mt-3">Send Message</button>
       </form>
-    </div>
-    <div class="contact-info-side">
-      <h3>Information</h3>
-      <ul class="contact-info-list">
-        <li><i class="fa fa-envelope"></i> info@RIDERS.com</li>
-        <li><i class="fa fa-phone"></i> +966 555 123 456</li>
-        <li><i class="fa fa-map-marker"></i> Riyadh, Saudi Arabia</li>
-        <li><i class="fa fa-globe"></i> www.RIDERS.com</li>
-      </ul>
-      <div style="margin-top:32px; color:#000000; font-size:1.05rem;">We are here to help you with all your RIDERS needs. Reach out to us anytime!</div>
     </div>
   </div>
 </div>
