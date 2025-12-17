@@ -34,7 +34,7 @@ class Rider (models.Model):
     date_of_birth = models.DateField()
 
     size_car = models.CharField(max_length=64, choices=SizeCarName.choices, default=SizeCarName.M)
-    city = models.ManyToManyField(City)
+    cities = models.ManyToManyField(City)
 
 class ReviewRider (models.Model):
 

@@ -1,15 +1,123 @@
 {% extends "main/base.html" %}
+{% load static %}
 
 {%block title%} Contact Us - Wesal {% endblock %}
+{% block style %}
+<style>
+  main
+  { 
+  
+  }
+  #contact
+  {
+    width: 100%;
+    min-height: 100vh;
+    gap: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: #000000 1px solid;
+    background: linear-gradient(135deg, #f8f7f5 0%, #ead5aa 90%);
+  }
+  .contact-info-side, .contact-form-side
+  {
+    gap: 10px;
+    position: relative;
+    width: 450px;
+    height: 550px;
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    padding: 4.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  }
+  .contact-info-side h1
+  {
+    top: 20px;
+    position: absolute;
+    font-weight: 600;
+    color: #474341;
+  }
+  .contact-info-side .contact-info-list
+  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .contact-form-side h1
+  {
+    top: 20px;
+    position: absolute;
+    color: #474341;
+    font-weight: 600;
+    margin-bottom: 100px;
+  }
+  .contact-info-side .contact-info-list li
+  {
+    gap: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+  }
+  .contact-form-side .contact-detail
+  {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .contact-form-side .contact-detail .input-group
+  {
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .form-label
+  {
+    font-weight: 600;
+    color: #474341;
+    margin-bottom: 8px;
+    margin-top: 0;
+    font-size: 0.95rem;
+    display: block;
+  }
+  .contact-form-side .contact-detail .input-group input
+  {
+    border: 2px solid #a3a2a2;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  .contact-form-side .contact-detail .input-group textarea 
+  {
+    border: gray 1px solid;
+    border-radius: 15px;
+  }
+  button
+  {
+    border: none;
+    color: #333;
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #f2c235;
+  }
+</style>
+{% endblock %}
 
-{% load static %}
 {% block content %}
 
-
-<div class="contact-bg id">
-  <div class="contact-overlay d-flex flex-row gap-2 justify-content-center" >
+<div class="contact-bg">
+  <div class="contact-overlay" id="contact" >
     <div class="contact-info-side">
-      <h3>Information</h3>
+      <h1>Information</h1>
       <ul class="contact-info-list" type="none">
         <li><i class="fa fa-envelope"></i> info@Wesal.com</li>
         <li><i class="fa fa-phone"></i> +966 555 123 456</li>
@@ -19,23 +127,23 @@
       <div style="margin-top:32px; color:#000000; font-size:1.05rem;">We are here to help you with all your Wesal needs. Reach out to us anytime!</div>
     </div>    
     <div class="contact-form-side">
-      <h2>Contact Us</h2>
-      <form method="post" action="{% url 'main:contact_view' %}" >
+      <h1>Contact Us</h1>
+      <form method="post" action="{% url 'main:contact_view' %}" class="contact-detail" >
         {% csrf_token %}
         <div class="input-group">
-          <label for="first_name"><i class="fa fa-user"></i> First Name</label>
+          <label for="first_name" class="form-label"><i class="fa fa-user"></i> First Name</label>
           <input type="text" id="first_name" name="first_name" required>
         </div>
         <div class="input-group">
-          <label for="last_name"><i class="fa fa-user"></i> Last Name</label>
+          <label for="last_name" class="form-label"><i class="fa fa-user"></i> Last Name</label>
           <input type="text" id="last_name" name="last_name" required>
         </div>
         <div class="input-group">
-          <label for="email"><i class="fa fa-envelope"></i> Email address</label>
+          <label for="email" class="form-label"><i class="fa fa-envelope"></i> Email address</label>
           <input type="email" id="email" name="email" required>
         </div>
         <div class="input-group">
-          <label for="message"><i class="fa fa-comment"></i> Message</label>
+          <label for="message" class="form-label"><i class="fa fa-comment"></i> Message</label>
           <textarea id="message" name="message" rows="4" required></textarea>
         </div>
         <button type="submit" class="btn-main w-100 mt-3">Send Message</button>
