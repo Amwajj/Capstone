@@ -1,5 +1,6 @@
 from django.db import models
 from main.models import City, Neighborhood, Day
+from drivers.models import Driver
 
 # Create your models here.
 class Trip (models.Model):
@@ -8,7 +9,7 @@ class Trip (models.Model):
         ('APPROVED', 'Approved'),
         ('REJECTED', 'Rejected'),
     ]
-
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name="trips")
     start_date = models.DateField()
     end_date = models.DateField()
     start_time = models.TimeField()
@@ -20,7 +21,7 @@ class Trip (models.Model):
     total_riders = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
     is_private = models.BooleanField(default=False)
-    creadted_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     admin_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
     rider_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
-    reject_Comment = models.TextField()
+    reject_Comment = models.TextField(null=True, blank=True)

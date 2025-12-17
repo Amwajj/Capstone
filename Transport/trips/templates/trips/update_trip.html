@@ -1,0 +1,148 @@
+{% extends "main/base.html" %}
+{% block title %}Update Trip{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4">
+                <h2 class="text-center mb-4">Update Trip</h2>
+
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ field }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- Dates -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Start Date</label>
+                            <input type="date" name="start_date"
+                                   value="{{ trip.start_date|date:'Y-m-d' }}"
+                                   class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>End Date</label>
+                            <input type="date" name="end_date"
+                                   value="{{ trip.end_date|date:'Y-m-d' }}"
+                                   class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Time -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Start Time</label>
+                            <input type="time" name="start_time"
+                                   value="{{ trip.start_time|time:'H:i' }}"
+                                   class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>End Time</label>
+                            <input type="time" name="end_time"
+                                   value="{{ trip.end_time|time:'H:i' }}"
+                                   class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- City -->
+                    <div class="mb-3">
+                        <label>City</label>
+                        <select name="city" class="form-select" multiple required>
+                            {% for city in cities %}
+                                <option value="{{ city.id }}"
+                                    {% if city in trip.city.all %}selected{% endif %}>
+                                    {{ city.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Start Neighborhood -->
+                    <div class="mb-3">
+                        <label>Start Neighborhood</label>
+                        <select name="start_neighborhood" class="form-select" multiple required>
+                            {% for n in neighborhoods %}
+                                <option value="{{ n.id }}"
+                                    {% if n in trip.start_neighborhood.all %}selected{% endif %}>
+                                    {{ n.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- End Neighborhood -->
+                    <div class="mb-3">
+                        <label>End Neighborhood</label>
+                        <select name="end_neighborhood" class="form-select" multiple required>
+                            {% for n in neighborhoods %}
+                                <option value="{{ n.id }}"
+                                    {% if n in trip.end_neighborhood.all %}selected{% endif %}>
+                                    {{ n.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Days -->
+                    <div class="mb-3">
+                        <label>Days of Week</label>
+                        <select name="days_of_week" class="form-select" multiple required>
+                            {% for day in days %}
+                                <option value="{{ day.id }}"
+                                    {% if day in trip.days_of_week.all %}selected{% endif %}>
+                                    {{ day.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Seats & Price -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Total Riders</label>
+                            <input type="number" name="total_riders"
+                                   value="{{ trip.total_riders }}"
+                                   class="form-control" min="1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Price</label>
+                            <input type="number" name="price"
+                                   value="{{ trip.price }}"
+                                   step="0.01" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Private -->
+                    <div class="form-check mb-4">
+                        <input type="checkbox" name="is_private"
+                               class="form-check-input"
+                               id="is_private"
+                               {% if trip.is_private %}checked{% endif %}>
+                        <label class="form-check-label" for="is_private">
+                            Private Trip
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Update Trip
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

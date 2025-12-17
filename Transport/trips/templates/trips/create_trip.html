@@ -1,94 +1,101 @@
-{% extends 'main/base.html' %}
+{% extends "main/base.html" %}
 {% load static %}
+
 {% block title %}Create Trip{% endblock %}
 
 {% block content %}
 
-<section class="d-flex justify-content-center align-items-center mt-5 mb-5">
-    <div class="col-12 col-md-8">
-        <div class="card shadow-sm p-4">
-            <h2 class="mb-5 mt-3 text-center"><strong>Create Trip</strong></h2>
+<form method="POST" action="{% url 'trips:create_trip_view' %}">
+    {% csrf_token %}
 
-            <form method="post" action="{% url 'trips:create_trip_view' %}" class="row g-3">
-                {% csrf_token %}
-
-                <!-- Start Date -->
-                <div class="col-md-6 form-floating">
-                    {{ form.start_date }}
-                    <label>Start Date</label>
-                </div>
-
-                <!-- End Date -->
-                <div class="col-md-6 form-floating">
-                    {{ form.end_date }}
-                    <label>End Date</label>
-                </div>
-
-                <!-- Start Time -->
-                <div class="col-md-6 form-floating">
-                    {{ form.start_time }}
-                    <label>Start Time</label>
-                </div>
-
-                <!-- End Time -->
-                <div class="col-md-6 form-floating">
-                    {{ form.end_time }}
-                    <label>End Time</label>
-                </div>
-
-                <!-- City -->
-                <div class="col-12">
-                    <label class="form-label fw-bold">City</label>
-                    {{ form.city }}
-                </div>
-
-                <!-- Start Neighborhood -->
-                <div class="col-12">
-                    <label class="form-label fw-bold">Start Neighborhood</label>
-                    {{ form.start_neighborhood }}
-                </div>
-
-                <!-- End Neighborhood -->
-                <div class="col-12">
-                    <label class="form-label fw-bold">End Neighborhood</label>
-                    {{ form.end_neighborhood }}
-                </div>
-
-                <!-- Days of Week -->
-                <div class="col-12">
-                    <label class="form-label fw-bold">Days of Week</label>
-                    {{ form.days_of_week }}
-                </div>
-
-                <!-- Total Riders -->
-                <div class="col-md-6 form-floating">
-                    {{ form.total_riders }}
-                    <label>Total Riders</label>
-                </div>
-
-                <!-- Price -->
-                <div class="col-md-6 form-floating">
-                    {{ form.price }}
-                    <label>Price</label>
-                </div>
-
-                <!-- Is Private -->
-                <div class="col-12 form-check mt-3">
-                    {{ form.is_private }}
-                    <label class="form-check-label">
-                        Private Trip
-                    </label>
-                </div>
-
-                <div class="col-12 mt-4">
-                    <button class="btn btn-dark w-100" type="submit">
-                        Create Trip
-                    </button>
-                </div>
-
-            </form>
+    <!-- Dates -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label>Start Date</label>
+            <input type="date" name="start_date" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+            <label>End Date</label>
+            <input type="date" name="end_date" class="form-control" required>
         </div>
     </div>
-</section>
+
+    <!-- Time -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label>Start Time</label>
+            <input type="time" name="start_time" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+            <label>End Time</label>
+            <input type="time" name="end_time" class="form-control" required>
+        </div>
+    </div>
+
+    <!-- City -->
+    <div class="mb-3">
+        <label>City</label>
+        <select name="city" class="form-select" multiple required>
+            {% for city in cities %}
+                <option value="{{ city.id }}">{{ city.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Start Neighborhood -->
+    <div class="mb-3">
+        <label>Start Neighborhood</label>
+        <select name="start_neighborhood" class="form-select" multiple required>
+            {% for n in neighborhoods %}
+                <option value="{{ n.id }}">{{ n.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- End Neighborhood -->
+    <div class="mb-3">
+        <label>End Neighborhood</label>
+        <select name="end_neighborhood" class="form-select" multiple required>
+            {% for n in neighborhoods %}
+                <option value="{{ n.id }}">{{ n.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Days -->
+    <div class="mb-3">
+        <label>Days of Week</label>
+        <select name="days_of_week" class="form-select" multiple required>
+            {% for day in days %}
+                <option value="{{ day.id }}">{{ day.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Seats & Price -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label>Total Riders</label>
+            <input type="number" name="total_riders" class="form-control" min="1" required>
+        </div>
+        <div class="col-md-6">
+            <label>Price</label>
+            <input type="number" name="price" step="0.01" class="form-control" required>
+        </div>
+    </div>
+
+    <!-- Private -->
+    <div class="form-check mb-4">
+        <input type="checkbox" name="is_private" class="form-check-input" id="is_private">
+        <label class="form-check-label" for="is_private">
+            Private Trip
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">
+        Create Trip
+    </button>
+</form>
+
 
 {% endblock %}
