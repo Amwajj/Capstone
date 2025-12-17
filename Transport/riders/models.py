@@ -40,7 +40,6 @@ class ReviewRider (models.Model):
 
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver,on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.SmallIntegerField()
     comments = models.TextField()
 
