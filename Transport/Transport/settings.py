@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,6 +46,7 @@ INSTALLED_APPS = [
     'riders',
     'accounts',
     'trips',
+    'rider_request',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +129,11 @@ STATIC_URL = 'static/'
 
 MEDIA_URL="/media/"
 MEDIA_ROOT= os.path.join(BASE_DIR,'media')
+
+#Email Settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
