@@ -10,7 +10,34 @@ from main.models import City, Neighborhood, Day
 
 # Create your views here.
 def all_trip_view(request:HttpRequest):
-    pass
+    if request.user.is_authenticated:
+        try:
+            ride_city = request.user.rider.city
+            trips =Trip.objects.filter(city=ride_city, admin_status='APPROVED')# يطلع الرحلات على حسب مدينة الراكب
+        except AttributeError:
+            trips =Trip.objects.filter(admin_status='APPROVED')
+    
+    else:
+        trips =Trip.objects.filter(admin_status='APPROVED')
+
+
+        
+
+    return render(request, 'trips/trips_list.html',{'trips':trips})
+
+
+def trip_detail_view(request:HttpRequest, trip_id):
+    trip = get_object_or_404(Trip, id=trip_id, admin_status='APPROVED')
+
+    driver = trip.driver
+    car = driver.car
+
+    context = {
+        'trip':trip,
+        'driver':driver,
+        'car': car
+    }
+    return render(request, 'trips/trip_detail.html',context)
 
 @login_required
 def create_trip_view(request:HttpRequest):
@@ -29,10 +56,14 @@ def create_trip_view(request:HttpRequest):
             form.save_m2m()
             messages.success(request, "Created Trip successfully", "alert-success")
             return redirect('main:home_view')
+        else:
+            messages.error(request, "Please correct the errors below.", "alert-danger")
+
     else:
         form = TripForm()
 
     context = {
+        'form':form,
         'cities': City.objects.all(),
         'neighborhoods': Neighborhood.objects.all(),
         'days': Day.objects.all(),

@@ -10,14 +10,18 @@ class Trip (models.Model):
         ('REJECTED', 'Rejected'),
     ]
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name="trips")
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+
     start_date = models.DateField()
     end_date = models.DateField()
+
     start_time = models.TimeField()
     end_time = models.TimeField()
-    city = models.ManyToManyField(City)
+
     start_neighborhood = models.ManyToManyField(Neighborhood, related_name="trip_starts")
     end_neighborhood = models.ManyToManyField(Neighborhood, related_name="trip_ends")
     days_of_week = models.ManyToManyField(Day)
+    
     total_riders = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
     is_private = models.BooleanField(default=False)

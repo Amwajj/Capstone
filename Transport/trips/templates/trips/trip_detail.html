@@ -1,0 +1,119 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Trip Details{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
+    }
+
+    .detail-card {
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.1);
+    }
+
+    .section-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #2a5298;
+    }
+
+    .info-row {
+        margin-bottom: 8px;
+    }
+</style>
+
+<div class="container py-5">
+
+    <!-- Trip Info -->
+    <div class="card detail-card mb-4">
+        <div class="card-body">
+            <h4 class="section-title">
+                <i class="fa-solid fa-route me-2"></i> Trip Information
+            </h4>
+
+            <div class="info-row"><strong>City:</strong> {{ trip.city.name }}</div>
+
+            <div class="info-row">
+                <strong>From:</strong>
+                {% for n in trip.start_neighborhood.all %}
+                    {{ n.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="info-row">
+                <strong>To:</strong>
+                {% for n in trip.end_neighborhood.all %}
+                    {{ n.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="info-row">
+                <strong>Days:</strong>
+                {% for day in trip.days_of_week.all %}
+                    {{ day.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="info-row">
+                <strong>Time:</strong> {{ trip.start_time }} - {{ trip.end_time }}
+            </div>
+
+            <div class="info-row">
+                <strong>Available Seats:</strong> {{ trip.total_riders }}
+            </div>
+
+            <div class="info-row">
+                <strong>Price:</strong> ${{ trip.price }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Driver Info -->
+    <div class="card detail-card mb-4">
+        <div class="card-body">
+            <h4 class="section-title">
+                <i class="fa-solid fa-user me-2"></i> Driver Information
+            </h4>
+
+            <div class="d-flex align-items-center mb-3">
+                <img src="{{ driver.avatar.url }}" width="80" height="80"
+                     class="rounded-circle me-3">
+                <div>
+                    <strong>{{ driver.user.username }}</strong><br>
+                    <small class="text-muted">{{ driver.gender }}</small>
+                </div>
+            </div>
+
+            <div class="info-row"><strong>Phone:</strong> {{ driver.phone }}</div>
+            <div class="info-row"><strong>Status:</strong> {{ driver.status }}</div>
+        </div>
+    </div>
+
+    <!-- Car Info -->
+    {% if car %}
+    <div class="card detail-card">
+        <div class="card-body">
+            <h4 class="section-title">
+                <i class="fa-solid fa-car me-2"></i> Car Information
+            </h4>
+
+            <div class="info-row"><strong>Company:</strong> {{ car.company.name }}</div>
+            <div class="info-row"><strong>Model:</strong> {{ car.model }}</div>
+            <div class="info-row"><strong>Year:</strong> {{ car.year }}</div>
+            <div class="info-row"><strong>Color:</strong> {{ car.color }}</div>
+            <div class="info-row"><strong>Plate Number:</strong> {{ car.plate_number }}</div>
+            <div class="info-row"><strong>Seats:</strong> {{ car.seats_count }}</div>
+
+            <div class="mt-3">
+                <strong>Car Registration:</strong><br>
+                <img src="{{ car.car_registration.url }}" class="img-fluid rounded mt-2" style="max-width:300px;">
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Trips List{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
+    }
+
+    .trip-card {
+        border: none;
+        border-radius: 18px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .trip-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+
+    .trip-header {
+        background: #474341;
+        color: white;
+        padding: 15px 20px;
+    }
+
+    .trip-header h5 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .trip-body p {
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+
+    .badge-custom {
+        background-color: #f1f3f5;
+        color: #333;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .price {
+        font-size: 22px;
+        font-weight: bold;
+        color: #217530;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Available Trips</h2>
+        <p class="text-muted">Choose the trip that fits you best</p>
+    </div>
+
+    {% if trips %}
+        <div class="row g-4">
+    {% for trip in trips %}
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 d-flex">
+            <div class="card trip-card w-100">
+
+                <div class="trip-header">
+                    <h5>
+                        <i class="fa-solid fa-location-dot me-2"></i>
+                        {{ trip.city.name }}
+                    </h5>
+                </div>
+
+                <div class="card-body trip-body">
+                    <p><i class="fa-solid fa-user me-2 text-primary"></i>
+                        <strong>Driver:</strong> {{ trip.driver.user.username }}
+                    </p>
+
+                    <p><i class="fa-solid fa-arrow-right me-2 text-success"></i>
+                        <strong>From:</strong>
+                        {% for n in trip.start_neighborhood.all %}
+                            <span class="badge badge-custom">{{ n.name }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p><i class="fa-solid fa-flag-checkered me-2 text-danger"></i>
+                        <strong>To:</strong>
+                        {% for n in trip.end_neighborhood.all %}
+                            <span class="badge badge-custom">{{ n.name }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p><i class="fa-solid fa-calendar-days me-2 text-warning"></i>
+                        <strong>Days:</strong>
+                        {% for day in trip.days_of_week.all %}
+                            <span class="badge badge-custom">{{ day.name }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p><i class="fa-solid fa-clock me-2 text-info"></i>
+                        {{ trip.start_time }} - {{ trip.end_time }}
+                    </p>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">
+                            <i class="fa-solid fa-users me-1"></i>
+                            {{ trip.total_riders }} riders
+                        </span>
+                        <span class="price">${{ trip.price }}</span>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-transparent border-0 text-center pb-4">
+                    <a href="{% url 'trips:trip_detail_view' trip.id %}" class="btn auth-btn auth-btn-primary rounded-pill px-4">
+                        View Details
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+    {% else %}
+        <div class="text-center text-muted">
+            <i class="fa-solid fa-circle-info fa-2x mb-3"></i>
+            <p>No trips available at the moment</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
