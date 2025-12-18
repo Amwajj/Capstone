@@ -8,15 +8,10 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('drivers', '0005_alter_car_id_alter_carcompany_id_alter_driver_id_and_more'),
-        ('trips', '0002_alter_trip_id'),
+        ('trips', '0001_initial'),
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='trip',
-            old_name='creadted_at',
-            new_name='created_at',
-        ),
         migrations.AddField(
             model_name='trip',
             name='driver',
