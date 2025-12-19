@@ -64,32 +64,76 @@
                                 </select>
                             </div>
 
+
                             <div class="mb-3">
-                                <label class="form-label">Start Neighborhood *</label>
-                                <select name="start_neighborhood" class="form-select" multiple required>
-                                    {% for n in neighborhoods %}
-                                    <option value="{{ n.id }}">{{ n.name }}</option>
-                                    {% endfor %}
-                                </select>
+                                <label class="form-label d-block text-end">Start Neighborhood *</label>
+
+                                <div class="dropdown w-100 text-start">
+                                    <button class="form-select w-100 text-end" type="button"
+                                        data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                                        Start Neighborhood
+                                    </button>
+
+                                    <ul class="dropdown-menu w-100 p-2 text-end">
+                                        {% for n in neighborhoods %}
+                                        <li class="mb-1">
+                                            <label class="d-flex align-items-center justify-content-between">
+                                                <span class="ms-2">{{ n.name }}</span>
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="start_neighborhood" value="{{ n.id }}">
+                                            </label>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">End Neighborhood *</label>
-                                <select name="end_neighborhood" class="form-select" multiple required>
-                                    {% for n in neighborhoods %}
-                                    <option value="{{ n.id }}">{{ n.name }}</option>
-                                    {% endfor %}
-                                </select>
+
+                            <div class="mb-3">
+                                <label class="form-label d-block text-end">End Neighborhood *</label>
+
+                                <div class="dropdown w-100 text-end">
+                                    <button class="form-select w-100 text-end" type="button"
+                                        data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                                        End Neighborhood
+                                    </button>
+
+                                    <ul class="dropdown-menu w-100 p-2 ">
+                                        {% for n in neighborhoods %}
+                                        <li class="mb-1">
+                                            <label class="d-flex align-items-center justify-content-between">
+                                                <span class="ms-2">{{ n.name }}</span>
+                                                <input class="form-check-input" type="checkbox" name="End_neighborhood"
+                                                    value="{{ n.id }}">
+                                            </label>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
 
-                            <!-- Days -->
-                            <div class="mb-4">
-                                <label class="form-label">Days of Week *</label>
-                                <select name="days_of_week" class="form-select" multiple required>
-                                    {% for day in days %}
-                                    <option value="{{ day.id }}">{{ day.name }}</option>
-                                    {% endfor %}
-                                </select>
+
+                            <div class="mb-3">
+                                <label class="form-label d-block text-end">Days of Week *</label>
+
+                                <div class="dropdown w-100 text-end">
+                                    <button class="form-select w-100 text-end" type="button"
+                                        data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                                        Days of Week
+                                    </button>
+
+                                    <ul class="dropdown-menu w-100 p-2 ">
+                                        {% for day in days %}
+                                        <li class="mb-1">
+                                            <label class="d-flex align-items-center justify-content-between">
+                                                <span class="ms-2">{{ day.name }}</span>
+                                                <input class="form-check-input" type="checkbox" name="days_of_week"
+                                                    value="{{ day.id }}">
+                                            </label>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
 
                             <!-- Seats & Price -->
@@ -108,7 +152,7 @@
                                 <label class="form-label d-block">Private Trip</label>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="is_private" id="radioYes"
-                                        value="True" >
+                                        value="True">
                                     <label class="form-check-label" for="radioYes">Yes</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -129,4 +173,45 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const dropdowns = document.querySelectorAll('.dropdown');
+
+    console.log("Dropdowns found:", dropdowns.length);
+
+    dropdowns.forEach(dropdown => {
+
+        const button = dropdown.querySelector('button');
+        const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+
+        console.log("Checkboxes:", checkboxes.length);
+
+        const placeholder = button.textContent.trim();
+
+        function updateButtonText() {
+            const selected = [];
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    const text = cb.closest('label').querySelector('span').textContent.trim();
+                    selected.push(text);
+                }
+            });
+
+            button.textContent = selected.length > 0
+                ? selected.join('، ')
+                : placeholder;
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateButtonText);
+        });
+    });
+
+});
+</script>
+
+
 {% endblock %}

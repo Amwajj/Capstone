@@ -1,148 +1,163 @@
 {% extends "main/base.html" %}
+{% load static %}
+
 {% block title %}Update Trip{% endblock %}
 
 {% block content %}
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-7">
+                <div class="auth-card">
+                    <div class="card-body p-4 p-md-5">
 
-<div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm p-4">
-                <h2 class="text-center mb-4">Update Trip</h2>
+                        <div class="auth-header">
+                            <div class="auth-icon">
+                                <i class="fa-solid fa-route"></i>
+                            </div>
+                            <h2>Update Trip</h2>
+                            <p>Modify your trip details</p>
+                        </div>
 
-
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            {% for field, errors in form.errors.items %}
-                                {% for error in errors %}
-                                    <li>{{ field }}: {{ error }}</li>
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li>
+                                    {% endfor %}
                                 {% endfor %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-
-                <form method="POST">
-                    {% csrf_token %}
-
-                    <!-- Dates -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label>Start Date</label>
-                            <input type="date" name="start_date"
-                                   value="{{ trip.start_date|date:'Y-m-d' }}"
-                                   class="form-control" required>
+                            </ul>
                         </div>
-                        <div class="col-md-6">
-                            <label>End Date</label>
-                            <input type="date" name="end_date"
-                                   value="{{ trip.end_date|date:'Y-m-d' }}"
-                                   class="form-control" required>
+                        {% endif %}
+
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert-custom alert-{{ message.tags }}-custom">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span>{{ message }}</span>
                         </div>
-                    </div>
+                        {% endfor %}
+                        {% endif %}
 
-                    <!-- Time -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label>Start Time</label>
-                            <input type="time" name="start_time"
-                                   value="{{ trip.start_time|time:'H:i' }}"
-                                   class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label>End Time</label>
-                            <input type="time" name="end_time"
-                                   value="{{ trip.end_time|time:'H:i' }}"
-                                   class="form-control" required>
-                        </div>
-                    </div>
+                        <form method="POST" enctype="multipart/form-data" class="auth-form">
+                            {% csrf_token %}
 
-                    <!-- City -->
-                    <div class="mb-3">
-                        <label>City</label>
-                        <select name="city" class="form-select" multiple required>
-                            {% for city in cities %}
-                                <option value="{{ city.id }}"
-                                    {% if city in trip.city.all %}selected{% endif %}>
-                                    {{ city.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                            <!-- Trip Schedule -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Start Date *</label>
+                                    <input type="date" name="start_date" class="form-control"
+                                           value="{{ trip.start_date|date:'YYYY-MM-DD' }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">End Date *</label>
+                                    <input type="date" name="end_date" class="form-control"
+                                           value="{{ trip.end_date|date:'YYYY/MM/DD' }}" required>
+                                </div>
+                            </div>
 
-                    <!-- Start Neighborhood -->
-                    <div class="mb-3">
-                        <label>Start Neighborhood</label>
-                        <select name="start_neighborhood" class="form-select" multiple required>
-                            {% for n in neighborhoods %}
-                                <option value="{{ n.id }}"
-                                    {% if n in trip.start_neighborhood.all %}selected{% endif %}>
-                                    {{ n.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Start Time *</label>
+                                    <input type="time" name="start_time" class="form-control"
+                                           value="{{ trip.start_time|time:'HH:MM' }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">End Time *</label>
+                                    <input type="time" name="end_time" class="form-control"
+                                           value="{{ trip.end_time|time:'HH:MM' }}" required>
+                                </div>
+                            </div>
 
-                    <!-- End Neighborhood -->
-                    <div class="mb-3">
-                        <label>End Neighborhood</label>
-                        <select name="end_neighborhood" class="form-select" multiple required>
-                            {% for n in neighborhoods %}
-                                <option value="{{ n.id }}"
-                                    {% if n in trip.end_neighborhood.all %}selected{% endif %}>
-                                    {{ n.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                            <!-- Route Info -->
+                            <div class="mb-3">
+                                <label class="form-label">City *</label>
+                                <select name="city" class="form-select" required>
+                                    {% for city in cities %}
+                                    <option value="{{ city.id }}"
+                                        {% if city in trip.city.all %}selected{% endif %}>
+                                        {{ city.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                    <!-- Days -->
-                    <div class="mb-3">
-                        <label>Days of Week</label>
-                        <select name="days_of_week" class="form-select" multiple required>
-                            {% for day in days %}
-                                <option value="{{ day.id }}"
-                                    {% if day in trip.days_of_week.all %}selected{% endif %}>
-                                    {{ day.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                            <div class="mb-3">
+                                <label class="form-label">Start Neighborhood *</label>
+                                <select name="start_neighborhood" class="form-select" multiple required>
+                                    {% for n in neighborhoods %}
+                                    <option value="{{ n.id }}"
+                                        {% if n in trip.start_neighborhood.all %}selected{% endif %}>
+                                        {{ n.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                    <!-- Seats & Price -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label>Total Riders</label>
-                            <input type="number" name="total_riders"
-                                   value="{{ trip.total_riders }}"
-                                   class="form-control" min="1" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label>Price</label>
-                            <input type="number" name="price"
-                                   value="{{ trip.price }}"
-                                   step="0.01" class="form-control" required>
-                        </div>
-                    </div>
+                            <div class="mb-4">
+                                <label class="form-label">End Neighborhood *</label>
+                                <select name="end_neighborhood" class="form-select" multiple required>
+                                    {% for n in neighborhoods %}
+                                    <option value="{{ n.id }}"
+                                        {% if n in trip.end_neighborhood.all %}selected{% endif %}>
+                                        {{ n.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                    <!-- Private -->
-                    <div class="form-check mb-4">
-                        <input type="checkbox" name="is_private"
-                               class="form-check-input"
-                               id="is_private"
-                               {% if trip.is_private %}checked{% endif %}>
-                        <label class="form-check-label" for="is_private">
-                            Private Trip
-                        </label>
-                    </div>
+                            <!-- Days -->
+                            <div class="mb-4">
+                                <label class="form-label">Days of Week *</label>
+                                <select name="days_of_week" class="form-select" multiple required>
+                                    {% for day in days %}
+                                    <option value="{{ day.id }}"
+                                        {% if day in trip.days_of_week.all %}selected{% endif %}>
+                                        {{ day.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                    <button type="submit" class="btn btn-primary w-100">
-                        Update Trip
-                    </button>
-                </form>
+                            <!-- Seats & Price -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Total Riders *</label>
+                                    <input type="number" name="total_riders" min="1" class="form-control"
+                                           value="{{ trip.total_riders }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Price *</label>
+                                    <input type="number" name="price" step="0.01" class="form-control"
+                                           value="{{ trip.price }}" required>
+                                </div>
+                            </div>
+
+                            <!-- Private -->
+                            <div class="form-check mb-4">
+                                <label class="form-label d-block">Private Trip</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="is_private" id="radioYes"
+                                           value="True" {% if trip.is_private %}checked{% endif %}>
+                                    <label class="form-check-label" for="radioYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="is_private" id="radioNo"
+                                           value="False" {% if not trip.is_private %}checked{% endif %}>
+                                    <label class="form-check-label" for="radioNo">No</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-3">
+                                <i class="fa-solid fa-pen-to-square me-2"></i>Update Trip
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

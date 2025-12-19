@@ -7,21 +7,42 @@ from .models import Trip
 from drivers.models import Driver
 from .forms import TripForm
 from main.models import City, Neighborhood, Day
-
+from django.db.models import Q
 # Create your views here.
 def all_trip_view(request:HttpRequest):
+    trips =Trip.objects.filter(admin_status='APPROVED')
     if request.user.is_authenticated:
         try:
             ride_city = request.user.rider.city
             trips =Trip.objects.filter(city=ride_city, admin_status='APPROVED')# يطلع الرحلات على حسب مدينة الراكب
         except AttributeError:
-            trips =Trip.objects.filter(admin_status='APPROVED')
-    
-    else:
-        trips =Trip.objects.filter(admin_status='APPROVED')
+            pass
+
+        search = request.GET.get('search')
+        if search:
+            trips = trips.filter(
+                Q(start_neighborhood__name__icontains=search) |
+            Q(end_neighborhood__name__icontains=search)
+            )
+    start_neighborhoods = request.GET.getlist('start_neighborhood')
+    if start_neighborhoods:
+        trips = trips.filter(start_neighborhood__id__in=start_neighborhoods)
 
 
+    end_neighborhoods = request.GET.getlist('end_neighborhood')
+    if end_neighborhoods:
+        trips = trips.filter(end_neighborhood__id__in=end_neighborhoods)
+       
+        start_date = request.GET.get('start_date')
+        if start_date:
+            trips= trips.filter(start_date__gte=start_date)
+
+        end_date = request.GET.get('end_date')
+        if end_date:
+            trips= trips.filter(end_date__lte=end_date)
         
+        trips = trips.distinct()
+ 
 
     return render(request, 'trips/trips_list.html',{'trips':trips})
 
@@ -85,7 +106,7 @@ def update_trip_view(request:HttpRequest , trip_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Trip updated successfully")
-            return redirect('main:home_view')
+            return redirect('trips:trip_detail_view', trip_id=trip_id)
     else:
         form = TripForm(instance=trip)
 
@@ -98,18 +119,18 @@ def update_trip_view(request:HttpRequest , trip_id):
 
 @login_required
 def delete_trip_view(request, trip_id):
-    trip=get_object_or_404(Trip, id=trip_id)
-         
+    trip = get_object_or_404(Trip, id=trip_id)
+
     if trip.driver.user != request.user:
-        messages.error(request, "You are not allowed to delete this trip")
-        return redirect('main:home_view')
-    
-    if request.method =="POST":
+        messages.error(request, "You are not allowed to delete this trip", "alert-warning")
+        return redirect('trips:trip_detail_view', trip_id=trip_id)
+
+    if request.method == "POST":
         try:
             trip.delete()
-            messages.success(request, "Trip delete successfully")
-
+            messages.success(request, "Trip deleted successfully")
         except Exception as e:
-            messages.error(request,"There is a problem. You cannot delete this trip at the moment.", "alert-danger")
-    
-    return redirect("main:home_view")
+             messages.error(request, f"Error: {e}", "alert-danger")
+
+    return redirect("accounts:profile_driver")
+

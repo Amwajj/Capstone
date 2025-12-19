@@ -4,116 +4,282 @@
 {% block title %}Trip Details{% endblock %}
 
 {% block content %}
+
 <style>
     body {
         background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
+        color: #474341;
     }
 
-    .detail-card {
+    .page-title {
+        font-weight: 700;
+        color: #474341;
+    }
+
+    .custom-card {
         border-radius: 18px;
-        box-shadow: 0 10px 25px rgba(0,0,0,.1);
+        border: none;
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+        background: #f8f7f5;
     }
 
     .section-title {
         font-weight: 600;
-        margin-bottom: 15px;
-        color: #2a5298;
+        color: #474341;
+        border-bottom: 2px solid #f2c235;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
     }
 
-    .info-row {
-        margin-bottom: 8px;
+    .info-text {
+        color: #a3a2a2;
+        margin-bottom: 10px;
+    }
+
+    .info-text strong {
+        color: #474341;
+    }
+
+    .price {
+        color: #f2c235;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .avatar {
+        border: 3px solid #f2c235;
+    }
+
+    .car-img {
+        max-height: 220px;
+        object-fit: cover;
+        border-radius: 14px;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
     }
 </style>
 
-<div class="container py-5">
 
-    <!-- Trip Info -->
-    <div class="card detail-card mb-4">
-        <div class="card-body">
-            <h4 class="section-title">
-                <i class="fa-solid fa-route me-2"></i> Trip Information
-            </h4>
-
-            <div class="info-row"><strong>City:</strong> {{ trip.city.name }}</div>
-
-            <div class="info-row">
-                <strong>From:</strong>
-                {% for n in trip.start_neighborhood.all %}
-                    {{ n.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </div>
-
-            <div class="info-row">
-                <strong>To:</strong>
-                {% for n in trip.end_neighborhood.all %}
-                    {{ n.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </div>
-
-            <div class="info-row">
-                <strong>Days:</strong>
-                {% for day in trip.days_of_week.all %}
-                    {{ day.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </div>
-
-            <div class="info-row">
-                <strong>Time:</strong> {{ trip.start_time }} - {{ trip.end_time }}
-            </div>
-
-            <div class="info-row">
-                <strong>Available Seats:</strong> {{ trip.total_riders }}
-            </div>
-
-            <div class="info-row">
-                <strong>Price:</strong> ${{ trip.price }}
-            </div>
-        </div>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-4">
+        <h3 class="page-title">Trip Details</h3>
     </div>
 
-    <!-- Driver Info -->
-    <div class="card detail-card mb-4">
-        <div class="card-body">
-            <h4 class="section-title">
-                <i class="fa-solid fa-user me-2"></i> Driver Information
-            </h4>
+    <div class="row g-4 mb-4 align-items-stretch">
 
-            <div class="d-flex align-items-center mb-3">
-                <img src="{{ driver.avatar.url }}" width="80" height="80"
-                     class="rounded-circle me-3">
-                <div>
-                    <strong>{{ driver.user.username }}</strong><br>
-                    <small class="text-muted">{{ driver.gender }}</small>
+        <!-- Trip Information -->
+        <div class="col-lg-8">
+            <div class="card custom-card p-4 h-100">
+
+                <div class="d-flex justify-content-between section-title align-items-center mb-3">
+                    <h5 class=" m-0">
+                        <i class="fa-solid fa-route me-2"></i>
+                        Trip Information
+                    </h5>
+
+                    <div class="d-flex gap-2">
+
+
+                        {% if request.user == trip.driver.user %}
+                        <a href="{% url 'trips:update_trip_view' trip.id %}"
+                            class="btn btn-sm btn-outline-warning fw-bold">
+                            <i class="fa-solid fa-pen me-1"></i> Edit
+                        </a>
+
+                        <form method="POST" action="{% url 'trips:delete_trip_view' trip.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold"
+                                onclick="return confirm('Are you sure you want to delete this trip?');">
+                                <i class="fa-solid fa-trash me-1"></i> Delete
+                            </button>
+                        </form>
+
+
+
+                        {% elif request.user.is_authenticated and request.user == trip.rider.user %}
+                        <a href="" class="btn btn-sm fw-bold text-white" style="background:#f2c235;">
+                            <i class="fa-solid fa-plus me-1"></i> Join Trip
+                        </a>
+                        {% endif %}
+
+                    </div>
                 </div>
+
+
+                <p class="info-text"><strong>City:</strong> {{ trip.city.name }}</p>
+
+                <p class="info-text">
+                    <strong>From:</strong>
+                    {% for n in trip.start_neighborhood.all %}
+                    {{ n.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p class="info-text">
+                    <strong>To:</strong>
+                    {% for n in trip.end_neighborhood.all %}
+                    {{ n.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p class="info-text">
+                    <strong>Days:</strong>
+                    {% for day in trip.days_of_week.all %}
+                    {{ day.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p class="info-text">
+                    <strong>Date:</strong>
+                    {{ trip.start_date }} – {{ trip.end_date }}
+                </p>
+
+                <p class="info-text">
+                    <strong>Time:</strong>
+                    {{ trip.start_time }} – {{ trip.end_time }}
+                </p>
+
+                <p class="info-text">
+                    <strong>Available Seats:</strong>
+                    {{ trip.total_riders }}
+                </p>
+
+                <p class="info-text mb-0">
+                    <strong>Price:</strong>
+                    <span class="price">${{ trip.price }}</span>
+                </p>
+
             </div>
-
-            <div class="info-row"><strong>Phone:</strong> {{ driver.phone }}</div>
-            <div class="info-row"><strong>Status:</strong> {{ driver.status }}</div>
         </div>
+
+        <!-- Driver and car Information -->
+        <div class="col-lg-4">
+            <div class="card custom-card p-4 h-100">
+
+                <!-- Driver Information -->
+                <h5 class="section-title">
+                    <i class="fa-solid fa-user me-2"></i>
+                    Driver Information
+                </h5>
+
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="{{ driver.avatar.url }}" class="rounded-circle avatar" width="90" height="90">
+                    <div>
+                        <h6 class="fw-bold mb-1">{{ driver.user.username }}</h6>
+                        <small class="text-muted">{{ driver.gender }}</small>
+                    </div>
+                </div>
+
+                <p class="info-text"><strong>Phone:</strong> {{ driver.phone }}</p>
+
+                <!-- Divider -->
+                <hr style="border-color:#a3a2a2; opacity:.3; margin:22px 0;">
+
+                <!-- Car Information -->
+                {% if car %}
+                <h5 class="section-title">
+                    <i class="fa-solid fa-car me-2"></i>
+                    Car Information
+                </h5>
+
+                <p class="info-text"><strong>Company:</strong> {{ car.company.name }}</p>
+                <p class="info-text"><strong>Model:</strong> {{ car.model }}</p>
+                <p class="info-text"><strong>Year:</strong> {{ car.year }}</p>
+                <p class="info-text"><strong>Color:</strong> {{ car.color }}</p>
+                <p class="info-text"><strong>Plate Number:</strong> {{ car.plate_number }}</p>
+                <p class="info-text mb-0"><strong>Seats:</strong> {{ car.seats_count }}</p>
+                {% else %}
+                <p class="text-muted mb-0">No car information available.</p>
+                {% endif %}
+
+            </div>
+        </div>
+
+
     </div>
+    {% if request.user == trip.driver.user %}
+    <!-- Join Requests -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="card custom-card p-4">
 
-    <!-- Car Info -->
-    {% if car %}
-    <div class="card detail-card">
-        <div class="card-body">
-            <h4 class="section-title">
-                <i class="fa-solid fa-car me-2"></i> Car Information
-            </h4>
+                <h5 class="section-title">
+                    <i class="fa-solid fa-users me-2"></i>
+                    Join Requests
+                </h5>
 
-            <div class="info-row"><strong>Company:</strong> {{ car.company.name }}</div>
-            <div class="info-row"><strong>Model:</strong> {{ car.model }}</div>
-            <div class="info-row"><strong>Year:</strong> {{ car.year }}</div>
-            <div class="info-row"><strong>Color:</strong> {{ car.color }}</div>
-            <div class="info-row"><strong>Plate Number:</strong> {{ car.plate_number }}</div>
-            <div class="info-row"><strong>Seats:</strong> {{ car.seats_count }}</div>
+                {% if join_requests %}
+                <div class="table-responsive">
+                    <table class="table align-middle text-center">
+                        <thead>
+                            <tr style="color:#474341;">
+                                <th>User</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Notes</th>
+                                <th>Status</th>
+                                {% if request.user == trip.driver.user %}
+                                <th>Action</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
 
-            <div class="mt-3">
-                <strong>Car Registration:</strong><br>
-                <img src="{{ car.car_registration.url }}" class="img-fluid rounded mt-2" style="max-width:300px;">
+                        <tbody>
+                            {% for r in join_requests %}
+                            <tr>
+                                <td class="fw-semibold">{{ r.user.username }}</td>
+                                <td>{{ r.start_date }}</td>
+                                <td>{{ r.end_date }}</td>
+                                <td class="text-muted">{{ r.notes|default:"—" }}</td>
+
+                                <!-- Status -->
+                                <td>
+                                    {% if r.status == 'pending' %}
+                                    <span class="badge bg-secondary">Pending</span>
+                                    {% elif r.status == 'approved' %}
+                                    <span class="badge bg-success">Approved</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Driver Actions -->
+                                {% if request.user == trip.driver.user %}
+                                <td>
+                                    {% if r.status == 'pending' %}
+                                    <form method="POST" action="{% url 'trips:update_request_status_view' r.id %}"
+                                        class="d-flex gap-2 justify-content-center">
+                                        {% csrf_token %}
+
+                                        <button name="status" value="approved" class="btn btn-sm btn-success fw-bold">
+                                            Accept
+                                        </button>
+
+                                        <button name="status" value="rejected" class="btn btn-sm btn-danger fw-bold">
+                                            Reject
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% else %}
+                <p class="text-muted mb-0">No join requests yet.</p>
+                {% endif %}
+
             </div>
         </div>
     </div>
     {% endif %}
 
+
+
 </div>
+
 {% endblock %}

@@ -37,10 +37,8 @@ class Rider (models.Model):
     cities = models.ManyToManyField(City)
 
 class ReviewRider (models.Model):
-
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver,on_delete=models.CASCADE)
     rating = models.SmallIntegerField()
     comments = models.TextField()
-
     created_at = models.DateTimeField(auto_now_add=True)

@@ -18,7 +18,7 @@
 
     .trip-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
     }
 
     .trip-header {
@@ -45,22 +45,109 @@
         font-size: 14px;
     }
 
-    .price {
+    .price_trip {
         font-size: 22px;
         font-weight: bold;
-        color: #217530;
+        color: #f2c235;
+        /* أصفر */
     }
 </style>
 
 <div class="container py-5">
-    <div class="text-center mb-5">
+    <div class="mb-5">
         <h2 class="fw-bold">Available Trips</h2>
         <p class="text-muted">Choose the trip that fits you best</p>
     </div>
+    <div class="d-flex  justify-content-end align-items-center mb-4">
+        <form method="GET" class="d-flex w-50 me-3">
+            <input type="text" name="search" value="{{ request.GET.search }}" class="form-control ms-2"
+                placeholder="Search on trips by neighborhoods...">
+            <button class="btn btn-outline-secondary">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <button class="btn btn-outline-dark me-2" onclick="toggleFilter()">
+            <i class="fa-solid fa-filter"></i>
+        </button>
+    </div>
+
+    <form method="GET" id="filterBox" style="display:none;" class="card p-3 mb-4">
+        <div class="row g-3">
+
+
+
+            <div class="col-md-4">
+                <label class="form-label d-block text-end">Start Neighborhood *</label>
+
+                <div class="dropdown w-100 text-start">
+                    <button class="form-select w-100 text-end" type="button" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside">
+                        Start Neighborhood
+                    </button>
+
+                    <ul class="dropdown-menu w-100 p-2 text-end">
+                        {% for n in neighborhoods %}
+                        <li class="mb-1">
+                            <label class="d-flex align-items-center justify-content-between">
+                                <span class="ms-2">{{ n.name }}</span>
+                                <input class="form-check-input" type="checkbox" name="start_neighborhood"
+                                    value="{{ n.id }}">
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <label class="form-label d-block text-end">End Neighborhood *</label>
+
+                <div class="dropdown w-100 text-end">
+                    <button class="form-select w-100 text-end" type="button" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside">
+                        End Neighborhood
+                    </button>
+
+                    <ul class="dropdown-menu w-100 p-2 ">
+                        {% for n in neighborhoods %}
+                        <li class="mb-1">
+                            <label class="d-flex align-items-center justify-content-between">
+                                <span class="ms-2">{{ n.name }}</span>
+                                <input class="form-check-input" type="checkbox" name="end_neighborhood"
+                                    value="{{ n.id }}">
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <label>Start Date</label>
+                <input type="date" name="start_date" class="form-control">
+            </div>
+
+            <div class="col-md-2">
+                <label>End Date</label>
+                <input type="date" name="end_date" class="form-control">
+            </div>
+
+            <div class="col-12 text-end">
+                <button class="btn auth-btn auth-btn-primary px-4">
+                    Apply Filter
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+
 
     {% if trips %}
-        <div class="row g-4">
-    {% for trip in trips %}
+    <div class="row g-4">
+        {% for trip in trips %}
         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 d-flex">
             <div class="card trip-card w-100">
 
@@ -79,27 +166,34 @@
                     <p><i class="fa-solid fa-arrow-right me-2 text-success"></i>
                         <strong>From:</strong>
                         {% for n in trip.start_neighborhood.all %}
-                            <span class="badge badge-custom">{{ n.name }}</span>
+                        <span class="badge badge-custom">{{ n.name }}</span>
                         {% endfor %}
                     </p>
+
 
                     <p><i class="fa-solid fa-flag-checkered me-2 text-danger"></i>
                         <strong>To:</strong>
                         {% for n in trip.end_neighborhood.all %}
-                            <span class="badge badge-custom">{{ n.name }}</span>
+                        <span class="badge badge-custom">{{ n.name }}</span>
                         {% endfor %}
                     </p>
 
                     <p><i class="fa-solid fa-calendar-days me-2 text-warning"></i>
                         <strong>Days:</strong>
                         {% for day in trip.days_of_week.all %}
-                            <span class="badge badge-custom">{{ day.name }}</span>
+                        <span class="badge badge-custom">{{ day.name }}</span>
                         {% endfor %}
                     </p>
 
                     <p><i class="fa-solid fa-clock me-2 text-info"></i>
                         {{ trip.start_time }} - {{ trip.end_time }}
                     </p>
+
+                    <p><i class="fa-solid fa-calendar-days me-2 text-warning"></i>
+                        <strong>Date:</strong>
+                        {{ trip.start_date }} – {{ trip.end_date }}
+                    </p>
+
 
                     <hr>
 
@@ -108,26 +202,76 @@
                             <i class="fa-solid fa-users me-1"></i>
                             {{ trip.total_riders }} riders
                         </span>
-                        <span class="price">${{ trip.price }}</span>
+                        <span class="price_trip">${{ trip.price }}</span>
                     </div>
                 </div>
 
                 <div class="card-footer bg-transparent border-0 text-center pb-4">
-                    <a href="{% url 'trips:trip_detail_view' trip.id %}" class="btn auth-btn auth-btn-primary rounded-pill px-4">
+                    <a href="{% url 'trips:trip_detail_view' trip.id %}"
+                        class="btn auth-btn auth-btn-primary rounded-pill px-4">
                         View Details
                     </a>
                 </div>
 
             </div>
         </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
 
     {% else %}
-        <div class="text-center text-muted">
-            <i class="fa-solid fa-circle-info fa-2x mb-3"></i>
-            <p>No trips available at the moment</p>
-        </div>
+    <div class="text-center text-muted">
+        <i class="fa-solid fa-circle-info fa-2x mb-3"></i>
+        <p>No trips available at the moment</p>
+    </div>
     {% endif %}
 </div>
+
+<script>
+    function toggleFilter() {
+        const box = document.getElementById("filterBox");
+        box.style.display = box.style.display === "none" ? "block" : "none";
+    }
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const dropdowns = document.querySelectorAll('.dropdown');
+
+        console.log("Dropdowns found:", dropdowns.length);
+
+        dropdowns.forEach(dropdown => {
+
+            const button = dropdown.querySelector('button');
+            const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+
+            console.log("Checkboxes:", checkboxes.length);
+
+            const placeholder = button.textContent.trim();
+
+            function updateButtonText() {
+                const selected = [];
+
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        const text = cb.closest('label').querySelector('span').textContent.trim();
+                        selected.push(text);
+                    }
+                });
+
+                button.textContent = selected.length > 0
+                    ? selected.join('، ')
+                    : placeholder;
+            }
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', updateButtonText);
+            });
+        });
+
+    });
+</script>
+
+
 {% endblock %}
