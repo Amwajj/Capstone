@@ -36,9 +36,16 @@ class Rider (models.Model):
     City = models.ForeignKey(City, on_delete=models.CASCADE)
 
 
+    def __str__(self):
+        return self.user
+
 class ReviewRider (models.Model):
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
     driver = models.ForeignKey(Driver,on_delete=models.CASCADE)
     rating = models.SmallIntegerField()
     comments = models.TextField()
+
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.driver.user} on {self.rider.user}"

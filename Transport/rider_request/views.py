@@ -11,23 +11,34 @@ from main.models import City, Neighborhood, Day
 
 
 # Create your views here.
+@login_required
 def create_rider_request(request:HttpRequest):
 
-    rider_request_form = RiderRequestForm()
+    try:
+        rider = Rider.objects.get(user=request.user)
+    except Rider.DoesNotExist:
+        messages.error(request, "Must be rider to create rider request ads")
+        return redirect('accounts:sign_in')
+
+    
 
     if request.method == "POST":
         rider_request_form = RiderRequestForm(request.POST)
         if rider_request_form.is_valid():
-            rider_request_form.save()
-
+            rider_request = rider_request_form.save(commit=False)
+            rider_request.rider = request.user.rider
+            rider_request.save()
+            rider_request_form.save_m2m()
             messages.success(request, "Created rider request add successfully", "alert-success")
             return redirect('rider_request:list_rider_request')
         else:
-            print("not valid form", rider_request_form.errors)
+            messages.error(request, "Please correct the errors below", "alert-danger")
+    else:
+        rider_request_form = RiderRequestForm()
         
-        context = { 'cities':City.objects.all(), 'neighborhoods':Neighborhood.objects.all(), 'days':Day.objects.all()}
+        context = { 'cities':City.objects.all(), 'neighborhoods':Neighborhood.objects.all(), 'days':Day.objects.all(),"rider_request_form":rider_request_form, "status":RiderRequest.Status.choices}
 
-    return render(request, "rider_request/rider_request_form.html",{"rider_request_form":rider_request_form, "Status":RiderRequest.Status.choices},context)
+    return render(request, "rider_request/rider_request_form.html",context)
 
 def list_rider_request(request:HttpRequest):
 
