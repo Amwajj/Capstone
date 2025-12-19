@@ -338,3 +338,17 @@
     background: #4caf50;
     width: 100%;
 }
+
+@media (max-width: 576px) {
+    .auth-form .row > div {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-form .form-control,
+    .auth-form .form-select {
+        font-size: 1rem;
+        padding: 10px 14px;
+    }
+}
