@@ -39,7 +39,7 @@ class Driver (models.Model):
     national_id_or_iqama = models.CharField(max_length=20, blank=True, null=True)
     gender = models.CharField(max_length=6, choices=Gender.choices, default=Gender.F)
     avatar = models.ImageField(upload_to="images/avatars/",default="images/avatars/avatar.webp")
-    date_of_birth = models.DateField(blank=True, null=True)
+    date_of_birth = models.DateField(null=True, blank=True)
     cities = models.ManyToManyField(City, blank=True)
     licenses = models.ImageField(upload_to="images/", blank=True, null=True)
     car = models.OneToOneField(Car, on_delete=models.CASCADE, blank=True, null=True)

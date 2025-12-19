@@ -12,7 +12,7 @@
             <div class="col-md-9 col-lg-7">
                 <div class="auth-card">
                     <div class="card-body p-4 p-md-5">
-                        
+
                         <!-- Icon & Header -->
                         <div class="auth-header">
                             <div class="auth-icon">
@@ -21,127 +21,137 @@
                             <h2>Create Rider Account</h2>
                             <p>Join RIDERS as a Passenger</p>
                         </div>
-                        
+
                         <!-- Messages -->
                         {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert-custom alert-{{ message.tags }}-custom">
-                                    <i class="fa-solid fa-circle-exclamation"></i>
-                                    <span>{{ message }}</span>
-                                </div>
-                            {% endfor %}
+                        {% for message in messages %}
+                        <div class="alert-custom alert-{{ message.tags }}-custom">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        {% endfor %}
                         {% endif %}
-                        
-                        <form method="POST" action="{% url 'accounts:sign_up_rider' %}" enctype="multipart/form-data" class="auth-form">
-                        {% csrf_token %}
-                        
-                        <h5 class="form-section-title">
-                            <i class="fa-solid fa-user-circle"></i> Account Information
-                        </h5>
-                        
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username *</label>
-                            <input type="text" class="form-control" id="username" name="username" 
-                                   placeholder="Enter your username" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   placeholder="Enter your email" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password *</label>
-                            <input type="password" class="form-control" id="password" name="password" 
-                                   placeholder="Enter your password (min 8 characters)" required>
-                            <div class="password-strength" id="password-strength"></div>
-                            <small class="form-text" id="password-text"></small>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="confirm_password" class="form-label">Confirm Password *</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
-                                   placeholder="Confirm your password" required>
-                        </div>
-                        
-                        <h5 class="form-section-title">
-                            <i class="fa-solid fa-id-card"></i> Personal Information
-                        </h5>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="gender" class="form-label">Gender</label>
-                                <select class="form-select" id="gender" name="gender">
-                                    <option value="">Select Gender</option>
-                                    <option value="m">Male</option>
-                                    <option value="f">Female</option>
-                                </select>
+
+                        <form method="POST" action="{% url 'accounts:sign_up_rider' %}" enctype="multipart/form-data"
+                            class="auth-form">
+                            {% csrf_token %}
+
+                            <h5 class="form-section-title">
+                                <i class="fa-solid fa-user-circle"></i> Account Information
+                            </h5>
+
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username *</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    placeholder="Enter your username" required>
                             </div>
-                            
-                            <div class="col-md-6">
-                                <label for="birth_date" class="form-label">Birth Date</label>
-                                <input type="date" class="form-control" id="birth_date" name="birth_date">
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter your email" required>
                             </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" 
-                                   placeholder="05xxxxxxxx or 9665xxxxxxxx">
-                            <small class="form-text text-muted">Format: 05xxxxxxxx or 9665xxxxxxxx</small>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="id_type" class="form-label">ID Type</label>
-                                <select class="form-select" id="id_type" name="id_type">
-                                    <option value="">Select ID Type</option>
-                                    <option value="national">National ID</option>
-                                    <option value="iqama">Iqama</option>
-                                </select>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password *</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Enter your password (min 8 characters)" required>
+                                <div class="password-strength" id="password-strength"></div>
+                                <small class="form-text" id="password-text"></small>
                             </div>
-                            
-                            <div class="col-md-6">
-                                <label for="id_number" class="form-label">ID Number</label>
-                                <input type="text" class="form-control" id="id_number" name="id_number" 
-                                       placeholder="Enter your ID number">
+
+                            <div class="mb-4">
+                                <label for="confirm_password" class="form-label">Confirm Password *</label>
+                                <input type="password" class="form-control" id="confirm_password"
+                                    name="confirm_password" placeholder="Confirm your password" required>
                             </div>
+
+                            <h5 class="form-section-title">
+                                <i class="fa-solid fa-id-card"></i> Personal Information
+                            </h5>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" id="gender" name="gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="date_of_birth" class="form-label">Birth Date</label>
+                                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone"
+                                    placeholder="05xxxxxxxx or 9665xxxxxxxx">
+                                <small class="form-text text-muted">Format: 05xxxxxxxx or 9665xxxxxxxx</small>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="id_type" class="form-label">ID Type</label>
+                                    <select class="form-select" id="id_type" name="id_type">
+                                        <option value="">Select ID Type</option>
+                                        <option value="national">National ID</option>
+                                        <option value="iqama">Iqama</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="national_id_or_iqama" class="form-label">ID Number</label>
+                                    <input type="text" class="form-control" id="national_id_or_iqama" name="national_id_or_iqama"
+                                        placeholder="Enter your ID number">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.City.id_for_label }}" class="form-label">
+                                    City
+                                </label>
+                                {{ form.City }}
+                                {% if form.City.errors %}
+                                <div class="text-danger">{{ form.City.errors }}</div>
+                                {% endif %}
+                            </div>
+
+
+
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">Bio</label>
+                                <textarea class="form-control" id="bio" name="bio" rows="3"
+                                    placeholder="Tell us about yourself (optional)"></textarea>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="avatar" class="form-label">Profile Picture</label>
+                                <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                            </div>
+
+                            <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-4">
+                                <i class="fa-solid fa-user-check me-2"></i>Create Rider Account
+                            </button>
+                        </form>
+
+                        <!-- Footer Links -->
+                        <div class="auth-footer">
+                            <p>Already have an account?
+                                <a href="{% url 'accounts:sign_in' %}" class="text-decoration-none fw-bold">Sign In</a>
+                            </p>
+                            <p>Want to be a driver?
+                                <a href="{% url 'accounts:sign_up_driver' %}"
+                                    class="text-decoration-none fw-bold text-success">
+                                    <i class="fa-solid fa-car"></i> Sign Up as Driver
+                                </a>
+                            </p>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location" name="location" 
-                                   placeholder="Enter your city">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="bio" class="form-label">Bio</label>
-                            <textarea class="form-control" id="bio" name="bio" rows="3" 
-                                      placeholder="Tell us about yourself (optional)"></textarea>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="avatar" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
-                        </div>
-                        
-                        <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-4">
-                            <i class="fa-solid fa-user-check me-2"></i>Create Rider Account
-                        </button>
-                    </form>
-                    
-                    <!-- Footer Links -->
-                    <div class="auth-footer">
-                        <p>Already have an account? 
-                            <a href="{% url 'accounts:sign_in' %}" class="text-decoration-none fw-bold">Sign In</a>
-                        </p>
-                        <p>Want to be a driver? 
-                            <a href="{% url 'accounts:sign_up_driver' %}" class="text-decoration-none fw-bold text-success">
-                                <i class="fa-solid fa-car"></i> Sign Up as Driver
-                            </a>
-                        </p>
-                    </div>
                     </div>
                 </div>
             </div>

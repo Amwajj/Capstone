@@ -6,49 +6,75 @@ from riders.models import Rider
 from drivers.models import Driver
 from django.contrib import messages
 from drivers.forms import DriverForm
+from riders.forms import RiderForm
 from drivers.models import Car, CarCompany
 from main.models import City
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+
 def sign_up_rider(request: HttpRequest):
     """تسجيل راكب جديد"""
-    
+
     if request.method == 'POST':
         # بيانات الحساب
         username = request.POST.get('username')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         email = request.POST.get('email')
-        
+
         # Validations
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.')
             return redirect('accounts:sign_up_rider')
-        
+
         if len(password) < 8:
-            messages.error(request, 'Password must be at least 8 characters.', "alert-warning")
+            messages.error(request, 'Password must be at least 8 characters.')
             return redirect('accounts:sign_up_rider')
-        
+
         if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already exists.', "alert-warning")
+            messages.error(request, 'Username already exists.')
             return redirect('accounts:sign_up_rider')
-        
+
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email already exists.', "alert-warning")
+            messages.error(request, 'Email already exists.')
             return redirect('accounts:sign_up_rider')
-        
+
         # إنشاء User
-        user = User.objects.create_user(username=username, password=password, email=email)
-        
-        # إنشاء Rider (بدون بيانات إضافية الآن)
-        Rider.objects.create(user=user)
-        
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email
+        )
+
+        # إنشاء Rider باستخدام الفورم
+        rider_form = RiderForm(request.POST, request.FILES)
+        if rider_form.is_valid():
+            rider = rider_form.save(commit=False)
+            rider.user = user
+            rider.save()
+            
+
+
+        else:
+            print("❌ Rider form errors:", rider_form.errors)
+            messages.error(request, "Rider information is invalid.")
+            user.delete()  # مهم: لا نترك User بدون Rider
+            return redirect('accounts:sign_up_rider')
+
         login(request, user)
-        messages.success(request, f'Welcome {username}! You are registered as a Rider.')
+        messages.success(
+            request,
+            f'Welcome {username}! You are registered as a Rider.'
+        )
         return redirect('accounts:sign_in')
-    
-    return render(request, 'accounts/signup_rider.html')
+
+    # GET
+    form = RiderForm()
+    return render(request, 'accounts/signup_rider.html', {
+        'form': form,
+    })
+
 
 
 def sign_up_driver(request: HttpRequest):

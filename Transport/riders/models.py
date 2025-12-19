@@ -31,10 +31,10 @@ class Rider (models.Model):
     national_id_or_iqama = models.CharField(max_length=20, blank=True)
     gender = models.CharField(max_length=6, choices=Gender.choices, default=Gender.F)
     avatar = models.ImageField(upload_to="images/avatars/",default="images/avatars/avatar.webp")
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=True, blank=True)
+    size_car = models.CharField(max_length=64, choices=SizeCarName.choices, default=SizeCarName.M, null=True, blank=True)
+    City = models.ForeignKey(City, on_delete=models.CASCADE)
 
-    size_car = models.CharField(max_length=64, choices=SizeCarName.choices, default=SizeCarName.M)
-    cities = models.ManyToManyField(City)
 
 class ReviewRider (models.Model):
 
