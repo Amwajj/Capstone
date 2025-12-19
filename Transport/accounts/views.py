@@ -7,6 +7,8 @@ from drivers.models import Driver
 from django.contrib import messages
 from drivers.forms import DriverForm
 from drivers.models import Car, CarCompany
+from main.models import City
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def sign_up_rider(request: HttpRequest):
@@ -44,7 +46,7 @@ def sign_up_rider(request: HttpRequest):
         
         login(request, user)
         messages.success(request, f'Welcome {username}! You are registered as a Rider.')
-        return redirect('main:home_view')
+        return redirect('accounts:sign_in')
     
     return render(request, 'accounts/signup_rider.html')
 
@@ -103,7 +105,8 @@ def sign_up_driver(request: HttpRequest):
     
     # GET request
     form = DriverForm()
-    return render(request, 'accounts/signup_driver.html', {'form': form})
+    cities = City.objects.all()
+    return render(request, 'accounts/signup_driver.html', {'form': form, 'cities': cities})
 
 def sign_in(request: HttpRequest):
 
@@ -128,3 +131,12 @@ def log_out(request: HttpRequest):
 
     return redirect('main:home_view')
 
+@login_required
+def profile_driver(request: HttpRequest):
+   driver = request.user.driver
+   return render(request, 'accounts/profile_driver.html', {'driver': driver})
+
+@login_required
+def profile_rider(request: HttpRequest):
+   rider = request.user.rider
+   return render(request, 'accounts/profile_rider.html', {'rider': rider})
