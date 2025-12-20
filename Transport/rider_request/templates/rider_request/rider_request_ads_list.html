@@ -1,16 +1,31 @@
 {% extends "main/base.html" %}
 {% block title %}Rider Request Ads List{% endblock %}
 
+{% block style %}
+
+<style>
+    span
+    {   
+        font-size: large;
+    }
+    span i
+    {
+        margin-right: 10px;
+    }
+</style>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <h2 class="fw-bold text-dark mb-1">Rider Requests</h2>
+            <h1 class="fw-bold text-dark mb-1">Rider Requests</h1>
             <p class="text-muted">Find or manage transportation requests</p>
         </div>
-        <a href="{% url 'rider_request:create_rider_request' %}" class="btn btn-primary px-4 shadow-sm">
-            <i class="fa-solid fa-plus me-2"></i>Post New Request
+        <a href="{% url 'rider_request:create_rider_request' %}" class="btn btn-warning px-4 shadow-sm">
+            <i class="fa-solid fa-plus me-2 m-2"></i>Post New Request
         </a>
     </div>
 
@@ -18,37 +33,38 @@
         {% for ads in rider_requests %}
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden">
-                <div class="position-absolute top-0 end-0 m-3">
+                <div class="position-absolute top-0 start-0 m-3">
                     {% if ads.status == 'accept' %}
                         <span class="badge bg-success-subtle text-success border border-success px-3">Accepted</span>
                     {% else %}
-                        <span class="badge bg-secondary-subtle text-secondary border border-secondary px-3">Pending</span>
+                        <span class="badge bg-warning-subtle text-warning border border-warning px-3">Pending</span>
                     {% endif %}
                 </div>
 
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="icon-box bg-primary-subtle text-primary rounded-circle p-2 me-3">
+                        <div class="icon-box bg-warning-subtle text-warning rounded-circle p-2 me-3 m-2">
                             <i class="fa-solid fa-location-dot"></i>
                         </div>
                         <div>
-                            <h6 class="mb-0 fw-bold">{{ ads.city.name }}</h6>
-                            <small class="text-success fw-bold">{{ ads.price }} SAR</small>
+                            <h3 class="mb-0 fw-bold">{{ ads.city.name }}</h3>    
                         </div>
                     </div>
-
                     <div class="mb-4">
                         <div class="d-flex mb-2 small text-muted">
-                            <span class="me-3"><i class="fa-solid fa-users me-2"></i>{{ ads.total_riders }} Riders</span>
-                            <span><i class="fa-solid fa-calendar-days me-2"></i>{{ ads.start_date }}</span>
+                            <span><i class="fa-solid fa-users me-2 text-warning "></i>{{ ads.total_riders }} Riders</span>
+                            <span><i class="fa-solid fa-calendar-days me-2 text-warning "></i>{{ ads.start_date }}</span>
                         </div>
                         <div class="d-flex small text-muted">
-                            <span><i class="fa-solid fa-clock me-2"></i>{{ ads.start_time }} - {{ ads.end_time }}</span>
+                            <span><i class="fa-solid fa-clock me-2 text-warning"></i>{{ ads.start_time }} - {{ ads.end_time }}</span>
+                        </div>
+                        <div class="d-flex small text-muted">
+                            <span><i class="bi bi-tags text-warning"></i>{{ ads.price }} SAR</span>
                         </div>
                     </div>
 
                     <div class="d-grid gap-2">
-                        <a href="{% url 'rider_request:detail_rider_request' ads.id %}" class="btn btn-outline-primary btn-sm rounded-pill">
+                        <a href="{% url 'rider_request:detail_rider_request' ads.id %}" class="btn btn-outline-warning btn-sm rounded-pill">
                             View Details
                         </a>
                         
