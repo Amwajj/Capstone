@@ -3,123 +3,26 @@
 
 {%block title%} Contact Us - Wesal {% endblock %}
 {% block style %}
-<style>
-  #contact
-  {
-    width: 100%;
-    min-height: 100vh;
-    gap: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    background: linear-gradient(135deg, #f8f7f5 0%, #ead5aa 90%);
-  }
-  .contact-info-side, .contact-form-side
-  {
-    gap: 10px;
-    position: relative;
-    width: 450px;
-    height: 550px;
-    background: white;
-    border-radius: 15px;
-    display: flex;
-    padding: 4.5rem;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  }
-.contact-info-side h1,  .contact-form-side h1
-  {
-    top: 20px;
-    position: absolute;
-    font-weight: 600;
-    color: #474341;
-  }
-.contact-info-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-.contact-info-list li {
-		margin-bottom: 12px;
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		font-size: 1rem;
-}
-.contact-info-list i {
-	color: #474341;
-	font-size: 1.2rem;
-}
-  .contact-form-side .contact-detail
-  {
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
-  }
-  .contact-form-side .contact-detail .input-group
-  {
-    gap: 10px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .form-label
-  {
-    font-weight: 600;
-    color: #474341;
-    margin-bottom: 8px;
-    margin-top: 0;
-    font-size: 0.95rem;
-    display: block;
-  }
-  .contact-form-side .contact-detail .input-group input
-  {
-    border: 2px solid #a3a2a2;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 1rem;
-  }
-  .contact-form-side .contact-detail .input-group textarea 
-  {
-    border: gray 1px solid;
-    border-radius: 15px;
-  }
-  button
-  {
-    border: none;
-    color: #333;
-    padding: 14px 20px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 8px;
-    background: #f2c235;
-  }
-</style>
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<div class="contact-bg">
+
+<div class="contact-bg" style="padding-left: 20px; padding-right: 20px;">
+  <div class="contact-welcome fadein-left" style="margin: 0 auto 18px auto; max-width: 600px; text-align:left;">
+  <h2 class="animated-gradient-title">Contact Wesal Support</h2>
+    <p style="color:#474341; font-size:1.35rem; margin-bottom:0.2em; font-family:'Roboto',sans-serif; text-align:left;">We value your questions and feedback. Our support team is here to assist you promptly and professionally.</p>
+    <p style="color:#474341; font-size:1.22rem; margin-bottom:18px; font-family:'Roboto',sans-serif; text-align:left;">Reach us through the channels below or fill out the form — we’ll respond as soon as possible.</p>
+  <ul class="contact-info-list" type="none" style="max-width: 600px; margin: 0 0 0 0; padding-left: 32px; text-align:left; font-size:1.22rem;">
+      <li><i class="fa fa-envelope"></i> info@Wesal.com</li>
+      <li><i class="fa fa-phone"></i> +966 555 123 456</li>
+      <li><i class="fa fa-map-marker"></i> Riyadh, Saudi Arabia</li>
+      <li><i class="fa fa-globe"></i> www.Wesal.com</li>
+    </ul>
+  </div>
   <div class="contact-overlay" id="contact" >
-    <div class="contact-info-side">
-      <!--<h1>Information</h1>-->
-      <ul class="contact-info-list" type="none">
-        <li><i class="fa fa-envelope"></i> info@Wesal.com</li>
-        <li><i class="fa fa-phone"></i> +966 555 123 456</li>
-        <li><i class="fa fa-map-marker"></i> Riyadh, Saudi Arabia</li>
-        <li><i class="fa fa-globe"></i> www.Wesal.com</li>
-      </ul>
-      <!--
-      <div style="margin-top:32px; color:#000000; font-size:1.05rem;">We are here to help you with all your Wesal needs. Reach out to us anytime!</div>
-          
-      -->
-    </div>
     <div class="contact-form-side">
-     <!--<h1>Contact Us</h1>
-      --> 
       <form method="post" action="{% url 'main:contact_view' %}" class="contact-detail" >
         {% csrf_token %}
         <div class="input-group">
@@ -144,5 +47,5 @@
   </div>
 </div>
 
-
+<script src="{% static 'js/contact.js' %}"></script>
 {% endblock %}

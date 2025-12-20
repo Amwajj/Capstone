@@ -32,7 +32,7 @@
                         <div class="tp-username" style="font-size: 1.08rem; color: #7c7c7c; margin-bottom: 10px;">
                             @{{ driver.user.username }}
                         </div>
-
+                    <!----- RATING ----->
                         <div class="tp-rating mb-3" style="font-size: 1.15rem; color: #f2c235;">
                             {% if driver.rating %}
                                 {% for i in "12345" %}
@@ -47,7 +47,7 @@
                                 <span style="color: #aaa;">No rating</span>
                             {% endif %}
                         </div>
-
+                    <!--ِENDRATING-->
                         <div class="tp-info-list w-100" style="font-size: 1.13rem; margin-bottom: 18px;">
                             {% if driver.phone %}
                                 <div class="mb-2" style="background: #fffbe6; border-radius: 8px; padding: 7px 0; color: #b48a00;"><i class="fa-solid fa-phone me-1"></i> {{ driver.phone }}</div>
@@ -96,7 +96,7 @@
                             </a>
                         </div>
                     </div>
-
+                    
                     <!-- Tabs -->
                     <ul class="nav nav-pills tp-tabs mb-3">
                         <li class="nav-item">
@@ -190,7 +190,7 @@
                             </div>
                         </div>
 
-                        <!-- Vehicle Tab  هذا معلومات السياره-->
+                        <!-- Vehicle Tab   معلومات السياره-->
                         <div class="tab-pane fade" id="vehicle">
                             <div class="tp-card">
                                 <h6 class="tp-card-title">Vehicle Information</h6>

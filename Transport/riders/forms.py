@@ -59,4 +59,6 @@ class RiderForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['City'].queryset = City.objects.all()
+        # إصلاح KeyError عند عدم وجود City في الحقول
+        if 'City' in self.fields:
+            self.fields['City'].queryset = City.objects.all()

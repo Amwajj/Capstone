@@ -1,12 +1,62 @@
 {% extends "main/base.html" %}
 
-{% block title %}Profile_Rider{% endblock %}
+{% block title %}Rider Profile{% endblock %}
 
 {% block content %}
-
-
-
-
-
-
+<div class="container tp-profile-page py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="tp-shell">
+                <div class="tp-inner">
+                    <div class="tp-header mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="tp-avatar">
+                                <img src="{{ rider.avatar.url }}" alt="Avatar" />
+                            </div>
+                            <div>
+                                <div class="tp-name">{{ rider.user.first_name }} {{ rider.user.last_name }}</div>
+                                <div class="tp-username">@{{ rider.user.username }}</div>
+                                <div class="tp-email"><a href="mailto:{{ rider.user.email }}">{{ rider.user.email }}</a></div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="tp-badge approved">Rider</span>
+                        </div>
+                    </div>
+                    <div class="tp-card">
+                        <div class="tp-card-title mb-3"><i class="fa-solid fa-id-card"></i> Personal Information</div>>
+                        <div class="tp-info-row">
+                            <div class="tp-info-label">National ID / Iqama</div>
+                            <div class="tp-info-value">{{ rider.national_id_or_iqama }}</div>
+                        </div>
+                        <div class="tp-info-row">
+                            <div class="tp-info-label">Gender</div>
+                            <div class="tp-info-value">{{ rider.get_gender_display }}</div>
+                        </div>
+                        <div class="tp-info-row">
+                            <div class="tp-info-label">Date of Birth</div>
+                            <div class="tp-info-value">{{ rider.date_of_birth|date:'Y-m-d' }}</div>
+                        </div>
+                        <div class="tp-info-row">
+                            <div class="tp-info-label">Phone Number</div>
+                            <div class="tp-info-value">{{ rider.phone }}</div>
+                        <div class="tp-info-row">
+                            <div class="tp-info-label">Preferred Car Size</div>
+                            <div class="tp-info-value">
+                                <span class="badge bg-secondary">Small</span>
+                                <span class="badge bg-secondary">Medium</span>
+                                <span class="badge bg-secondary">Large</span>
+                                <span class="ms-2 fw-bold text-dark">{{ rider.get_size_car_display }}</span>
+                            </div>
+                        </div>
+                        <div class="tp-info-row">
+                            <div class="tp-info-label">City</div>
+                            <div class="tp-info-value">{{ rider.City.name }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

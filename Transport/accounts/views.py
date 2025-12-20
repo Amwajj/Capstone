@@ -39,12 +39,16 @@ def sign_up_rider(request: HttpRequest):
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email already exists.')
             return redirect('accounts:sign_up_rider')
+        
+        
 
         # إنشاء User
         user = User.objects.create_user(
             username=username,
             password=password,
-            email=email
+            email=email,
+            first_name=request.POST.get('first_name', ''),
+            last_name=request.POST.get('last_name', '')
         )
 
         # إنشاء Rider باستخدام الفورم

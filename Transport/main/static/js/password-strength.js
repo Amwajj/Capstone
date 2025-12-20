@@ -47,28 +47,23 @@ document.addEventListener('DOMContentLoaded', function() {
  * @returns {number} - مستوى القوة (1=ضعيفة، 2=متوسطة، 3=قوية)
  */
 function checkPasswordStrength(password) {
+    // إذا احتوت كلمة المرور على أحد الرموز المطلوبة
+    if (/[!@#$%٪^&*]/.test(password)) {
+        return 3; // قوية
+    }
+    // الشروط الافتراضية القديمة
     let strength = 0;
-    
-    // فحص الطول
     if (password.length >= 8) strength++;
     if (password.length >= 12) strength++;
-    
-    // فحص الحروف الصغيرة والكبيرة
     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
         strength++;
     }
-    
-    // فحص الأرقام
     if (/\d/.test(password)) {
         strength++;
     }
-    
-    // فحص الرموز الخاصة
     if (/[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/`~]/.test(password)) {
         strength++;
     }
-    
-    // تحديد مستوى القوة النهائي
     if (strength <= 2) return 1; // ضعيفة
     if (strength <= 4) return 2; // متوسطة
     return 3; // قوية

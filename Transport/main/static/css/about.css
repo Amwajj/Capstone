@@ -1,6 +1,6 @@
 .about-page {
     background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
-    padding: 120px 20px 80px;
+    padding: 60px 20px 60px;
 }
 
 /* Hero */
@@ -8,8 +8,6 @@
     text-align: center;
     margin-bottom: 60px;
 }
-
-
 
 .about-icon {
     width: 85px;
@@ -72,6 +70,25 @@
     border-radius: 14px;
     padding: 35px 25px;
     text-align: center;
+    transition: transform 0.18s cubic-bezier(.4,0,.2,1), box-shadow 0.18s cubic-bezier(.4,0,.2,1);
+    cursor: pointer;
+}
+.about-card:active,
+.about-card:focus {
+    transform: scale(1.045);
+    box-shadow: 0 8px 32px 0 rgba(242,194,53,0.18), 0 2px 8px 0 rgba(44,62,80,0.10);
+    z-index: 2;
+}
+
+/* Animation for fade-in on scroll */
+.about-card {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+.about-card.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 .about-card i {
@@ -89,6 +106,10 @@
 .about-card p {
     color: #6b6765;
     line-height: 1.7;
+}
+.about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px 0 rgba(242,194,53,0.18), 0 2px 8px 0 rgba(44,62,80,0.10);
 }
 
 /* Vision & Mission */
