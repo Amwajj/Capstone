@@ -1,6 +1,7 @@
 from django.db import models
 from main.models import City, Neighborhood, Day
 from drivers.models import Driver
+from riders.models import Rider
 
 # Create your models here.
 class Trip (models.Model):
@@ -27,5 +28,24 @@ class Trip (models.Model):
     is_private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     admin_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+
+
+class JoinTrip (models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    ]
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    comment = models.TextField()
     rider_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
     reject_Comment = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta: 
+        unique_together = ('trip','rider')
