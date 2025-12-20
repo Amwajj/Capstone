@@ -12,7 +12,7 @@
                 <div class="auth-card">
 
                     <!-- Back Button -->
-                    <a href="{% url 'accounts:profile_driver' %}" class="btn auth-btn auth-btn-secondary w-100 mb-4 "
+                    <a href="{% url 'accounts:profile_driver' %}" class="btn auth-btn auth-btn-secondary mb-4 "
                         style=" color:#474341; margin:20px ; ">
                         <i class="fa-solid fa-arrow-left me-2"></i> Back to Profile
                     </a>
@@ -60,6 +60,8 @@
                                 {% if form.company.errors %}
                                 <div class="text-danger small">{{ form.company.errors }}</div>
                                 {% endif %}
+
+                                  <style> select.form-select, select.form-control { background-position: right center;}</style>
                             </div>
 
                             <div class="mb-3">
@@ -118,7 +120,7 @@
 
                                 
                                 <!-- input رفع الصورة -->
-                                <input type="file" name="car_registration" accept="image/*" class="form-control">
+                                <input type="file" name="car_registration" accept="image/*" class="form-control"  >
 
 
                                 <!-- رسائل الخطأ -->

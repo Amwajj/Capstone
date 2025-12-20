@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseForbidden
 from django.contrib import messages
 from django.core.paginator import Paginator
-
 from .forms import RiderRequestForm
-from .models import RiderRequest
+from .models import RiderRequest, CommentRiderRequest
 from riders.models import Rider
 from main.models import City, Neighborhood, Day
+
 
 
 
@@ -60,8 +60,9 @@ def detail_rider_request(request:HttpRequest,  rider_request_id):
 
     rider_request = get_object_or_404(RiderRequest, id = rider_request_id)
     rider = rider_request.rider
+    root_comments = rider_request.comments.filter(parent__isnull=True)
 
-    return render(request, "rider_request/rider_request_detail.html", {'rider_request':rider_request,'rider':rider })
+    return render(request, "rider_request/rider_request_detail.html", {'rider_request':rider_request,'rider':rider,  "root_comments": root_comments})
 
 #update the rider request ads form
 @login_required
@@ -101,3 +102,30 @@ def delete_rider_request(request, pk):
         return redirect('rider_request:list_rider_request')
     
     return render(request, "rider_request/rider_request_confirm_delete.html", {'rider_request': rider_request})
+
+@login_required
+def add_comment(request:HttpRequest, rider_request_id):
+
+    if request.method != "POST":
+        return HttpResponseForbidden()
+
+    rider_request = get_object_or_404(RiderRequest, id=rider_request_id)
+
+    parent_id = request.POST.get("parent_id")
+    parent = None
+
+    if parent_id:
+        parent = get_object_or_404(CommentRiderRequest, id=parent_id)
+
+        # التحقق من صلاحيات الرد
+        if parent.user != rider_request.rider.user and parent.user != request.user:
+            return HttpResponseForbidden()
+
+    CommentRiderRequest.objects.create(
+        user=request.user,
+        rider_request=rider_request,
+        comment=request.POST.get("comment"),
+        parent=parent
+    )
+
+    return redirect("rider_request:detail_rider_request", rider_request_id)

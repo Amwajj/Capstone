@@ -37,7 +37,12 @@ class CommentRiderRequest (models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    rider_request = models.ForeignKey(RiderRequest, on_delete= models.CASCADE)
-
+    rider_request = models.ForeignKey(RiderRequest, on_delete= models.CASCADE,  related_name="comments")
+    parent = models.ForeignKey(
+        "self",
+        null=True, blank=True,
+        related_name="replies",
+        on_delete=models.CASCADE
+    )
     def __str__(self):
         return f"{self.user} on {self.comment}"
