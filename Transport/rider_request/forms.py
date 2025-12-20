@@ -7,5 +7,5 @@ class RiderRequestForm(forms.ModelForm):
         fields = [
             'city','days_of_week','start_neighborhood',
             'end_neighborhood','start_time','end_time','start_date','end_date',
-            'total_riders','price','status'
+            'total_riders','price'
         ]

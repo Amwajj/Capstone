@@ -101,6 +101,24 @@
     }
 }
 
+.rider-request-ad-section
+{
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #f8f7f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.rider-request-ad-section h1
+{
+    width: 100%;
+    text-align: center;
+    color: #333;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .hero-title {

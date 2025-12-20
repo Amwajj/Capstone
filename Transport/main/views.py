@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
+from rider_request.models import RiderRequest
 from main.models import Contact
 
 
@@ -16,7 +17,10 @@ from main.models import Contact
 
 def home_view(request:HttpRequest):
 
-    return render(request, "main/home.html")
+    new_rider_request_ads = RiderRequest.objects.all().order_by('-id')
+    rider_requests = new_rider_request_ads[:4]
+
+    return render(request, "main/home.html", {"rider_requests":rider_requests})
 
 #Contact view
 def contact_view(request:HttpRequest):
