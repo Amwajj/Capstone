@@ -62,7 +62,11 @@ def detail_rider_request(request:HttpRequest,  rider_request_id):
     rider = rider_request.rider
     comments = rider_request.comments.filter(parent__isnull=True).order_by('-created_at')
 
-    return render(request, "rider_request/rider_request_detail.html", {'rider_request':rider_request,'rider':rider,  "comments": comments})
+    
+    # ⭐ هل المستخدم الحالي سائق؟
+    is_driver_user = hasattr(request.user, "driver")  # ⭐
+
+    return render(request, "rider_request/rider_request_detail.html", {'rider_request':rider_request,'rider':rider,  "comments": comments, "is_driver_user": is_driver_user})
 
 #update the rider request ads form
 @login_required
@@ -102,30 +106,85 @@ def delete_rider_request(request, pk):
         return redirect('rider_request:list_rider_request')
     
     return render(request, "rider_request/rider_request_confirm_delete.html", {'rider_request': rider_request})
+ 
 
+ 
 @login_required
-def add_comment(request:HttpRequest, rider_request_id):
+def add_comment(request: HttpRequest, rider_request_id):
 
     if request.method != "POST":
         return HttpResponseForbidden()
 
     rider_request = get_object_or_404(RiderRequest, id=rider_request_id)
+    rider_owner = rider_request.rider.user  #  صاحب الإعلان (الراكب)
+
+    content = (request.POST.get("comment") or "").strip()
+    if not content:
+        messages.error(request, "Comment cannot be empty")
+        return redirect("rider_request:detail_rider_request", rider_request_id=rider_request_id)  
 
     parent_id = request.POST.get("parent_id")
     parent = None
 
-    if parent_id:
-        parent = get_object_or_404(CommentRiderRequest, id=parent_id)
+    # helper: نطلع Root Comment لأي رسالة داخل نفس المحادثة
+    def get_root(c: CommentRiderRequest) -> CommentRiderRequest:
+        while c.parent_id is not None:
+            c = c.parent
+        return c
 
-        # التحقق من صلاحيات الرد
-        if parent.user != rider_request.rider.user and parent.user != request.user:
+    #  helper: نطلع آخر رسالة في السلسلة (Leaf) عشان نخلي الرد دائماً على آخر شي
+    def get_last_in_chain(c: CommentRiderRequest) -> CommentRiderRequest:
+        # نفترض إن المحادثة خط واحد (بنفرضه بالصلاحيات)
+        while c.replies.exists():
+            c = c.replies.order_by("created_at").last()
+        return c
+
+    if parent_id:
+        #  الرد لازم يكون على آخر رسالة في السلسلة (يعني نمنع الرد على رسالة قديمة)
+        parent = get_object_or_404(CommentRiderRequest, id=parent_id, rider_request=rider_request)
+        root = get_root(parent)  
+        thread_driver = root.user  #  السائق اللي بدأ المحادثة
+
+        #  تمنع سائق ثاني يدخل يرد على محادثة مو له
+        if request.user != rider_owner and request.user != thread_driver:
             return HttpResponseForbidden()
 
-    CommentRiderRequest.objects.create(
-        user=request.user,
-        rider_request=rider_request,
-        comment=request.POST.get("comment"),
-        parent=parent
-    )
+        #  نفرض الرد يكون على آخر رسالة فقط
+        last_msg = get_last_in_chain(root)  
+        if parent.id != last_msg.id:
+            #  إذا حاول يرد على تعليق قديم، نحوله لآخر رسالة
+            parent = last_msg
 
-    return redirect("rider_request:detail_rider_request", rider_request_id)
+        #  التناوب: إذا آخر رسالة من السائق - اللي يرد الآن لازم الراكب صاحب الإعلان
+        # إذا آخر رسالة من الراكب صاحب الإعلان - اللي يرد الآن لازم نفس السائق عشان ما اكثر ردود
+        if parent.user == thread_driver:
+            # آخر رسالة سائق - الآن لازم الراكب
+            if request.user != rider_owner:
+                return HttpResponseForbidden()
+        else:
+            # آخر رسالة راكب - الآن لازم نفس السائق
+            if request.user != thread_driver:
+                return HttpResponseForbidden()
+
+        #  أنشئ الرد
+        CommentRiderRequest.objects.create(
+            user=request.user,
+            rider_request=rider_request,
+            comment=content,              #  (استخدمنا content بعد strip)
+            parent=parent
+        )
+
+    else:
+        #  Root Comment: فقط السائق يكتب، الراكب (صاحب الإعلان) ممنوع يبدأ
+        if request.user == rider_owner:
+            return HttpResponseForbidden()
+
+        #  أنشئ تعليق رئيسي (بداية محادثة)
+        CommentRiderRequest.objects.create(
+            user=request.user,
+            rider_request=rider_request,
+            comment=content,
+            parent=None
+        )
+
+    return redirect("rider_request:detail_rider_request", rider_request_id=rider_request_id)  

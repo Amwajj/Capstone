@@ -1,0 +1,70 @@
+{# rider_request/component/comment_item.html #}
+
+<div class="border-bottom pb-3 mb-3">
+
+  {# اسم المستخدم + avatar  #}
+  <div class="d-flex align-items-center gap-2">
+
+    {% if node.user.rider %}
+      <a href="{% url 'accounts:profile_rider' %}" class="fw-bold text-decoration-none text-dark">
+        {% if node.user.rider.avatar %}
+          <img src="{{ node.user.rider.avatar.url }}" class="rounded-circle avatar" width="42" height="42">
+        {% endif %}
+        {{ node.user.username }}
+      </a>
+    {% else %}
+      <a href="{% url 'accounts:profile_driver' %}" class="fw-bold text-decoration-none text-dark">
+        {% if node.user.driver.avatar %}
+          <img src="{{ node.user.driver.avatar.url }}" class="rounded-circle avatar" width="42" height="42">
+        {% endif %}
+        {{ node.user.username }}
+      </a>
+    {% endif %}
+
+    <small class="text-muted">{{ node.created_at }}</small>
+  </div>
+
+  <p class="mt-2 mb-2">{{ node.comment }}</p>
+
+  {#  نعرض الردود (لا نهائي) #}
+  {% if node.replies.exists %}
+    <div class="ms-5 ps-3 border-start mt-2">
+      {% for child in node.replies.all %}
+        {% include "rider_request/component/comment_item.html" with node=child rider_owner=rider_owner thread_driver=thread_driver %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {#  reply form يظهر مرة واحدة فقط: على آخر رسالة (Leaf) #}
+  {% if not node.replies.exists %}
+
+    {#  من المسموح يرد الآن؟ تناوب Driver - RiderOwner #}
+    {% if node.user == thread_driver %}
+      {# آخر رسالة من السائق -> الراكب صاحب الإعلان هو اللي يرد #}
+      {% if request.user == rider_owner %}
+        <form method="POST" action="{% url 'rider_request:add_comment' rider_request.id %}" class="ms-4 mt-3">
+          {% csrf_token %}
+          <input type="hidden" name="parent_id" value="{{ node.id }}">
+          <textarea name="comment" required class="form-control mb-1" placeholder="Reply..."></textarea>
+          <button class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-reply me-1"></i> Reply
+          </button>
+        </form>
+      {% endif %}
+    {% else %}
+      {# آخر رسالة من الراكب -> نفس السائق صاحب المحادثة هو اللي يرد #}
+      {% if request.user == thread_driver %}
+        <form method="POST" action="{% url 'rider_request:add_comment' rider_request.id %}" class="ms-4 mt-3">
+          {% csrf_token %}
+          <input type="hidden" name="parent_id" value="{{ node.id }}">
+          <textarea name="comment" required class="form-control mb-1" placeholder="Reply..."></textarea>
+          <button class="btn btn-outline-primary btn-sm">
+            <i class="fa-solid fa-reply me-1"></i> Reply
+          </button>
+        </form>
+      {% endif %}
+    {% endif %}
+
+  {% endif %}
+
+</div>
