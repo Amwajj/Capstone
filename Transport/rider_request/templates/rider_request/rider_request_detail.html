@@ -86,6 +86,7 @@
                     </h3>
 
                     <div class="d-flex gap-2">
+                        <!-- عملية الحذف و التعديل فقط منشئ الإعلان هو يمكنه فعل ذلك -->
                         {% if rider_request.rider.user == request.user %}
                         <a href="{% url 'rider_request:update_rider_request' rider_request.id %}"
                             class="btn btn-sm btn-outline-warning fw-bold">

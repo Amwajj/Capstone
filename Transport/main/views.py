@@ -11,8 +11,10 @@ from django.template.loader import render_to_string
 
 #for authentications (superuser)
 from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.http import require_POST
+
 
 from rider_request.models import RiderRequest
 from main.models import Contact
@@ -74,8 +76,29 @@ def about_view(request: HttpRequest):
 #Admin view
 def manager_view(request: HttpRequest):
 
-    driver_list = Driver.objects.filter(status = 'PENDING')
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return HttpResponseForbidden("Access Denied: You do not have the required permissions to view this page.")
 
-    return render(request, "main/manager.html", {"drivers":driver_list})
+    if request.method == "POST":
+        driver_id = request.POST.get('driver_id')
+        action = request.POST.get('action')
+        
+        driver = get_object_or_404(Driver, id=driver_id)
+        
+        if action == "approve":
+            driver.status = 'APPROVED'
+            driver.save()
+            messages.success(request, f"Driver {driver.user.username} approved successfully!")
+        elif action == "reject":
+            driver.status = 'REJECTED'
+            driver.save()
+            messages.error(request, f"Driver {driver.user.username} has been rejected.")    
+        
+
+        return redirect('main:manager_view') 
+
+
+    driver_list = Driver.objects.filter(status='PENDING')
+    return render(request, "main/manager.html", {"drivers": driver_list})
 
 

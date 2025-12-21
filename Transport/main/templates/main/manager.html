@@ -4,24 +4,55 @@
 
 {% block style %}
 <style>
+    .page-title
+    {
+        margin-top: 30px;
+        margin-bottom: 20px;
+        font-weight: 700;
+        color: #474341;
+        text-align: center;
+    }
+    h3
+    {
+        width: 85%;
+        display: block;
+        color: #474341;
+        align-items: center;
+    }
+    .section-title {
+
+        border-bottom: 2px solid #f2c235;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+    }
+    .section-title th
+    {
+        font-weight: 600;
+        font-size: large;
+        color: #474341;        
+    }
     table img
     {
         width: 150px;
         height: 90px;
-        border: 1px double #f2c235;
+        border: 1px double #474341;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-title d-flex aligin-item justify-content">
-    <h1>
-        Admin page
-    </h1>
+<div class="d-flex flex-column justify-content-center align-items-center mt-5 mb-4">
+    <h1 class="page-title">Manager Dashboard</h1>
+    <h3>
+        <i class="fa-solid fa-list text-warning"></i>
+        Drivers Pending List
+    </h3>    
 </div>
-<div class="container mt-3">
-    <table class="table">
-        <thead>
+
+<div class="container-fluid d-flex flex-row align-items-center justify-content-center gap-5 mb-5">
+
+    <table class="table table-hover align-middle">
+        <thead class="section-title">
             <tr>
                 <th>Driver Name</th>
                 <th>ID card</th>
@@ -29,10 +60,9 @@
                 <th>Date of birth</th>
                 <th>Nationality</th>
                 <th>Phone</th>
-                <th>licenses</th>
-                <th>car_registration</th>
-                <th>Action</th>
-            </tr>
+                <th>Licenses</th>
+                <th>Car Registration</th>
+                <th class="text-center">Action</th> </tr>
         </thead>
         <tbody>
             {% for driver in drivers %}
@@ -40,29 +70,43 @@
                 <td>{{ driver.user.username }}</td>
                 <td>{{ driver.national_id_or_iqama }}</td>
                 <td>{{ driver.gender }}</td>
-                <td>{{ driver.date_of_birth}}</td>
+                <td>{{ driver.date_of_birth }}</td>
                 <td>{{ driver.nationality }}</td>
-                <td>{{ driver.phone}}</td>
-                <td><img src="{{ driver.licenses.url }}" alt=""></td>
-                <td><img src="{{ driver.car_registration.url }}" alt=""></td>
+                <td>{{ driver.phone }}</td>
                 <td>
+                    {% if driver.licenses %}
+                    <img src="{{ driver.licenses.url }}" alt="License" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                    {% endif %}
+                </td>
+                <td>
+                    {% if driver.car_registration %}
+                    <img src="{{ driver.car_registration.url }}" alt="Car Reg" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="d-flex gap-2 justify-content-center">
                         <form action="" method="POST">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-success">Approve</button>
+                            <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
                         </form>
-                
+
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="3" style="text-align: center; padding: 20px;">
-                    <p>There are no drivers currently in the pending list.</p>
+                <td colspan="9" style="text-align: center; padding: 40px;">
+                    <p class="text-muted">There are no drivers currently in the pending list.</p>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table> 
 </div>
-
-
 {% endblock %}

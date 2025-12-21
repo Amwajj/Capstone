@@ -45,7 +45,7 @@ def create_rider_request(request:HttpRequest):
 
 #Showing the list of rider request ads
 def list_rider_request(request:HttpRequest):
-    
+
     rider_requests = RiderRequest.objects.all().order_by('-id') 
 
     page_number = request.GET.get("page",1)

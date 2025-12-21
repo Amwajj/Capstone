@@ -46,12 +46,12 @@
     </div>
   </div>
 </div>
-
+{% if user.is_authenticated and user.driver %}
 <div class="rider-request-ad-section">
     <div class="rider-request-title d-flex justify-content-between align-items-center">
         <h1 class="animated-gradient-title">Rider Request Latest Ads</h1>
         <a href="{% url 'rider_request:list_rider_request' %}">
-            Rider Request List<i class="bi bi-arrow-right-circle-fill"></i>
+            Rider Request List <i class="fa-solid fa-arrow-right"></i>
         </a>    
     </div>
     <div class="row g-4">
@@ -103,4 +103,5 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}
 {% endblock %}
