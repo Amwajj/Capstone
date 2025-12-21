@@ -1,6 +1,8 @@
 {% extends "main/base.html" %}
 {% load static %}
 
+{% block title %}Home{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 <script src="{% static 'js/home.js' %}"></script>
@@ -46,13 +48,15 @@
 </div>
 
 <div class="rider-request-ad-section">
-    <div class="rider-request-title">
+    <div class="rider-request-title d-flex justify-content-between align-items-center">
+        <h1 class="animated-gradient-title">Rider Request Latest Ads</h1>
         <a href="{% url 'rider_request:list_rider_request' %}">
-        <h1>Rider Request Latest Ads</h1></a>
+            Rider Request List<i class="bi bi-arrow-right-circle-fill"></i>
+        </a>    
     </div>
     <div class="row g-4">
         {% for ads in rider_requests %}
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-6 ">
                 <div class="card shadow-sm border-0 position-relative overflow-hidden card-content">
 
                     <div class="card-body p-4">

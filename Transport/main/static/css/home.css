@@ -113,9 +113,18 @@
     justify-content: center;
     flex-direction: column;
 }
+.rider-request-title
+{
+    width: 90%;
+}
+.rider-request-title a
+{
+    color: #7e5e27;
+    text-decoration: none;
+}
 .rider-request-title h1
 {
-    width: 100%;
+    
     text-align: center;
     color: #333;
     padding: 20px;

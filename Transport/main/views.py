@@ -9,6 +9,11 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
+#for authentications (superuser)
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.http import require_POST
+
 from rider_request.models import RiderRequest
 from main.models import Contact
 from drivers.models import Driver
@@ -64,3 +69,13 @@ def contact_message_view(request:HttpRequest):
 # About Us view
 def about_view(request: HttpRequest):
     return render(request, "main/about.html")
+
+
+#Admin view
+def manager_view(request: HttpRequest):
+
+    driver_list = Driver.objects.filter(status = 'PENDING')
+
+    return render(request, "main/manager.html", {"drivers":driver_list})
+
+
