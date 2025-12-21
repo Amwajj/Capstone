@@ -1,0 +1,68 @@
+{% extends "main/base.html" %}
+
+{% block title %}Manager{% endblock %}
+
+{% block style %}
+<style>
+    table img
+    {
+        width: 150px;
+        height: 90px;
+        border: 1px double #f2c235;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-title d-flex aligin-item justify-content">
+    <h1>
+        Admin page
+    </h1>
+</div>
+<div class="container mt-3">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Driver Name</th>
+                <th>ID card</th>
+                <th>Gender</th>
+                <th>Date of birth</th>
+                <th>Nationality</th>
+                <th>Phone</th>
+                <th>licenses</th>
+                <th>car_registration</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for driver in drivers %}
+            <tr>
+                <td>{{ driver.user.username }}</td>
+                <td>{{ driver.national_id_or_iqama }}</td>
+                <td>{{ driver.gender }}</td>
+                <td>{{ driver.date_of_birth}}</td>
+                <td>{{ driver.nationality }}</td>
+                <td>{{ driver.phone}}</td>
+                <td><img src="{{ driver.licenses.url }}" alt=""></td>
+                <td><img src="{{ driver.car_registration.url }}" alt=""></td>
+                <td>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center; padding: 20px;">
+                    <p>There are no drivers currently in the pending list.</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> 
+</div>
+
+
+{% endblock %}
