@@ -72,6 +72,7 @@
     }
     .profile-info-row i { margin-right: 8px; color: #ffc266; font-size: 1.2em; }
 </style>
+{% if request.user == driver.user %}
 <div class="tp-profile-page">
     <div class="tp-shell">
         <div class="tp-inner">
@@ -308,15 +309,15 @@
                                 </p>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
 </div>
+{% endif %}
+
+{% if request.user != driver.user %}
 
 <div class="container tp-profile-page py-4">
     <div class="row justify-content-center">
@@ -389,6 +390,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 <script>
     // حركة دخول البطاقة والصورة
     window.addEventListener('DOMContentLoaded', function() {

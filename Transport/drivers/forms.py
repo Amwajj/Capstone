@@ -54,12 +54,7 @@ class DriverForm(forms.ModelForm):
         label='Driving License *',
         widget=forms.FileInput(attrs={'class': 'form-control'})
     )
-    car_registration = forms.ImageField(
-        required=True,
-        label='Car Registration (Istimara) *',
-        widget=forms.FileInput(attrs={'class': 'form-control'})
-    )
-    
+   
     class Meta:
         model = Driver
         exclude = ['user', 'status', 'rating', 'car']

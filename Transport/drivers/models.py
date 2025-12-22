@@ -54,7 +54,6 @@ class Driver (models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True)
     nationality = models.ForeignKey(Nationality, on_delete=models.SET_NULL, blank=True, null=True)
     licenses = models.ImageField(upload_to="images/licenses/", blank=True, null=True)
-    car_registration = models.ImageField(upload_to="images/car_registrations/", blank=True, null=True)
     car = models.OneToOneField(Car, on_delete=models.CASCADE, blank=True, null=True)
 
     rating = models.SmallIntegerField(choices=RatingChoices.choices ,default=RatingChoices.STAR5)
