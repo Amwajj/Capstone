@@ -16,7 +16,7 @@ def driver_car_view(request: HttpRequest) -> HttpResponse:
 
     if not driver:
         messages.error(request, "No driver profile found. Please contact admin.")
-        return redirect("accounts:profile_driver")
+        return redirect("accounts:profile_driver",driver_id=driver.id)
 
     # جلب السيارة المرتبطة بالسائق إذا وجدت
     car = getattr(driver, 'car', None)
@@ -28,7 +28,7 @@ def driver_car_view(request: HttpRequest) -> HttpResponse:
             driver.car = car         # ربط السيارة بالسائق
             driver.save()
             messages.success(request, "Car information updated successfully.")
-            return redirect("accounts:profile_driver")
+            return redirect("accounts:profile_driver",driver_id=driver.id)
     else:
         form = CarForm(instance=car)
 

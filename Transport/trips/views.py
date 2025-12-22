@@ -113,7 +113,7 @@ def create_trip_view(request:HttpRequest):
             request,
             "Your account is under review. You can create trips only after admin approval."
         )
-        return redirect('accounts:profile_driver')
+        return redirect("accounts:profile_driver",driver_id=driver.id)
     
     if request.method == "POST":
         form = TripForm(request.POST)
@@ -179,7 +179,7 @@ def delete_trip_view(request, trip_id):
         except Exception as e:
              messages.error(request, f"Error: {e}", "alert-danger")
 
-    return redirect("accounts:profile_driver")
+    return redirect("accounts:profile_driver",driver_id=trip.driver.id)
 
 
 @login_required

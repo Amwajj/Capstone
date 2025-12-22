@@ -66,9 +66,9 @@
                             </a>
                             <ul class="dropdown-menu" id="profile-dropdown-menu">
                                 {% if user.driver %}
-                                    <li><a href="{% url 'accounts:profile_driver' %}" class="dropdown-link"><i class="fa-solid fa-user"></i> Profile</a></li>
+                                    <li><a href="{% url 'accounts:profile_driver' user.driver.id %}" class="dropdown-link"><i class="fa-solid fa-user"></i> Profile</a></li>
                                 {% elif user.rider %}
-                                    <li><a href="{% url 'accounts:profile_rider' %}" class="dropdown-link"><i class="fa-solid fa-user"></i> Profile</a></li>
+                                    <li><a href="{% url 'accounts:profile_rider' user.rider.id %}" class="dropdown-link"><i class="fa-solid fa-user"></i> Profile</a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a href="{% url 'accounts:log_out' %}" class="dropdown-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>

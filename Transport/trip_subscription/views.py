@@ -26,7 +26,7 @@ def checkout_srtipe_view(request:HttpRequest, join_trip_id):
     
     if join_trip.rider_status != 'APPROVED':
         messages.warning(request, "You cannot proceed with payment until your trip request is approved.","alert-warning")
-        return redirect("accounts:profile_rider")
+        return redirect("accounts:profile_rider", rider_id=join_trip.rider.id)
     
     trip = join_trip.trip
 

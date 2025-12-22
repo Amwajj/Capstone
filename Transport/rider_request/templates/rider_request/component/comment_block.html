@@ -12,59 +12,41 @@
 
       {#  Root Comment: السائق فقط يكتب #}
       {% if is_driver_user and request.user != rider_request.rider.user %}
-        <form method="POST" action="{% url 'rider_request:add_comment' rider_request.id %}" class="mb-4">
-          {% csrf_token %}
-          <textarea name="comment" required class="form-control mb-2" placeholder="Write your comment..."></textarea>
-          <button class="btn btn-primary btn-sm">
-            <i class="fa-solid fa-paper-plane me-1"></i> Send
-          </button>
-        </form>
+<form method="POST"
+      action="{% url 'rider_request:add_comment' rider_request.id %}"
+      class="mb-4"
+      onsubmit="return confirm('Editing comments is not allowed after submission.\nAre you sure you want to submit?');">
+
+    {% csrf_token %}
+
+    <textarea name="comment"
+              required
+              class="form-control mb-2"
+              placeholder="Write your comment..."></textarea>
+
+    <button type="submit" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-paper-plane me-1"></i> Send
+    </button>
+</form>
+
+
       {% endif %}
 
       {#  عرض كل المحادثات (Root comments) #}
+      <div class="me-3">
+        
       {% for comment in comments %}
+      
         {% include "rider_request/component/comment_item.html" with node=comment rider_owner=rider_request.rider.user thread_driver=comment.user %}
-      {% empty %}
+      <hr>
+
+        {% empty %}
         <p class="text-muted">No comments yet.</p>
       {% endfor %}
-
-    </div>
-  </div>
-</div>
-
-
-<!-- Confirm Send Modal -->
-<div class="modal fade" id="confirmSendModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Confirm Submission</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        <p>Editing comments or replies is not allowed after submission.</p>
-        <p class="fw-bold">Are you sure you want to submit?</p>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal">
-          No, Go Back
-        </button>
-
-        <button type="button"
-                class="btn btn-primary"
-                id="confirmSendBtn">
-          Yes, Submit
-        </button>
+      
       </div>
 
     </div>
   </div>
 </div>
-
-
 

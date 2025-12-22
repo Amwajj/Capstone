@@ -167,15 +167,16 @@ def profile_driver(request: HttpRequest, driver_id=None):
     عرض بروفايل أي سائق لأي مستخدم مسجّل دخول (راكب أو سائق)
     إذا لم يُحدد driver_id، يعرض بروفايل السائق الحالي
     """
-    if driver_id:
-        try:
+    try:
+        if driver_id:
             driver = Driver.objects.get(id=driver_id)
-        except Driver.DoesNotExist:
+        else:
+        # إذا لم يُحدد id، يعرض بروفايل السائق الحالي
+            driver = request.user.driver
+    except Driver.DoesNotExist:
             messages.error(request, "Driver not found.")
             return redirect('main:home_view')
-    else:
-        # إذا لم يُحدد id، يعرض بروفايل السائق الحالي
-        driver = request.user.driver
+    
     car = driver.car if hasattr(driver, 'car') else None
     return render(request, 'accounts/profile_driver.html', {'driver': driver, 'car': car})
 
@@ -189,7 +190,7 @@ def edit_driver_profile(request: HttpRequest):
         if driver_form.is_valid():
             driver_form.save()
             messages.success(request, 'Profile updated successfully!', "alert-success")
-            return redirect('accounts:profile_driver')
+            return redirect("accounts:profile_driver",driver_id=driver.id)
         else:
             messages.error(request, 'Please correct the errors below.', "alert-danger")
     else:
@@ -246,7 +247,7 @@ def edit_rider_profile(request: HttpRequest):
         if rider_form.is_valid():
             rider_form.save()
             messages.success(request, 'Profile updated successfully!', "alert-success")
-            return redirect('accounts:profile_rider')
+            return redirect('accounts:profile_rider', rider_id=rider.id)
         else:
             messages.error(request, 'Please correct the errors below.', "alert-danger")
     else:
