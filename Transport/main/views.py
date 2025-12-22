@@ -4,6 +4,9 @@ from django.http import HttpRequest
 #for messages notifications
 from django.contrib import messages
 
+#for Pagination
+from django.core.paginator import Paginator
+
 #for sending email message
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -78,27 +81,50 @@ def manager_view(request: HttpRequest):
 
     if not request.user.is_authenticated or not request.user.is_superuser:
         return HttpResponseForbidden("Access Denied: You do not have the required permissions to view this page.")
-
+    
     if request.method == "POST":
-        driver_id = request.POST.get('driver_id')
         action = request.POST.get('action')
+        driver_id = request.POST.get('driver_id')
+        trip_id = request.POST.get('trip_id')
         
-        driver = get_object_or_404(Driver, id=driver_id)
+        if driver_id:
+            driver = get_object_or_404(Driver, id=driver_id)
+            
+            if action == "approve":
+                driver.status = 'APPROVED'
+                driver.save()
+                messages.success(request, f"Driver {driver.user.username} approved successfully!")
+            elif action == "reject":
+                driver.status = 'REJECTED'
+                driver.save()
+                messages.error(request, f"Driver {driver.user.username} has been rejected.")
         
-        if action == "approve":
-            driver.status = 'APPROVED'
-            driver.save()
-            messages.success(request, f"Driver {driver.user.username} approved successfully!")
-        elif action == "reject":
-            driver.status = 'REJECTED'
-            driver.save()
-            messages.error(request, f"Driver {driver.user.username} has been rejected.")    
+        elif trip_id:
+            trip = get_object_or_404(Trip, id=trip_id)
+            if action == "approve":
+                trip.admin_status = 'APPROVED'
+                messages.success(request, f"Trip #{trip.id} approved!")
+            elif action == "reject":
+                trip.admin_status = 'REJECTED'
+                messages.error(request, f"Trip #{trip.id} rejected.")
+            trip.save()    
         
 
         return redirect('main:manager_view') 
 
-
     driver_list = Driver.objects.filter(status='PENDING')
-    return render(request, "main/manager.html", {"drivers": driver_list})
+    trip_list = Trip.objects.filter(admin_status = 'PENDING')
+
+    #Driver Pagination
+    paginator_drivers = Paginator(driver_list, 7)
+    page_number_drivers = request.GET.get('page_drivers')
+    drivers_page_obj = paginator_drivers.get_page(page_number_drivers)
+
+    #Trip Pagination
+    paginator_trips = Paginator(trip_list, 7)
+    page_number_trips = request.GET.get('page_trips')
+    trips_page_obj = paginator_trips.get_page(page_number_trips)
+
+    return render(request, "main/manager.html", {"drivers": drivers_page_obj, "trips": trips_page_obj})
 
 
