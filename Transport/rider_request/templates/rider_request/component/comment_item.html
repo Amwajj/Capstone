@@ -21,11 +21,12 @@
       </a>
     {% endif %}
 
-    <small class="text-muted">{{ node.created_at }}</small>
+
   </div>
 
   <p class="mt-2 mb-2">{{ node.comment }}</p>
-
+  <small class="text-muted" style="display:inline-block; transform: skewX(10deg);">
+        {{ node.created_at }}</small>
   {#  نعرض الردود (لا نهائي) #}
   {% if node.replies.exists %}
   <div class="ms-5 m-4 ps-3 mt-2">
@@ -42,29 +43,52 @@
     {% if node.user == thread_driver %}
       {# آخر رسالة من السائق -> الراكب صاحب الإعلان هو اللي يرد #}
       {% if request.user == rider_owner %}
-        <form method="POST" action="{% url 'rider_request:add_comment' rider_request.id %}" class="ms-4 mt-3">
-          {% csrf_token %}
-          <input type="hidden" name="parent_id" value="{{ node.id }}">
-          <textarea name="comment" required class="form-control mb-1" placeholder="Reply..."></textarea>
-          <button class="btn btn-outline-secondary btn-sm">
-            <i class="fa-solid fa-reply me-1"></i> Reply
-          </button>
+        <form method="POST"
+            action="{% url 'rider_request:add_comment' rider_request.id %}"
+            class="ms-4 mt-3"
+            onsubmit="return confirm('Editing replies is not allowed after submission.\nAre you sure you want to submit this reply?');">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="parent_id" value="{{ node.id }}">
+
+            <textarea name="comment"
+                    required
+                    class="form-control mb-1"
+                    placeholder="Reply..."></textarea>
+
+            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <i class="fa-solid fa-reply me-1"></i> Reply
+            </button>
         </form>
+
       {% endif %}
     {% else %}
       {# آخر رسالة من الراكب -> نفس السائق صاحب المحادثة هو اللي يرد #}
       {% if request.user == thread_driver %}
-        <form method="POST" action="{% url 'rider_request:add_comment' rider_request.id %}" class="ms-4 mt-3">
-          {% csrf_token %}
-          <input type="hidden" name="parent_id" value="{{ node.id }}">
-          <textarea name="comment" required class="form-control mb-1" placeholder="Reply..."></textarea>
-          <button class="btn btn-outline-primary btn-sm">
-            <i class="fa-solid fa-reply me-1"></i> Reply
-          </button>
+        <form method="POST"
+            action="{% url 'rider_request:add_comment' rider_request.id %}"
+            class="ms-4 mt-3"
+            onsubmit="return confirm('Editing replies is not allowed after submission.\nAre you sure you want to submit this reply?');">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="parent_id" value="{{ node.id }}">
+
+            <textarea name="comment"
+                    required
+                    class="form-control mb-1"
+                    placeholder="Reply..."></textarea>
+
+            <button type="submit" class="btn btn-outline-primary btn-sm">
+                <i class="fa-solid fa-reply me-1"></i> Reply
+            </button>
         </form>
+
+        
       {% endif %}
     {% endif %}
-<hr>
+    
   {% endif %}
 
 </div>
