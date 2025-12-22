@@ -128,22 +128,7 @@
                                 {% endif %}
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">Car Registration (Istimara)</label>
-                                {% if driver.car_registration %}
-                                    <div class="mb-2">
-                                        <a href="{{ driver.car_registration.url }}" target="_blank">
-                                            <img src="{{ driver.car_registration.url }}" alt="Current Registration" class="tp-image-preview">
-                                        </a>
-                                        <small class="d-block text-muted">Current registration</small>
-                                    </div>
-                                {% endif %}
-                                {{ form.car_registration }}
-                                <small class="text-muted">Upload new registration (optional)</small>
-                                {% if form.car_registration.errors %}
-                                    <div class="text-danger small">{{ form.car_registration.errors }}</div>
-                                {% endif %}
-                            </div>
+                           
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg">
