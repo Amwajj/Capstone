@@ -1,6 +1,6 @@
 {# rider_request/component/comment_item.html #}
 
-<div class="border-bottom pb-3 mb-3">
+<div class=" pb-3 mb-3">
 
   {# اسم المستخدم + avatar  #}
   <div class="d-flex align-items-center gap-2">
@@ -28,7 +28,7 @@
 
   {#  نعرض الردود (لا نهائي) #}
   {% if node.replies.exists %}
-    <div class="ms-5 ps-3 border-start mt-2">
+  <div class="ms-5 m-4 ps-3 mt-2">
       {% for child in node.replies.all %}
         {% include "rider_request/component/comment_item.html" with node=child rider_owner=rider_owner thread_driver=thread_driver %}
       {% endfor %}
@@ -64,7 +64,7 @@
         </form>
       {% endif %}
     {% endif %}
-
+<hr>
   {% endif %}
 
 </div>

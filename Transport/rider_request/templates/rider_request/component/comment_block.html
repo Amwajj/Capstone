@@ -22,11 +22,13 @@
       {% endif %}
 
       {#  عرض كل المحادثات (Root comments) #}
+      <div class="me-3">
       {% for comment in comments %}
         {% include "rider_request/component/comment_item.html" with node=comment rider_owner=rider_request.rider.user thread_driver=comment.user %}
       {% empty %}
         <p class="text-muted">No comments yet.</p>
       {% endfor %}
+      </div>
 
     </div>
   </div>
