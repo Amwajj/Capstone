@@ -13,6 +13,8 @@ from main.models import City, Nationality
 from trips.models import Trip, JoinTrip
 from django.contrib.auth.decorators import login_required
 from django.db import transaction  
+from django.utils.http import url_has_allowed_host_and_scheme  
+
 from django.db.models import Count, Q
 
 
@@ -108,6 +110,18 @@ def sign_up_rider(request: HttpRequest):
     cities = City.objects.all()
     return render(request, 'accounts/signup_rider.html', {'form': form, 'cities': cities})
 
+def _render_driver_signup(request, form):
+    cities = City.objects.all()
+    nationalities = Nationality.objects.all()
+    return render(
+        request,
+        'accounts/signup_driver.html',
+        {
+            'form': form,
+            'cities': cities,
+            'nationalities': nationalities
+        }
+    )
 
 def sign_up_driver(request: HttpRequest):
     """تسجيل سائق جديد"""
@@ -120,24 +134,26 @@ def sign_up_driver(request: HttpRequest):
         confirm_password = request.POST.get('confirm_password')
         email = request.POST.get('email')
 
-        # Validations (كما هي)
+        driver_form = DriverForm(request.POST, request.FILES)
+
+
+        # Validations 
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.', "alert-warning")
-            return redirect('accounts:sign_up_driver')
+            return _render_driver_signup(request, driver_form)
 
         if len(password) < 8:
             messages.error(request, 'Password must be at least 8 characters.', "alert-warning")
-            return redirect('accounts:sign_up_driver')
+            return _render_driver_signup(request, driver_form)
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists.', "alert-warning")
-            return redirect('accounts:sign_up_driver')
+            return _render_driver_signup(request, driver_form)
 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email already exists.', "alert-warning")
-            return redirect('accounts:sign_up_driver')
+            return _render_driver_signup(request, driver_form)
 
-        driver_form = DriverForm(request.POST, request.FILES)
 
         try:  # ⭐
             with transaction.atomic():  # ⭐
@@ -159,15 +175,11 @@ def sign_up_driver(request: HttpRequest):
                     raise ValueError("Invalid driver form")  # ⭐
 
         except ValueError:
-            cities = City.objects.all()  # ⭐
-            nationalities = Nationality.objects.all()  # ⭐
-            return render(
-                request,
-                'accounts/signup_driver.html',
-                {'form': driver_form, 'cities': cities, 'nationalities': nationalities},
-            )  # ⭐
+            # أخطاء الفورم - نرجّع نفس الصفحة مع البيانات
+            return _render_driver_signup(request, driver_form)
 
         except Exception:
+            # أي خطأ غير متوقع
             return render(request, '403.html', status=403)  # ⭐
 
         login(request, user)
@@ -176,20 +188,19 @@ def sign_up_driver(request: HttpRequest):
             f'Welcome {username}! You are registered as a Driver. Your account is pending approval.',
             "alert-info"
         )
+        return redirect('accounts:sign_in')  
+
 
 
     # GET request
     form = DriverForm()
-    cities = City.objects.all()
-    nationalities = Nationality.objects.all()
-    return render(
-        request,
-        'accounts/signup_driver.html',
-        {'form': form, 'cities': cities, 'nationalities': nationalities}
-    )
+    return _render_driver_signup(request, form)
+
 
 
 def sign_in(request: HttpRequest):
+
+    next_url = request.GET.get("next") or request.POST.get("next")  
 
 
     if request.method == 'POST':
@@ -197,12 +208,19 @@ def sign_in(request: HttpRequest):
         password = request.POST['password']
 
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return redirect(request.GET.get("next", "/"))
+
+    # ⭐ حماية من open redirect
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+                return redirect(next_url)  # ⭐
+
+            return redirect("main:home_view")  # ⭐
+        
         else:
             messages.error(request, 'Invalid username or password.', "alert-danger")
-            return redirect('accounts:sign_in')
+            return render(request, 'accounts/signin.html')
 
     return render(request, 'accounts/signin.html')
 

@@ -73,7 +73,12 @@
                                     <li><a href="{% url 'accounts:profile_rider' user.rider.id %}" class="dropdown-link"><i class="fa-solid fa-user"></i> Profile</a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a href="{% url 'accounts:log_out' %}" class="dropdown-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                                <li>
+                                    <a href="{% url 'accounts:log_out' %}?next={{ request.get_full_path|urlencode }}" class="dropdown-link">
+                                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                    </a> 
+                                </li>
+
                             </ul>
                         </li>
                     {% else %}
@@ -83,7 +88,11 @@
                                 <li><a href="{% url 'accounts:sign_up_rider' %}" class="dropdown-link"><i class="fa-solid fa-user"></i> Rider</a></li>
                                 <li><a href="{% url 'accounts:sign_up_driver' %}" class="dropdown-link"><i class="fa-solid fa-car"></i> Driver</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a href="{% url 'accounts:sign_in' %}" class="dropdown-link"><i class="fa-solid fa-right-to-bracket"></i> Sign In</a></li>
+                                <li>
+                                    <a href="{% url 'accounts:sign_in' %}?next={{ request.get_full_path|urlencode }}" class="dropdown-link">
+                                        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+                                    </a> 
+                                </li>
                             </ul>
                         </li>
                     {% endif %}

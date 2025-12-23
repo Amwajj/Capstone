@@ -33,13 +33,19 @@
                         {% endif %}
                         
                         <!-- Form -->
-                        <form method="POST" action="{% url 'accounts:sign_in' %}" class="auth-form">
+                        <form method="POST" action="{% url 'accounts:sign_in' %}" class="auth-form"> <!-- ⭐ -->
+
                             {% csrf_token %}
+
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
                             
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" 
-                                       placeholder="Enter your username" required autofocus>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    value="{{ request.POST.username|default:'' }}"
+                                    placeholder="Enter your username" required autofocus>
+
                             </div>
                             
                             <div class="mb-4">
