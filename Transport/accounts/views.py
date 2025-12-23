@@ -13,6 +13,7 @@ from main.models import City, Nationality
 from trips.models import Trip, JoinTrip
 from django.contrib.auth.decorators import login_required
 from django.db import transaction  
+from django.db.models import Count, Q
 
 
 #  Helper لتقليل التكرار 
@@ -229,7 +230,16 @@ def profile_driver(request: HttpRequest, driver_id=None):
     car = driver.car if hasattr(driver, 'car') else None
     # جلب جميع الرحلات التي أنشأها السائق
     trips = driver.trips.all().order_by('-created_at')
-    return render(request, 'accounts/profile_driver.html', {'driver': driver, 'car': car, 'trips': trips})
+
+    subscriptions = driver.trips.filter(
+    admin_status='APPROVED'
+    ).annotate(
+    subscribed_count=Count(
+        'jointrip',  
+        filter=Q(jointrip__rider_status='APPROVED')
+    )
+    ).order_by('-created_at')
+    return render(request, 'accounts/profile_driver.html', {'driver': driver, 'car': car, 'trips': trips,'subscriptions':subscriptions})
 
 
 @login_required

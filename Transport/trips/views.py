@@ -11,7 +11,8 @@ from drivers.models import Driver
 from riders.models import Rider
 from .forms import TripForm, JoinTripForm
 from main.models import City, Neighborhood, Day
-from django.db.models import Q
+from django.db.models import Q ,Count, F
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -53,12 +54,24 @@ def all_trip_view(request: HttpRequest):
     if end_date:
         trips = trips.filter(end_date__lte=end_date)
 
+    # استبعاد الرحلات التي انتهى تاريخها
+    today = timezone.now().date()
+    trips = trips.filter(end_date__gte=today)
+
+    # استبعاد الرحلات الممتلئة
+    trips = trips.annotate(
+        accepted_riders=Count('jointrip', filter=Q(jointrip__rider_status='ACCEPTED'))
+    ).filter(accepted_riders__lt=F('total_riders'))
 
     # منع التكرار
     trips = trips.distinct()
+
+    page_number = request.GET.get("page",1)
+    paginator = Paginator(trips, 6)
+    trips_page =paginator.get_page(page_number)
     
 
-    return render(request, 'trips/trips_list.html', {'trips': trips})
+    return render(request, 'trips/trips_list.html', {'trips': trips, 'trips_page':trips_page})
 
 
 def trip_detail_view(request:HttpRequest, trip_id):
@@ -206,6 +219,13 @@ def join_trip_view(request:HttpRequest, trip_id):
         form = JoinTripForm(request.POST)
         if form.is_valid():
             join_req = form.save(commit=False)
+            if join_req.start_date < trip.start_date or join_req.end_date > trip.end_date:
+                messages.error(
+                    request,
+                    f"The date must be between {trip.start_date} and {trip.end_date}.",
+                    "alert-danger"
+                )
+                return redirect('trips:trip_detail_view', trip_id=trip_id)
             join_req.trip = trip
             join_req.rider = rider
             join_req.save()
