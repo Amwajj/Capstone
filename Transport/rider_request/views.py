@@ -55,26 +55,29 @@ def list_rider_request(request:HttpRequest):
     return render(request, "rider_request/rider_request_ads_list.html", {'rider_requests': rider_requests_page})
 
 
-#Showing the details of rider request ads
-def detail_rider_request(request:HttpRequest,  rider_request_id):
+   # Showing the details of rider request ads
+def detail_rider_request(request:HttpRequest, rider_request_id):
 
     rider_request = get_object_or_404(RiderRequest, id = rider_request_id)
     rider = rider_request.rider
     comments = rider_request.comments.filter(parent__isnull=True).order_by('-created_at')
+    
 
-    #لعرض_طلبات_الانضمام
-    join_requests = rider_request.all_join_requests.all()
-    #لحساب_عدد_الركاب_المقبولين
-    approved_count = rider_request.all_join_requests.filter(rider_status='APPROVED').count()
-    #حساب_عدد_المقاعد_المتبقية
+    join_requests = rider_request.all_join_requests.filter(rider_status='PENDING')
+
+
+    approved_requests = rider_request.all_join_requests.filter(rider_status='APPROVED')
+
+    # حساب عدد الركاب المقبولين 
+    approved_count = approved_requests.count()
+    
+    # حساب عدد المقاعد المتبقية
     remaining_seats = max(0, rider_request.total_riders - approved_count)
 
     has_joined = False
-    #لعرض_حالة_الطلب_لصاحب_الطلب
     user_status = None
 
     if request.user.is_authenticated and hasattr(request.user, 'rider'):
-   
         join_req = JoinRequestTrip.objects.filter(
             rider_request=rider_request, 
             rider=request.user.rider
@@ -84,11 +87,20 @@ def detail_rider_request(request:HttpRequest,  rider_request_id):
             has_joined = True
             user_status = join_req.get_rider_status_display()
 
-    
-    # ⭐ هل المستخدم الحالي سائق؟
-    is_driver_user = hasattr(request.user, "driver")  # ⭐
+    is_driver_user = hasattr(request.user, "driver")
 
-    return render(request, "rider_request/rider_request_detail.html", {'rider_request':rider_request,'rider':rider,  "comments": comments, "is_driver_user": is_driver_user, 'has_joined': has_joined, 'user_status': user_status, 'join_requests': join_requests, 'remaining_seats': remaining_seats})
+   
+    return render(request, "rider_request/rider_request_detail.html", {
+        'rider_request': rider_request, 
+        'rider': rider,
+        'comments': comments, 
+        'is_driver_user': is_driver_user, 
+        'has_joined': has_joined, 
+        'user_status': user_status, 
+        'join_requests': join_requests, 
+        'approved_requests': approved_requests, 
+        'remaining_seats': remaining_seats 
+    })
 
 #Allowing driver to change the request status
 def accept_rider_request(request, rider_request_id):
