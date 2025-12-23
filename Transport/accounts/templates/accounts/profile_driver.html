@@ -10,9 +10,9 @@
 {% block content %}
 <style>
     .profile-hero-minimal {
-        background: #fff;
+        background: linear-gradient(135deg, #e3e8f7 0%, #c5cae9 100%);
         border-radius: 28px;
-        box-shadow: 0 4px 24px #3c333376;
+        box-shadow: 0 4px 24px #1a237e22;
         padding: 2.5rem 2rem 2rem 2rem;
         margin-bottom: 2.5rem;
         position: relative;
@@ -26,7 +26,7 @@
         transform: translateY(0);
     }
     .profile-avatar {
-        width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #f4f4f4; box-shadow: 0 2px 12px #e0e0e0;
+        width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #3949ab; box-shadow: 0 2px 12px #3949ab33;
         opacity: 0;
         transform: scale(0.8);
         transition: all 0.7s cubic-bezier(.4,1.4,.6,1);
@@ -35,22 +35,22 @@
         opacity: 1;
         transform: scale(1);
     }
-    .profile-name { font-size: 2.1rem; font-weight: 700; color: #232323; }
-    .profile-username { color: #888; font-size: 1.1rem; font-weight: 500; }
-    .profile-bio { color: #555; font-size: 1.05rem; margin-bottom: 0.5rem; }
-    .profile-email a { color: #232323; text-decoration: underline dotted; }
-    .profile-badge { background: #ffc266d9; color: #181105; border-radius: 16px; padding: 4px 18px; font-weight: 600; font-size: 1rem; margin-left: 10px; }
+    .profile-name { font-size: 2.1rem; font-weight: 700; color: #1a237e; }
+    .profile-username { color: #3949ab; font-size: 1.1rem; font-weight: 500; }
+    .profile-bio { color: #3949ab; font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .profile-email a { color: #1a237e; text-decoration: underline dotted; }
+    .profile-badge { background: linear-gradient(90deg, #3949ab 0%, #c5cae9 100%); color: #fff; border-radius: 16px; padding: 4px 18px; font-weight: 600; font-size: 1rem; margin-left: 10px; }
     .profile-edit-btn {
-        background: linear-gradient(135deg, #ffc266d9 0%, #d15f0d59 100%);
-        color: #232323; border: none; padding: 7px 20px; font-size: 1rem; border-radius: 20px; font-weight: 600;
-        box-shadow: 0 2px 8px #ffe06633;
+        background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%);
+        color: #fff; border: none; padding: 7px 20px; font-size: 1rem; border-radius: 20px; font-weight: 600;
+        box-shadow: 0 2px 8px #3949ab33;
         transition: box-shadow 0.2s, background 0.2s;
     }
-    .profile-edit-btn:hover { box-shadow: 0 4px 16px #ffc266d9; background: #0e0c0992; color: #ececec; }
+    .profile-edit-btn:hover { box-shadow: 0 4px 16px #3949ab; background: #1a237e; color: #fff; }
     .profile-card {
-        background: #f4f4f4;
+        background: linear-gradient(135deg, #e3e8f7 0%, #c5cae9 100%);
         border-radius: 20px;
-        box-shadow: 0 2px 12px #e0e0e0;
+        box-shadow: 0 2px 12px #3949ab22;
         padding: 2rem 2rem 1.5rem 2rem;
         margin-bottom: 2rem;
         opacity: 0;
@@ -65,12 +65,12 @@
         display: flex; align-items: center; margin-bottom: 1.2rem;
     }
     .profile-info-label {
-        min-width: 140px; color: #232323; font-weight: 600; font-size: 1.08rem; display: flex; align-items: center;
+        min-width: 140px; color: #1a237e; font-weight: 600; font-size: 1.08rem; display: flex; align-items: center;
     }
     .profile-info-value {
-        color: #232323; font-size: 1.13rem; font-weight: 500; margin-left: 18px; display: flex; align-items: center;
+        color: #3949ab; font-size: 1.13rem; font-weight: 500; margin-left: 18px; display: flex; align-items: center;
     }
-    .profile-info-row i { margin-right: 8px; color: #ffc266; font-size: 1.2em; }
+    .profile-info-row i { margin-right: 8px; color: #3949ab; font-size: 1.2em; }
 </style>
 
 
@@ -81,21 +81,21 @@
             <div class="row g-4">
                 <!-- Sidebar -->
                 <div class="col-lg-4">
-                    <div class="tp-sidebar d-flex flex-column align-items-center justify-content-center" style="text-align:center; background: #f8f9fa; border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); padding: 32px 18px 28px 18px; min-height: 480px;">
+                    <div class="tp-sidebar d-flex flex-column align-items-center justify-content-center" style="text-align:center; background: linear-gradient(135deg, #e3e8f7 0%, #c5cae9 100%); border-radius: 18px; box-shadow: 0 2px 16px #3949ab22; padding: 32px 18px 28px 18px; min-height: 480px;">
 
-                        <div class="tp-avatar mb-3" style="box-shadow: 0 4px 18px rgba(0,0,0,0.10); border-radius: 50%; background: #fff; padding: 8px; margin-bottom: 18px;">
+                        <div class="tp-avatar mb-3" style="box-shadow: 0 4px 18px #3949ab22; border-radius: 50%; background: #e3e8f7; padding: 8px; margin-bottom: 18px;">
                             {% if driver.avatar and driver.avatar.url != '/media/images/avatars/avatar.webp' %}
-                                <img src="{{ driver.avatar.url }}" alt="Driver Avatar" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #f2c235;">
+                                <img src="{{ driver.avatar.url }}" alt="Driver Avatar" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #3949ab;">
                             {% else %}
                                 <i class="fa-solid fa-user fa-4x text-muted" style="margin-bottom: 10px;"></i>
                             {% endif %}
                         </div>
 
-                        <div class="tp-name" style="font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; color: #474341; letter-spacing: 0.5px;">
+                        <div class="tp-name" style="font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; color: #1a237e; letter-spacing: 0.5px;">
                             {{ driver.user.first_name }} {{ driver.user.last_name }}
                         </div>
 
-                        <div class="tp-username" style="font-size: 1.08rem; color: #7c7c7c; margin-bottom: 10px;">
+                        <div class="tp-username" style="font-size: 1.08rem; color: #3949ab; margin-bottom: 10px;">
                             @{{ driver.user.username }}
                         </div>
                     <!----- RATING ----->
@@ -108,7 +108,7 @@
                                         <i class="fa-regular fa-star"></i>
                                     {% endif %}
                                 {% endfor %}
-                                <span style="color: #474341; font-size: 1.05rem; margin-left: 6px;">{{ driver.rating }}/5</span>
+                                <span style="color: #3949ab; font-size: 1.05rem; margin-left: 6px;">{{ driver.rating }}/5</span>
                             {% else %}
                                 <span style="color: #aaa;">No rating</span>
                             {% endif %}
@@ -116,22 +116,22 @@
                     <!--ِENDRATING-->
                         <div class="tp-info-list w-100" style="font-size: 1.13rem; margin-bottom: 18px;">
                             {% if driver.phone %}
-                                <div class="mb-2" style="background: #fffbe6; border-radius: 8px; padding: 7px 0; color: #b48a00;"><i class="fa-solid fa-phone me-1"></i> {{ driver.phone }}</div>
+                                <div class="mb-2" style="background: #e3e8f7; border-radius: 8px; padding: 7px 0; color: #1a237e;"><i class="fa-solid fa-phone me-1"></i> {{ driver.phone }}</div>
                             {% endif %}
                             {% if driver.gender %}
-                                <div class="mb-2" style="background: #eaf6ff; border-radius: 8px; padding: 7px 0; color: #302e22a3;"><i class="fa-solid fa-venus-mars me-1"></i> {{ driver.get_gender_display }}</div>
+                                <div class="mb-2" style="background: #c5cae9; border-radius: 8px; padding: 7px 0; color: #3949ab;"><i class="fa-solid fa-venus-mars me-1"></i> {{ driver.get_gender_display }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="tp-email mb-2" style="font-size: 1.13rem; background: #f3f3f3; border-radius: 8px; padding: 7px 0; margin-bottom: 18px;">
+                        <div class="tp-email mb-2" style="font-size: 1.13rem; background: #e3e8f7; border-radius: 8px; padding: 7px 0; margin-bottom: 18px;">
                             {% if driver.user.email %}
-                                <a href="mailto:{{ driver.user.email }}" target="_blank" style="color: #474341; text-decoration: underline;">
-                                    <i class="fa-solid fa-envelope me-1" style="color:#f2c235;"></i> - {{ driver.user.email }}
+                                <a href="mailto:{{ driver.user.email }}" target="_blank" style="color: #1a237e; text-decoration: underline;">
+                                    <i class="fa-solid fa-envelope me-1" style="color:#3949ab;"></i> - {{ driver.user.email }}
                                 </a>
                             {% endif %}
                         </div>
 
-                        <span class="tp-badge {% if driver.status == 'PENDING' %}pending{% elif driver.status == 'APPROVED' %}approved{% elif driver.status == 'REJECTED' %}rejected{% endif %}" style="font-size: 1.09rem; padding: 8px 26px; margin-top: 10px; display: inline-block; border-radius: 16px; background: linear-gradient(135deg, #f2c235 0%, #f8d66d 100%); color: #474341; font-weight: 600; letter-spacing: 0.5px;">
+                        <span class="tp-badge {% if driver.status == 'PENDING' %}pending{% elif driver.status == 'APPROVED' %}approved{% elif driver.status == 'REJECTED' %}rejected{% endif %}" style="font-size: 1.09rem; padding: 8px 26px; margin-top: 10px; display: inline-block; border-radius: 16px; background: linear-gradient(90deg, #121213 0%, #c5cae9 100%); color: #fff; font-weight: 600; letter-spacing: 0.5px;">
                             {{ driver.get_status_display }}
                         </span>
 
@@ -149,10 +149,10 @@
                         </div>
 
                         <div>
-                            <a href="{% url 'accounts:edit_driver_profile' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #f2c235 0%, #f8d66d 100%); color: #474341; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 500;">
+                            <a href="{% url 'accounts:edit_driver_profile' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%); color: #fff; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 500;">
                                 <i class="fa-solid fa-pen" style="font-size: 0.8rem;"></i> Edit Profile
                             </a>
-                            <a href="{% url 'drivers:driver_car' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #f2c235 0%, #f8d66d 100%); color: #474341; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 500;">
+                            <a href="{% url 'drivers:driver_car' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%); color: #fff; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 500;">
                                 {% if driver.car %}
                                     <i class="fa-solid fa-pen-to-square me-2"></i>
                                     Edit Car Information
@@ -228,18 +228,7 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                                 <div class="tp-info-row">
-                                    <div class="tp-info-label">Car Registration (Istimara):</div>
-                                    <div class="tp-info-value">
-                                        {% if driver.car_registration %}
-                                            <a href="{{ driver.car_registration.url }}" target="_blank">
-                                                <img src="{{ driver.car_registration.url }}" alt="Car Registration" class="tp-image-preview">
-                                            </a>
-                                        {% else %}
-                                            Not uploaded
-                                        {% endif %}
-                                    </div>
-                                </div>
+                                
 
                                 <div class="tp-info-row">
                                     <div class="tp-info-label">Driving License:</div>
@@ -294,6 +283,18 @@
                                         <div class="tp-info-label">Seats Count:</div>
                                         <div class="tp-info-value">{{ car.seats_count }}</div>
                                     </div>
+                                    <div class="tp-info-row">
+                                    <div class="tp-info-label">Car Registration (Istimara):</div>
+                                    <div class="tp-info-value">
+                                        {% if driver.car_registration %}
+                                            <a href="{{ driver.car_registration.url }}" target="_blank">
+                                                <img src="{{ driver.car_registration.url }}" alt="Car Registration" class="tp-image-preview">
+                                            </a>
+                                        {% else %}
+                                            Not uploaded
+                                        {% endif %}
+                                    </div>
+                                </div>
                                     {% else %}
                                     <p class="tp-empty-text">
                                         No vehicle information available. Please add your vehicle details.
@@ -330,7 +331,7 @@
                                 
                                 <div class="d-flex justify-content-between">
                                     <h6 class="tp-card-title">Trip History</h6>
-                                    <a href="{% url 'trips:create_trip_view' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #f2c235 0%, #f8d66d 100%); color: #474341; border: none; padding: 6px 14px; font-size: 0.8rem; border-radius: 20px; font-weight: 500;">
+                                    <a href="{% url 'trips:create_trip_view' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%); color: #fff; border: none; padding: 6px 14px; font-size: 0.8rem; border-radius: 20px; font-weight: 500;">
                                         + Create Trip
                                     </a>
                                 </div>

@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Page fade-in animation
-    var main = document.querySelector('main');
-    if (main) {
-        main.classList.add('fadein-page');
-    }
+   window.addEventListener('load', () => {
+    document.body.classList.add('page-loaded');
+   });
+
 
     // Dropdown menu functionality
     function setupDropdown(dropdownId, toggleId) {

@@ -2,7 +2,7 @@
 .glass-bg {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #e3e7ee 0%, #f8f7f5 100%);
+    background: linear-gradient(135deg, #151c33 0%, #232a4d 100%);
 }
 .about-bubbles {
     position: absolute;
@@ -30,7 +30,7 @@
     .about-bubbles { display: none; }
 }
 .about-page {
-    background: linear-gradient(135deg, #202a44 0%, #283593 100%);
+    background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #3949ab 100%);
     background-blend-mode: normal;
     background-size: cover;
     background-repeat: no-repeat;
@@ -38,10 +38,9 @@
     min-height: 100vh;
     position: relative;
     z-index: 1;
-  
 }
 
-/* Animated floating shapes for about page */
+/* Animated floating shapes for about page OO */
 .about-floating-shape {
     position: absolute;
     border-radius: 50%;
@@ -85,7 +84,7 @@
     content: "";
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle at 60% 20%, #fff8 0%, #1a237e00 70%);
+    background: radial-gradient(circle at 60% 20%, #fff9 0%, #1a237e33 60%, #1a237e00 100%);
     z-index: 1;
     pointer-events: none;
 }
@@ -134,19 +133,21 @@
 .about-container {
     max-width: 1100px;
     margin: auto;
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(30, 36, 70, 0.82);
     border-radius: 18px;
     padding: 70px 80px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 12px 40px #1a237e33;
+    border: 1.5px solid #3949ab33;
 }
 
 /* Intro */
 .about-intro {
     text-align: center;
-    font-size: 1.1rem;
-    color: #474341;
+    font-size: 1.13rem;
+    color: #e3e8f7;
     line-height: 1.9;
     margin-bottom: 70px;
+    font-weight: 500;
 }
 
 /* Cards */
@@ -158,12 +159,14 @@
 }
 
 .about-card {
-    background: rgba(255,255,255,0.7);
+    background: linear-gradient(135deg, #232a4d 0%, #3949ab 100%);
     border-radius: 14px;
     padding: 35px 25px;
     text-align: center;
     transition: transform 0.18s cubic-bezier(.4,0,.2,1), box-shadow 0.18s cubic-bezier(.4,0,.2,1);
     cursor: pointer;
+    box-shadow: 0 4px 18px #1a237e22;
+    border: 1.5px solid #3949ab33;
 }
 .about-card:active,
 .about-card:focus {
@@ -184,19 +187,21 @@
 }
 
 .about-card i {
-    font-size: 2rem;
-    color: #1a237e;
+    font-size: 2.1rem;
+    color: #c5cae9;
     margin-bottom: 15px;
+    text-shadow: 0 2px 8px #1a237e55;
 }
 
 .about-card h3 {
-    color: #474341;
+    color: #fff;
     font-weight: 700;
     margin-bottom: 10px;
+    letter-spacing: 0.5px;
 }
 
 .about-card p {
-    color: #6b6765;
+    color: #c5cae9;
     line-height: 1.7;
 }
 .about-card:hover {
@@ -213,19 +218,22 @@
 }
 
 .about-box {
-    background: rgba(26, 35, 126, 0.08);
+    background: linear-gradient(135deg, #232a4d 0%, #3949ab 100%);
     border-radius: 14px;
     padding: 30px;
+    box-shadow: 0 2px 10px #1a237e22;
+    border: 1.5px solid #3949ab33;
 }
 
 .about-box h3 {
-    color: #474341;
+    color: #fff;
     font-weight: 700;
     margin-bottom: 10px;
+    letter-spacing: 0.5px;
 }
 
 .about-box p {
-    color: #6b6765;
+    color: #c5cae9;
     line-height: 1.8;
 }
 
@@ -235,14 +243,17 @@
 }
 
 .about-values h3 {
-    color: #474341;
+    color: #fff;
     font-weight: 700;
     margin-bottom: 15px;
+    letter-spacing: 0.5px;
 }
 
 .about-values ul {
-    color: #6b6765;
+    color: #c5cae9;
     padding-left: 20px;
+    font-size: 1.08rem;
+    font-weight: 500;
 }
 
 .about-values li {
@@ -251,17 +262,18 @@
 
 /* Pride */
 .about-pride {
-    background: #e8eaf6;
-    border-left: 5px solid #1a237e;
+    background: linear-gradient(90deg, #232a4d 0%, #3949ab 100%);
+    border-left: 5px solid #c5cae9;
     padding: 20px 25px;
     border-radius: 10px;
     font-weight: 600;
-    color: #283593;
+    color: #c5cae9;
     display: flex;
     align-items: center;
     gap: 12px;
     justify-content: center;
     text-align: center;
+    box-shadow: 0 2px 10px #1a237e22;
 }
 
 /* Responsive */
@@ -279,7 +291,7 @@
 
 .about-pride {
     display: flex;
-    align-items: center;   /* يخليهم بنفس المستوى */
+    align-items: center;  
     gap: 12px;
     justify-content: center;
     text-align: center;

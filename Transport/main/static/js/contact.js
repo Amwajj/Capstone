@@ -5,6 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (el) {
     setTimeout(function() {
       el.classList.add('show');
-    }, 120);
+    }, 600);
   }
 });
