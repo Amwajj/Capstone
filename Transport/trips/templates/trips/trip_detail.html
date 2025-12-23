@@ -76,10 +76,11 @@
 
     <div class="row g-4 mb-4 align-items-stretch">
 
-        <!-- Trip Information -->
+
         <div class="col-lg-8">
             <div class="card custom-card p-4 h-100">
                 <div class="d-flex justify-content-between section-title align-items-center mb-3">
+                    <!-- Trip Information -->
                     <h5 class=" m-0">
                         <i class="fa-solid fa-route me-2"></i>
                         Trip Information
@@ -121,9 +122,53 @@
                 </p>
                 <p class="info-text"><strong>Date:</strong> {{ trip.start_date }} – {{ trip.end_date }}</p>
                 <p class="info-text"><strong>Time:</strong> {{ trip.start_time }} – {{ trip.end_time }}</p>
-                <p class="info-text"><strong>Available Seats:</strong> {{ trip.total_riders }}</p>
-                <p class="info-text mb-0"><strong>Price:</strong> <span class="price">${{ trip.price }}</span></p>
+                <p class="info-text">
+                    <strong>Seats:</strong>
+                    {{ trip.total_riders }} seats -
+                    {{ remaining_seats }} seat left
+                </p>
+                <p class="info-text">
+                    <strong>Subscribers:</strong>
+                    {{ total_subscribers }}  
+                </p>
+                <p class="info-text mb-0"><strong>Price:</strong> <span class="price">{{ trip.price }} SAR</span></p>
+
+                <hr style="border-color:#a3a2a2; opacity:.3; margin:22px 0;">
+                <div class="d-flex justify-content-between section-title align-items-center mb-3">
+                    <!-- Participating Riders -->
+                    <h5 class="m-0 mb-2">
+                        <i class="fa-solid fa-route me-2"></i>
+                        Participating Riders
+                    </h5>
+                </div>
+                <div class="d-flex gap-4 flex-wrap">
+
+                    {% for sub in subscribers %}
+                    <div class="text-center me-3">
+                        <img src="{{ sub.rider.avatar.url }}" class="rounded-circle shadow-sm" width="70" height="70"
+                            style="object-fit: cover;">
+
+                        <div class="mt-2 fw-semibold">
+                            {{ sub.rider.user.first_name }}
+                            {{ sub.rider.user.last_name }}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No riders have joined yet.</p>
+                    {% endfor %}
+
+                </div>
+
+                {% if total_subscribers > 4 %}
+                <p class="mt-3 text-muted">
+                    +{{ total_subscribers|add:"-4" }} more riders joined this trip
+                </p>
+                {% endif %}
+
+
             </div>
+
+
         </div>
 
         <!-- Driver and Car Information -->
@@ -163,7 +208,7 @@
                 <h5 class="section-title"><i class="fa-solid fa-users me-2"></i>Join Requests</h5>
                 {% if join_requests %}
                 <div class="table-responsive">
-                    <table class="table align-middle text-center">
+                    <table class="table table-bordered table-hover align-middle text-nowrap">
                         <thead>
                             <tr style="color:#474341;">
                                 <th>User</th>
@@ -171,54 +216,43 @@
                                 <th>End Date</th>
                                 <th>Notes</th>
                                 <th>Status</th>
-                                {% if has_rejected %}
-                                <th>Reject Comment</th>
-                                {%endif%}
-                                {%if not has_rejected%}
                                 <th>Action</th>
-                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
                             {% for r in join_requests %}
+                            {% if r.rider_status == 'PENDING'%}
                             <tr>
                                 <td class="fw-semibold">{{ r.rider.user.username }}</td>
                                 <td>{{ r.start_date }}</td>
                                 <td>{{ r.end_date }}</td>
 
                                 <td class="text-muted">{{ r.comment|default:"—" }}</td>
-
                                 <td>
-                                    {% if r.rider_status == 'PENDING' %}
-                                    <span class="badge bg-secondary">Pending</span>
-                                    {% elif r.rider_status == 'APPROVED' %}
-                                    <span class="badge bg-success">Approved</span>
-                                    {% elif r.rider_status == 'REJECTED' %}
-                                    <span class="badge bg-danger">Rejected</span>
-                                    {% endif %}
-                                </td>
 
-                                {% if r.rider_status == 'REJECTED'%}
-                                <td class="text-muted">{{ r.reject_Comment|default:"—" }}</td>
-                                {%endif%}
-                                {% if r.rider_status == 'PENDING' %}
+                                    <span class="badge bg-secondary">Pending</span>
+
+                                </td>
                                 <td>
                                     <form method="POST" action="{% url 'trips:update_request_status_view' r.id %}"
-                                        class="d-flex gap-2 justify-content-center align-items-center">
+                                        class="d-flex flex-column flex-md-row gap-1 justify-content-center">
                                         {% csrf_token %}
                                         <select name="status" class="form-select form-select-sm status-select"
                                             style="width:auto;">
                                             <option value="APPROVED">Accept</option>
                                             <option value="REJECTED">Reject</option>
                                         </select>
-                                        <input type="text" name="reject_comment" class="form-control form-control-sm reject-comment" placeholder="Reason for rejection">
+                                        <input type="text" name="reject_comment"
+                                            class="form-control form-control-sm reject-comment"
+                                            placeholder="Reason for rejection" style="display: none;">
+
                                         <button type="submit" class="btn btn-sm btn-primary fw-bold">Update</button>
                                     </form>
-                                    {% else %}
-                                    <span class="text-muted">—</span>
+
                                 </td>
-                                {% endif %}
+
                             </tr>
+                            {%endif%}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -291,6 +325,7 @@
     document.querySelectorAll('.status-select').forEach(select => {
         select.addEventListener('change', function () {
             const rejectInput = this.closest('form').querySelector('.reject-comment');
+
             if (this.value === 'REJECTED') {
                 rejectInput.style.display = 'block';
             } else {
@@ -300,5 +335,6 @@
         });
     });
 </script>
+
 
 {% endblock %}

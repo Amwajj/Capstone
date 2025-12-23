@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
+from django.utils import timezone
 
 from .models import Trip ,JoinTrip
 from trip_subscription.models import TripSubscription
@@ -52,10 +53,10 @@ def all_trip_view(request: HttpRequest):
     if end_date:
         trips = trips.filter(end_date__lte=end_date)
 
+
     # منع التكرار
     trips = trips.distinct()
-
-    print("GET DATA:", request.GET)
+    
 
     return render(request, 'trips/trips_list.html', {'trips': trips})
 
@@ -81,11 +82,14 @@ def trip_detail_view(request:HttpRequest, trip_id):
     all_subscriptions = TripSubscription.objects.filter(
         join_trip__trip=trip,
         join_trip__rider_status='APPROVED',
-        join_trip__end_date__gte=timezone.now().date)
+        join_trip__end_date__gte=timezone.now().date()
+        )
+
 
     # المشتركين للعرض فقط
     subscribers = all_subscriptions.select_related("rider")[:4]
     total_subscribers = all_subscriptions.count()
+    remaining_seats = max(trip.total_riders - total_subscribers, 0)
     context = {
         'trip':trip,
         'driver':driver,
@@ -96,6 +100,7 @@ def trip_detail_view(request:HttpRequest, trip_id):
         'join_trip':join_trip,
         'subscribers':subscribers,
         'total_subscribers':total_subscribers,
+        'remaining_seats':remaining_seats
     }
     return render(request, 'trips/trip_detail.html',context)
 

@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.models import User
+from trip_subscription.models import TripSubscription
 from riders.models import Rider
 from drivers.models import Driver
 from django.contrib import messages
@@ -224,18 +225,22 @@ def profile_rider(request: HttpRequest, rider_id=None):
         messages.error(request, "You are not registered as a rider.")
         return redirect('main:home_view')
     
-    
     joined_trips = JoinTrip.objects.select_related(
             'trip',
             'trip__driver',
             'trip__city'
         ).filter(
             rider=rider
-        ).filter(rider=rider).order_by('-created_at')
-    has_Accepted = joined_trips.filter(rider_status='APPROVED').exists()
+        ).order_by('-created_at')
+    
+    subscriptions = TripSubscription.objects.filter(
+            rider=rider
+        ).values_list('join_trip_id', flat=True)
+    
+    
     has_rejected = joined_trips.filter(rider_status='REJECTED').exists()
 
-    return render(request, 'accounts/profile_rider.html', {'rider': rider,'joined_trips':joined_trips, 'has_Accepted':has_Accepted,'has_rejected':has_rejected})
+    return render(request, 'accounts/profile_rider.html', {'rider': rider,'joined_trips':joined_trips,'has_rejected':has_rejected, 'subscriptions':subscriptions, 'joined_trips':joined_trips})
 
 @login_required
 def edit_rider_profile(request: HttpRequest):

@@ -305,7 +305,14 @@
                         <!-- Trips Tab -->
                         <div class="tab-pane fade" id="trips">
                             <div class="tp-card">
-                                <h6 class="tp-card-title">Trip History</h6>
+                                
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="tp-card-title">Trip History</h6>
+                                    <a href="{% url 'trips:create_trip_view' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #f2c235 0%, #f8d66d 100%); color: #474341; border: none; padding: 6px 14px; font-size: 0.8rem; border-radius: 20px; font-weight: 500;">
+                                        + Create Trip
+                                    </a>
+                                </div>
+                                
                                 <p class="tp-empty-text">
                                     No trips available yet. Trip history will appear here once you complete your first ride.
                                 </p>

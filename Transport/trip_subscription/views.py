@@ -131,14 +131,14 @@ def payment_trip_success(request:HttpRequest):
     total_price = days_count * trip.price
     
     # إرسال رسالة للراكب اذا اشترك
-    rider_html = render_to_string("main/mail/subscribes_rider.html", {"rider":join_trip.rider, "trip":trip, "start_date": join_trip.start_date, "end_date": join_trip.end_date,
+    rider_html = render_to_string("trip_subscription/subscribes_rider.html", {"rider":join_trip.rider, "trip":trip, "start_date": join_trip.start_date, "end_date": join_trip.end_date,
         "days": days_count, "price": total_price})   
     email_to_rider=EmailMessage("تم الاشتراك في الباقة", rider_html,settings.EMAIL_HOST_USER,[join_trip.rider.user.email] )
     email_to_rider.content_subtype="html"
     email_to_rider.send()
 
     #ارسال رسالة للسائق انه في مشترك جديد
-    driver_html = render_to_string("main/mail/new_subscription_driver.html", {"driver": trip.driver, "rider": join_trip.rider, "trip": trip,
+    driver_html = render_to_string("trip_subscription/new_subscription_driver.html", {"driver": trip.driver, "rider": join_trip.rider, "trip": trip,
         "start_date": join_trip.start_date, "end_date": join_trip.end_date})   
     email_to_driver=EmailMessage("متدرب جديد اشترك معك", driver_html,settings.EMAIL_HOST_USER,[trip.driver.user.email] )
     email_to_driver.content_subtype="html"
@@ -146,7 +146,7 @@ def payment_trip_success(request:HttpRequest):
 
     
     messages.success(request, "You have successfully subscribed to the trip.", "alert-success")
-    return redirect("trips:trip_detail", trip_id=trip.id)
+    return redirect("trips:trip_detail_view", trip_id=trip.id)
 
 @login_required
 def payment_trip_cancel(request:HttpRequest):
