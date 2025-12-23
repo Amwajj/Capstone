@@ -9,36 +9,48 @@
 {% block content %}
 
 
-<div class="contact-bg" style="padding-left: 20px; padding-right: 20px;">
-  <div class="contact-welcome fadein-left" style="margin: 0 auto 18px auto; max-width: 600px; text-align:left;">
-  <h2 class="animated-gradient-title">Contact Wesal Support</h2>
-    <p style="color:#474341; font-size:1.35rem; margin-bottom:0.2em; font-family:'Roboto',sans-serif; text-align:left;">We value your questions and feedback. Our support team is here to assist you promptly and professionally.</p>
-    <p style="color:#474341; font-size:1.22rem; margin-bottom:18px; font-family:'Roboto',sans-serif; text-align:left;">Reach us through the channels below or fill out the form — we’ll respond as soon as possible.</p>
-  <ul class="contact-info-list" type="none" style="max-width: 600px; margin: 0 0 0 0; padding-left: 32px; text-align:left; font-size:1.22rem;">
-      <li><i class="fa fa-envelope"></i> info@Wesal.com</li>
-      <li><i class="fa fa-phone"></i> +966 555 123 456</li>
-      <li><i class="fa fa-map-marker"></i> Riyadh, Saudi Arabia</li>
-      <li><i class="fa fa-globe"></i> www.Wesal.com</li>
+
+<div class="contact-bg glass-bg">
+  <!-- Inspiring animated background bubbles -->
+  <div class="contact-bubbles">
+    <span class="bubble" style="--i:1"></span>
+    <span class="bubble" style="--i:2"></span>
+    <span class="bubble" style="--i:3"></span>
+    <span class="bubble" style="--i:4"></span>
+    <span class="bubble" style="--i:5"></span>
+    <span class="bubble" style="--i:6"></span>
+    <span class="bubble" style="--i:7"></span>
+    <span class="bubble" style="--i:8"></span>
+  </div>
+  <div class="contact-welcome fadein-left" style="padding-left: 32px;">
+    <h2 class="animated-gradient-title">Contact Wesal Support</h2>
+    <p class="contact-lead">We value your questions and feedback. Our support team is here to assist you promptly and professionally.</p>
+    <p class="contact-lead">Reach us through the channels below or fill out the form — we’ll respond as soon as possible.</p>
+    <ul class="contact-info-list">
+      <li><i class="fa fa-envelope animated-icon"></i> info@Wesal.com</li>
+      <li><i class="fa fa-phone animated-icon"></i> +966 555 123 456</li>
+      <li><i class="fa fa-map-marker animated-icon"></i> Riyadh, Saudi Arabia</li>
+      <li><i class="fa fa-globe animated-icon"></i> www.Wesal.com</li>
     </ul>
   </div>
-  <div class="contact-overlay" id="contact" >
-    <div class="contact-form-side">
-      <form method="post" action="{% url 'main:contact_view' %}" class="contact-detail" >
+  <div class="contact-overlay" id="contact">
+    <div class="contact-form-side glass-form">
+      <form method="post" action="{% url 'main:contact_view' %}" class="contact-detail">
         {% csrf_token %}
         <div class="input-group">
-          <label for="first_name" class="form-label"><i class="fa fa-user"></i> First Name</label>
+          <label for="first_name" class="form-label"><i class="fa fa-user animated-icon"></i> First Name</label>
           <input type="text" id="first_name" name="first_name" required>
         </div>
         <div class="input-group">
-          <label for="last_name" class="form-label"><i class="fa fa-user"></i> Last Name</label>
+          <label for="last_name" class="form-label"><i class="fa fa-user animated-icon"></i> Last Name</label>
           <input type="text" id="last_name" name="last_name" required>
         </div>
         <div class="input-group">
-          <label for="email" class="form-label"><i class="fa fa-envelope"></i> Email address</label>
+          <label for="email" class="form-label"><i class="fa fa-envelope animated-icon"></i> Email address</label>
           <input type="email" id="email" name="email" required>
         </div>
         <div class="input-group">
-          <label for="message" class="form-label"><i class="fa fa-comment"></i> Message</label>
+          <label for="message" class="form-label"><i class="fa fa-comment animated-icon"></i> Message</label>
           <textarea id="message" name="message" rows="4" required></textarea>
         </div>
         <button type="submit" class="btn-main w-100 mt-3">Send Message</button>
@@ -46,6 +58,63 @@
     </div>
   </div>
 </div>
+
+<script src="{% static 'js/contact.js' %}"></script>
+
+<style>
+/* Inspiring glassmorphism and animated bubbles for contact */
+.glass-bg {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e3e7ee 0%, #f8f7f5 100%);
+}
+.contact-bubbles {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.bubble {
+  position: absolute;
+  bottom: -120px;
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, #1a237e 60%, #bfc2da 100%);
+  opacity: 0.18;
+  border-radius: 50%;
+  animation: bubbleUp 12s linear infinite;
+  left: calc(var(--i) * 12% + 2vw);
+  animation-delay: calc(var(--i) * 1.2s);
+}
+@keyframes bubbleUp {
+  0% { transform: translateY(0) scale(1); opacity: 0.18; }
+  60% { opacity: 0.28; }
+  100% { transform: translateY(-90vh) scale(1.15); opacity: 0; }
+}
+.glass-form {
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 8px 32px 0 rgba(44,62,80,0.13), 0 2px 8px 0 rgba(44,62,80,0.08);
+  border: 2px solid rgba(26,35,126,0.08);
+  backdrop-filter: blur(7px);
+}
+.animated-icon {
+  animation: iconPulse 2.2s infinite cubic-bezier(.4,0,.2,1);
+  color: #1a237e !important;
+}
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 #1a237e44); }
+  50% { transform: scale(1.18); filter: drop-shadow(0 0 8px #1a237e88); }
+}
+.contact-lead {
+  color: #283593;
+  font-size: 1.18rem;
+  margin-bottom: 0.5em;
+  font-family: 'Roboto', sans-serif;
+  text-align: left;
+}
+@media (max-width: 900px) {
+  .contact-bubbles { display: none; }
+}
+</style>
 
 <script src="{% static 'js/contact.js' %}"></script>
 {% endblock %}

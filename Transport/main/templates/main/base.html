@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" href="{% static 'css/auth.css' %}">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">    
@@ -31,7 +34,6 @@
     z-index: 1055;
 }
 
-
     </style>
 </head>
 
@@ -39,7 +41,7 @@
 
 <body>
 
-     <header class="navbar">
+    <header class="navbar{% if request.resolver_match.url_name != 'home_view' %} navbar-solid{% endif %}">
         <div class="nav-container">
             <div class="logo">
                 <a href="{% url 'main:home_view' %}"><h2>WESAL</h2></a>
@@ -106,21 +108,27 @@
 </main>
 
 <footer class="footer-box w-100">
+    <!-- Decorative bubbles -->
+    <div class="footer-bubble b1"></div>
+    <div class="footer-bubble b2"></div>
+    <div class="footer-bubble b3"></div>
+    <div class="footer-bubble b4"></div>
     <div class="footer-inner">
 
         <div class="footer-col">
             <p class="footer-title">WESAL </p>
-            <div class="footer-icons">
-                <a href="#"><i class="fa-brands fa-whatsapp fa-lg"></i></a>
-                <a href="#"><i class="fa-solid fa-envelope fa-lg"></i></a>
-                <a href="#"><i class="fa-brands fa-x fa-lg"></i></a>
+            <p class="footer-description" style="font-size:2.1rem; font-family:'EB Garamond', serif; font-style:italic; margin-bottom:10px;" id="lets-talk">Let's Talk..</p>
+            <div class="footer-icons" style="justify-content:flex-start; margin-bottom:10px;">
+
+                <a href="#" title="Email" style="margin-left:18px;"><i class="fa-solid fa-envelope fa-lg"></i></a>
+                <a href="#" title="X" style="margin-left:18px;"><i class="fa-brands fa-x-twitter fa-lg"></i></a>
             </div>
         </div>
 
         <div class="footer-col">
             <p class="footer-topic">Contact</p>
-            <p class="footer-link">WhatsApp</p>
             <p class="footer-link">Email</p>
+            <p class="footer-link">X</p>
         </div>
 
         <div class="footer-col">

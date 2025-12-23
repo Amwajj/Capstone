@@ -12,6 +12,34 @@ function animateStatsOnView() {
   stats.forEach(stat => observer.observe(stat));
 }
 
+// Animate timeline cards on scroll (vertical timeline)
+function animateTimelineOnView() {
+  const timelineCards = document.querySelectorAll('.timeline-card');
+  timelineCards.forEach(card => card.classList.add('js-hide'));
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const step = card.closest('.timeline-step');
+        const steps = Array.from(document.querySelectorAll('.timeline-step .timeline-card'));
+        const idx = steps.indexOf(card);
+        // If last card, show immediately
+        if (idx === steps.length - 1) {
+          card.classList.remove('js-hide');
+          card.classList.add('animate-timeline');
+        } else {
+          setTimeout(() => {
+            card.classList.remove('js-hide');
+            card.classList.add('animate-timeline');
+          }, idx * 300);
+        }
+        observer.unobserve(card);
+      }
+    });
+  }, { threshold: 0.2 });
+  timelineCards.forEach(card => observer.observe(card));
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   animateStatsOnView();
   // Animate divider on scroll
@@ -51,6 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.animate-fadein').forEach(el => {
     el.classList.add('fadein-animate');
   });
+
+  animateTimelineOnView();
 });
 
 // CSS (add to your CSS file):

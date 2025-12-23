@@ -6,7 +6,7 @@
   font-size: 2.7rem;
   letter-spacing: 0.5px;
   text-align: left;
-  background: linear-gradient(270deg, #e4b651, #7e5e27, #f2c235, #807657, #e1be4d);
+  background: linear-gradient(270deg, #2c3767,  #b6b6c5, #0c1ad2, #495681, #ffffff);
   background-size: 600% 600%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -45,10 +45,10 @@ body {
   background: rgba(255,255,255,0.95);
   border-radius: 18px;
   box-shadow: 0 8px 32px 0 rgba(44,62,80,0.10), 0 2px 8px 0 rgba(44,62,80,0.08);
-  padding: 2.5rem 2.2rem;
-  margin:0.5rem 0;
-  width: 370px;
-  min-height: 420px;
+  padding: 3.2rem 2.8rem;
+  margin: 1.2rem 0;
+  width: 440px;
+  min-height: 520px;
   max-width: 98vw;
   display: flex;
   flex-direction: column;
@@ -124,25 +124,25 @@ body {
 }
 .btn-main {
   border: none;
-  color: #fff;
+  color: #01093ab1;
   padding: 14px 0;
   font-size: 1.13rem;
   font-weight: 700;
   border-radius: 8px;
-  background: linear-gradient(90deg, #444 60%, #222 100%);
+
   box-shadow: 0 2px 8px 0 #2222;
   letter-spacing: 0.03em;
   transition: background 0.18s, box-shadow 0.18s;
   width: 100%;
 }
 .btn-main:hover {
-  background: linear-gradient(90deg, #222 0%, #444 100%);
+  background: linear-gradient(90deg, #2222221d 0%, #44444437 100%);
   box-shadow: 0 4px 16px 0 #2222;
 }
 .btn-main:active {
-  background: linear-gradient(90deg, #eaeaea 60%, #bdbdbd 100%);
+ 
   color: #222;
-  box-shadow: 0 2px 8px 0 #8882;
+  box-shadow: 0 2px 8px 0 rgba(7, 96, 222, 0.38);
 }
 /* Fade-in from left animation for contact-welcome */
 .fadein-left {

@@ -1,7 +1,95 @@
-.about-page {
-    background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
-    padding: 60px 20px 60px;
+/* Inspiring glassmorphism and animated bubbles for about */
+.glass-bg {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e3e7ee 0%, #f8f7f5 100%);
 }
+.about-bubbles {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.bubble {
+    position: absolute;
+    bottom: -120px;
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, #1a237e 60%, #bfc2da 100%);
+    opacity: 0.18;
+    border-radius: 50%;
+    animation: bubbleUp 12s linear infinite;
+    left: calc(var(--i) * 120% + 2vw);
+    animation-delay: calc(var(--i) * 1.2s);
+}
+@keyframes bubbleUp {
+    0% { transform: translateY(0) scale(1); opacity: 0.18; }
+    60% { opacity: 0.28; }
+    100% { transform: translateY(-90vh) scale(1.15); opacity: 0; }
+}
+@media (max-width: 900px) {
+    .about-bubbles { display: none; }
+}
+.about-page {
+    background: linear-gradient(135deg, #202a44 0%, #283593 100%);
+    background-blend-mode: normal;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 0 0 60px 0;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  
+}
+
+/* Animated floating shapes for about page */
+.about-floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.13;
+    filter: blur(2px);
+    animation: floatShape 14s ease-in-out infinite;
+    z-index: 0;
+}
+.about-floating-shape.shape1 {
+    width: 180px; height: 180px;
+    left: 4vw; top: 8vh;
+    background: radial-gradient(circle at 40% 60%, #fff 0%, #1a237e 80%);
+    animation-delay: 0s;
+}
+.about-floating-shape.shape2 {
+    width: 120px; height: 120px;
+    right: 8vw; top: 18vh;
+    background: radial-gradient(circle at 60% 40%, #bfc2da 0%, #3949ab 90%);
+    animation-delay: 3s;
+}
+.about-floating-shape.shape3 {
+    width: 90px; height: 90px;
+    left: 12vw; bottom: 10vh;
+    background: radial-gradient(circle at 70% 30%, #fff 0%, #283593 90%);
+    animation-delay: 6s;
+}
+.about-floating-shape.shape4 {
+    width: 140px; height: 140px;
+    right: 10vw; bottom: 6vh;
+    background: radial-gradient(circle at 30% 70%, #bfc2da 0%, #1a237e 90%);
+    animation-delay: 9s;
+}
+@keyframes floatShape {
+    0% { transform: translateY(0) scale(1); opacity: 0.13; }
+    50% { transform: translateY(-40px) scale(1.08); opacity: 0.19; }
+    100% { transform: translateY(0) scale(1); opacity: 0.13; }
+}
+
+/* Soft glow overlay */
+.about-page::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 60% 20%, #fff8 0%, #1a237e00 70%);
+    z-index: 1;
+    pointer-events: none;
+}
+
 
 /* Hero */
 .about-hero {
@@ -12,25 +100,29 @@
 .about-icon {
     width: 85px;
     height: 85px;
-    background: linear-gradient(135deg, #f2c235, #e0b020);
+    background: linear-gradient(135deg, #ffffffc5, #cccdd689);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    box-shadow: 0 6px 20px rgba(242, 194, 53, 0.4);
+    box-shadow: 0 6px 20px rgba(22, 44, 211, 0.629);
+    margin-top: 48px;
 }
 
 .about-icon i {
     font-size: 2.5rem;
     color: #474341;
+    
 }
 
 
 .about-hero h1 {
     font-size: 2.6rem;
     font-weight: 700;
-    color: #474341;
+    color: #fff;
+    text-shadow: 0 2px 12px #1a237e99, 0 1px 0 #283593;
+    margin-top: 48px;
 }
 
 .about-hero p {
@@ -76,7 +168,7 @@
 .about-card:active,
 .about-card:focus {
     transform: scale(1.045);
-    box-shadow: 0 8px 32px 0 rgba(242,194,53,0.18), 0 2px 8px 0 rgba(44,62,80,0.10);
+    box-shadow: 0 8px 32px 0 rgba(26,35,126,0.18), 0 2px 8px 0 rgba(44,62,80,0.10);
     z-index: 2;
 }
 
@@ -93,7 +185,7 @@
 
 .about-card i {
     font-size: 2rem;
-    color: #f2c235;
+    color: #1a237e;
     margin-bottom: 15px;
 }
 
@@ -109,7 +201,7 @@
 }
 .about-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 32px 0 rgba(242,194,53,0.18), 0 2px 8px 0 rgba(44,62,80,0.10);
+    box-shadow: 0 8px 32px 0 rgba(26,35,126,0.18), 0 2px 8px 0 rgba(44,62,80,0.10);
 }
 
 /* Vision & Mission */
@@ -121,7 +213,7 @@
 }
 
 .about-box {
-    background: rgba(242, 194, 53, 0.1);
+    background: rgba(26, 35, 126, 0.08);
     border-radius: 14px;
     padding: 30px;
 }
@@ -159,12 +251,12 @@
 
 /* Pride */
 .about-pride {
-    background: #fffbf0;
-    border-left: 5px solid #f2c235;
+    background: #e8eaf6;
+    border-left: 5px solid #1a237e;
     padding: 20px 25px;
     border-radius: 10px;
     font-weight: 600;
-    color: #474341;
+    color: #283593;
     display: flex;
     align-items: center;
     gap: 12px;

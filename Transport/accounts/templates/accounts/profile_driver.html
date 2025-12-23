@@ -306,6 +306,27 @@
                         <!-- Trips Tab -->
                         <div class="tab-pane fade" id="trips">
                             <div class="tp-card">
+                                <h6 class="tp-card-title">Trip History</h6>
+                                {% if trips and trips.count > 0 %}
+                                    <ul class="list-group">
+                                        {% for trip in trips %}
+                                            <li class="list-group-item">
+                                                <strong>{{ trip.start_date }} - {{ trip.end_date }}</strong>
+                                                <br>
+                                                {{ trip.city.name }}
+                                                <br>
+                                                {{ trip.price }} SAR
+                                                <br>
+                                                الحالة: {{ trip.get_admin_status_display }}
+                                                <a href="{% url 'trips:trip_detail_view' trip.id %}" class="btn btn-sm btn-outline-primary ms-2">Details</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="tp-empty-text">
+                                        No trips available yet. Trip history will appear here once you complete your first ride.
+                                    </p>
+                                {% endif %}
                                 
                                 <div class="d-flex justify-content-between">
                                     <h6 class="tp-card-title">Trip History</h6>

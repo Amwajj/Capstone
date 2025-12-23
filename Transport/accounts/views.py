@@ -168,18 +168,19 @@ def profile_driver(request: HttpRequest, driver_id=None):
     عرض بروفايل أي سائق لأي مستخدم مسجّل دخول (راكب أو سائق)
     إذا لم يُحدد driver_id، يعرض بروفايل السائق الحالي
     """
-    try:
-        if driver_id:
+    if driver_id:
+        try:
             driver = Driver.objects.get(id=driver_id)
-        else:
-        # إذا لم يُحدد id، يعرض بروفايل السائق الحالي
-            driver = request.user.driver
-    except Driver.DoesNotExist:
+        except Driver.DoesNotExist:
             messages.error(request, "Driver not found.")
             return redirect('main:home_view')
-    
+    else:
+        # إذا لم يُحدد id، يعرض بروفايل السائق الحالي
+        driver = request.user.driver
     car = driver.car if hasattr(driver, 'car') else None
-    return render(request, 'accounts/profile_driver.html', {'driver': driver, 'car': car})
+    # جلب جميع الرحلات التي أنشأها السائق
+    trips = driver.trips.all().order_by('-created_at')
+    return render(request, 'accounts/profile_driver.html', {'driver': driver, 'car': car, 'trips': trips})
 
 @login_required
 def edit_driver_profile(request: HttpRequest):
@@ -191,7 +192,7 @@ def edit_driver_profile(request: HttpRequest):
         if driver_form.is_valid():
             driver_form.save()
             messages.success(request, 'Profile updated successfully!', "alert-success")
-            return redirect("accounts:profile_driver",driver_id=driver.id)
+            return redirect('accounts:profile_driver')
         else:
             messages.error(request, 'Please correct the errors below.', "alert-danger")
     else:
@@ -252,16 +253,14 @@ def edit_rider_profile(request: HttpRequest):
         if rider_form.is_valid():
             rider_form.save()
             messages.success(request, 'Profile updated successfully!', "alert-success")
-            return redirect('accounts:profile_rider', rider_id=rider.id)
+            return redirect('accounts:profile_rider')
         else:
             messages.error(request, 'Please correct the errors below.', "alert-danger")
     else:
         rider_form = RiderForm(instance=rider)
     
-    cities = City.objects.all()
     
     return render(request, 'accounts/edit_rider_profile.html', {
         'rider': rider,
         'form': rider_form,
-        'cities': cities,
     })
