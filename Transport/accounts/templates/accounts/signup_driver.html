@@ -5,6 +5,20 @@
 
 {% block content %}
 
+<style>
+/* ⭐ نفس ستايل Rider */
+.field-error input,
+.field-error select,
+.field-error textarea {
+    border: 2px solid #dc3545;
+    background-color: #fff5f5;
+}
+.error-text {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 4px;
+}
+</style>
 
 <div class="auth-page">
     <div class="container">
@@ -12,8 +26,8 @@
             <div class="col-md-9 col-lg-7">
                 <div class="auth-card">
                     <div class="card-body p-4 p-md-5">
-                        
-                        <!-- Icon & Header -->
+
+                        <!-- Header -->
                         <div class="auth-header">
                             <div class="auth-icon">
                                 <i class="fa-solid fa-car"></i>
@@ -21,146 +35,172 @@
                             <h2>Create Driver Account</h2>
                             <p>Join RIDERS as a Professional Driver</p>
                         </div>
-                        
-                        <!-- Info Alert -->
+
                         <div class="alert-custom alert-info-custom">
                             <i class="fa-solid fa-info-circle"></i>
                             <span>Your driver account will be reviewed and approved by our team.</span>
                         </div>
-                        
-                        <!-- Messages -->
+
                         {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert-custom alert-{{ message.tags }}-custom">
-                                    <i class="fa-solid fa-circle-exclamation"></i>
-                                    <span>{{ message }}</span>
-                                </div>
-                            {% endfor %}
+                        {% for message in messages %}
+                        <div class="alert-custom alert-{{ message.tags }}-custom">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        {% endfor %}
                         {% endif %}
-                        
-                        <form method="POST" action="{% url 'accounts:sign_up_driver' %}" enctype="multipart/form-data" class="auth-form">
-                        {% csrf_token %}
-                        
-                        <h5 class="form-section-title">
-                            <i class="fa-solid fa-user-circle"></i> Account Information
-                        </h5>
-                        
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username *</label>
-                            <input type="text" class="form-control" id="username" name="username" 
-                                   placeholder="Enter your username" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="first_name" class="form-label">First name</label>
-                            <input type="text" class="form-control" name="first_name" 
-                                   placeholder="Enter your first name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="last_name" class="form-label">Last name</label>
-                            <input type="text" class="form-control" name="last_name" 
-                                   placeholder="Enter your last name" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                   placeholder="Enter your email" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password *</label>
-                            <input type="password" class="form-control" id="password" name="password" 
-                                   placeholder="Enter your password (min 8 characters)" required>
-                            <div class="password-strength" id="password-strength"></div>
-                            <small class="form-text" id="password-text"></small>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="confirm_password" class="form-label">Confirm Password *</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
-                                   placeholder="Confirm your password" required>
-                        </div>
-                        
-                        <h5 class="form-section-title">
-                            <i class="fa-solid fa-id-card"></i> Personal Information
-                        </h5>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="gender" class="form-label">Gender</label>
-                                <select class="form-select" id="gender" name="gender">
-                                    <option value="">Select Gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                </select>
+
+                        <form method="POST"
+                              action="{% url 'accounts:sign_up_driver' %}"
+                              enctype="multipart/form-data"
+                              class="auth-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+                            <h5 class="form-section-title">
+                                <i class="fa-solid fa-user-circle"></i> Account Information
+                            </h5>
+
+                            <!-- Username -->
+                            <div class="mb-3 {% if form.username and form.username.errors %}field-error{% endif %}">
+                                <label class="form-label">Username *</label>
+                                <input type="text" class="form-control" name="username"
+                                       value="{{ request.POST.username|default:'' }}" required>
                             </div>
-                            
-                            <div class="col-md-6">
-                                <label for="date_of_birth" class="form-label">Birth Date</label>
-                                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number *</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" 
-                                   placeholder="05xxxxxxxx or 9665xxxxxxxx" required>
-                            <small class="form-text text-muted">Format: 05xxxxxxxx or 9665xxxxxxxx</small>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="id_type" class="form-label">ID Type *</label>
-                                <select class="form-select" id="id_type" name="id_type" required>
-                                    <option value="">Select ID Type</option>
-                                    <option value="national">National ID</option>
-                                    <option value="iqama">Iqama</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label for="national_id_or_iqama" class="form-label">ID Number *</label>
-                                <input type="text" class="form-control" id="national_id_or_iqama" name="national_id_or_iqama" 
-                                       placeholder="Enter your ID number" required>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="id_city" class="form-label">City *</label>
-                            <select class="form-select" id="id_city" name="city" required>
-                                <option value="">Select your city</option>
-                                {% for city in cities %}
-                                    <option value="{{ city.id }}">{{ city.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>                       
+
                             <div class="mb-3">
-                                <label for="id_nationality" class="form-label">Nationality *</label>
-                                {{ form.nationality }}
+                                <label class="form-label">First Name *</label>
+                                <input type="text" class="form-control" name="first_name"
+                                       value="{{ request.POST.first_name|default:'' }}" required>
                             </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" name="last_name"
+                                       value="{{ request.POST.last_name|default:'' }}" required>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3 {% if form.email and form.email.errors %}field-error{% endif %}">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="email"
+                                       value="{{ request.POST.email|default:'' }}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Password *</label>
+                                <input type="password" class="form-control" name="password" required>
+                            </div>
+
                             <div class="mb-4">
-                                <label for="id_licenses" class="form-label">Driving License *</label>
-                                <input type="file" class="form-control" id="id_licenses" name="licenses" accept="image/*" required>
-                                <small class="text-muted">Upload a photo of your driving license (Required)</small>
+                                <label class="form-label">Confirm Password *</label>
+                                <input type="password" class="form-control" name="confirm_password" required>
                             </div>
-                        
-                        
-                        <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-4">
-                            <i class="fa-solid fa-car-side me-2"></i>Create Driver Account
-                        </button>
-                    </form>
-                    
-                    <!-- Footer Links -->
-                    <div class="auth-footer">
-                        <p>Already have an account? 
-                            <a href="{% url 'accounts:sign_in' %}" class="text-decoration-none fw-bold">Sign In</a>
-                        </p>
-                        <p>Just need a ride? 
-                            <a href="{% url 'accounts:sign_up_rider' %}" class="text-decoration-none fw-bold text-primary">
-                                <i class="fa-solid fa-user"></i> Sign Up as Rider
-                            </a>
-                        </p>
-                    </div>
+
+                            <h5 class="form-section-title">
+                                <i class="fa-solid fa-id-card"></i> Personal Information
+                            </h5>
+
+                            <!-- Gender -->
+                            <div class="row mb-3">
+                                <div class="col-md-6 {% if form.gender.errors %}field-error{% endif %}">
+                                    <label class="form-label">Gender</label>
+                                    <select class="form-select" name="gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="male" {% if request.POST.gender == 'male' %}selected{% endif %}>Male</option>
+                                        <option value="female" {% if request.POST.gender == 'female' %}selected{% endif %}>Female</option>
+                                    </select>
+                                    {% for error in form.gender.errors %}
+                                        <div class="error-text">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Birth Date</label>
+                                    <input type="date" class="form-control" name="date_of_birth"
+                                           value="{{ request.POST.date_of_birth|default:'' }}">
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="mb-3 {% if form.phone.errors %}field-error{% endif %}">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" name="phone"
+                                       value="{{ request.POST.phone|default:'' }}" required>
+                                {% for error in form.phone.errors %}
+                                    <div class="error-text">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- ID -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">ID Type *</label>
+                                    <select class="form-select" name="id_type" required>
+                                        <option value="">Select ID Type</option>
+                                        <option value="national" {% if request.POST.id_type == 'national' %}selected{% endif %}>National ID</option>
+                                        <option value="iqama" {% if request.POST.id_type == 'iqama' %}selected{% endif %}>Iqama</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">ID Number *</label>
+                                    <input type="text" class="form-control" name="national_id_or_iqama"
+                                           value="{{ request.POST.national_id_or_iqama|default:'' }}" required>
+                                </div>
+                            </div>
+
+                            <!-- City -->
+                            <div class="mb-3 {% if form.city.errors %}field-error{% endif %}">
+                                <label class="form-label">City *</label>
+                                <select class="form-select" name="city" required>
+                                    <option value="">Select your city</option>
+                                    {% for city in cities %}
+                                        <option value="{{ city.id }}"
+                                          {% if request.POST.city == city.id|stringformat:'s' %}selected{% endif %}>
+                                          {{ city.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% for error in form.city.errors %}
+                                    <div class="error-text">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Nationality -->
+                            <div class="mb-3 {% if form.nationality.errors %}field-error{% endif %}">
+                                <label class="form-label">Nationality *</label>
+                                {{ form.nationality }}
+                                {% for error in form.nationality.errors %}
+                                    <div class="error-text">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- License -->
+                            <div class="mb-4 {% if form.licenses.errors %}field-error{% endif %}">
+                                <label class="form-label">Driving License *</label>
+                                <input type="file" class="form-control" name="licenses" required>
+                                {% for error in form.licenses.errors %}
+                                    <div class="error-text">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-4">
+                                <i class="fa-solid fa-car-side me-2"></i>Create Driver Account
+                            </button>
+                        </form>
+
+                        <div class="auth-footer">
+                            <p>Already have an account?
+                                <a href="{% url 'accounts:sign_in' %}" class="fw-bold">Sign In</a>
+                            </p>
+                            <p>Just need a ride?
+                                <a href="{% url 'accounts:sign_up_rider' %}" class="fw-bold text-primary">
+                                    <i class="fa-solid fa-user"></i> Sign Up as Rider
+                                </a>
+                            </p>
+                        </div>
+
                     </div>
                 </div>
             </div>

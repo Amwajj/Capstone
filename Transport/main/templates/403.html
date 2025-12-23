@@ -1,0 +1,51 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Access Forbidden{% endblock %}
+
+{% block style %}
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            background: url("{% static 'images/403-bg.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+
+        .back-home {
+            position: absolute;
+            bottom: 90px; /* ⭐ نفس مكان زر 404 */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .back-home a {
+            text-decoration: none;
+            padding: 14px 36px;
+            background: #000;
+            color: #fff;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .back-home a:hover {
+            background: #222;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="back-home">
+        <a href="/">Back to Home</a>
+    </div>
+
+{% endblock %}
