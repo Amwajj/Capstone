@@ -12,7 +12,7 @@
         }
 
         body {
-            background: url("{% static 'images/403-bg.jpg' %}") no-repeat center center fixed;
+            background: url("{% static 'image/403-bg.jpg' %}") no-repeat center center fixed;
             background-size: cover;
             font-family: Arial, sans-serif;
             position: relative;
@@ -20,7 +20,7 @@
 
         .back-home {
             position: absolute;
-            bottom: 90px; /* ⭐ نفس مكان زر 404 */
+            bottom: 90px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -38,13 +38,16 @@
         .back-home a:hover {
             background: #222;
         }
+        footer{
+            display: none;
+        }
     </style>
 {% endblock %}
 
 {% block content %}
 
 
-    <div class="back-home">
+    <div class="back-home ">
         <a href="/">Back to Home</a>
     </div>
 

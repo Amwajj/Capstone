@@ -15,8 +15,7 @@ def driver_car_view(request: HttpRequest) -> HttpResponse:
     driver = Driver.objects.filter(user=request.user).first()
 
     if not driver:
-        messages.error(request, "No driver profile found. Please contact admin.")
-        return redirect("accounts:profile_driver",driver_id=driver.id)
+        return render(request, "403.html", status=403)
 
     # جلب السيارة المرتبطة بالسائق إذا وجدت
     car = getattr(driver, 'car', None)
@@ -34,5 +33,6 @@ def driver_car_view(request: HttpRequest) -> HttpResponse:
 
     return render(request, "drivers/driver_car.html", {
         "form": form,
-        "car": car
+        "car": car,
+         "driver": driver,
     })

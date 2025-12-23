@@ -14,7 +14,7 @@
         }
 
         body {
-            background: url("{% static 'images/404-bg.jpg' %}") no-repeat center center fixed;
+            background: url("{% static 'image/404-bg.jpg' %}") no-repeat center center fixed;
             background-size: cover;
             font-family: Arial, sans-serif;
             position: relative;
@@ -22,7 +22,7 @@
 
         .back-home {
             position: absolute;
-            bottom: 90px; /* ⭐ تحت السيارة */
+            bottom: 90px; 
             left: 50%;
             transform: translateX(-50%);
         }
@@ -40,6 +40,11 @@
         .back-home a:hover {
             background: #222;
         }
+
+         footer{
+            display: none;
+        }
+
     </style>
 {% endblock %}
     

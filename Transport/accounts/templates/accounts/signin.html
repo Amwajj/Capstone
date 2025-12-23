@@ -33,8 +33,12 @@
                         {% endif %}
                         
                         <!-- Form -->
-                        <form method="POST" action="{% url 'accounts:sign_in' %}" class="auth-form">
+                        <form method="POST" action="{% url 'accounts:sign_in' %}" class="auth-form"> <!-- ⭐ -->
+
                             {% csrf_token %}
+
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
                             
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>

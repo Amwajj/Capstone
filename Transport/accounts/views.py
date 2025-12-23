@@ -13,6 +13,8 @@ from main.models import City, Nationality
 from trips.models import Trip, JoinTrip
 from django.contrib.auth.decorators import login_required
 from django.db import transaction  
+from django.utils.http import url_has_allowed_host_and_scheme  
+
 
 
 #  Helper لتقليل التكرار 
@@ -197,15 +199,24 @@ def sign_up_driver(request: HttpRequest):
 
 def sign_in(request: HttpRequest):
 
+    next_url = request.GET.get("next") or request.POST.get("next")  
+
 
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
 
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return redirect(request.GET.get("next", "/"))
+
+    # ⭐ حماية من open redirect
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+                return redirect(next_url)  # ⭐
+
+            return redirect("main:home_view")  # ⭐
+        
         else:
             messages.error(request, 'Invalid username or password.', "alert-danger")
             return render(request, 'accounts/signin.html')
