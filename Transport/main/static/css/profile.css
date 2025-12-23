@@ -152,20 +152,23 @@
         border-radius: 999px;
         padding: 7px 16px;
         font-size: 0.86rem;
-        color: #6b7280;
+        color: #3949ab;
         background: transparent;
-        border: 1px solid transparent;
+        border: 1.5px solid #c5cae9;
+        transition: background 0.18s, color 0.18s, box-shadow 0.18s;
     }
 
     .tp-tabs .nav-link:hover {
-        background: rgba(0, 0, 0, 0.03);
+        background: linear-gradient(90deg, #e3e8f7 0%, #c5cae9 100%);
+        color: #1a237e;
+        border-color: #3949ab;
     }
 
     .tp-tabs .nav-link.active {
-        color: #474341;
-        background: linear-gradient(135deg, #f2c235 0%, #f8d66d 40%, #fce591 100%);
-        border-color: rgba(242, 194, 53, 0.7);
-        box-shadow: 0 10px 25px rgba(242, 194, 53, 0.35);
+        color: #fff;
+        background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%);
+        border-color: #3949ab;
+        box-shadow: 0 10px 25px #3949ab33;
     }
 
     .tp-card {

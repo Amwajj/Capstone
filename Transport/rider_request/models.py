@@ -34,6 +34,22 @@ class RiderRequest (models.Model):
     def __str__(self):
         return self.rider.user
 
+class JoinRequestTrip (models.Model):
+    
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    ]
+ 
+    rider_request = models.ForeignKey(RiderRequest, on_delete=models.CASCADE, related_name='all_join_requests')
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE, related_name='my_submissions')
+    rider_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+
+    def __str__(self):
+        return self.rider.user
+
+
 class CommentRiderRequest (models.Model):
 
     user = models.ForeignKey(User, on_delete= models.CASCADE)

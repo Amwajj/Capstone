@@ -96,12 +96,27 @@
                             <a href="{% url 'rider_request:delete_rider_request' rider_request.id %}" class="btn btn-sm btn-outline-danger fw-bold">
                                 <i class="fa-solid fa-trash-can"></i> Delete
                             </a>
-                        {% endif %}
-                        
-                        {% if rider_request.status == 'pending' %}
-                            <a href="{% url 'rider_request:accept_rider_request' rider_request.id %}" class="btn btn-sm btn-success text-white px-3">
-                                Accept Request
-                            </a>
+
+                        {% elif request.user.is_authenticated and request.user.rider %}
+                            
+                            {% if not has_joined %}
+                                <a href="{% url 'rider_request:join_trip' rider_request.id %}" class="btn btn-sm btn-outline-warning fw-bold">
+                                    <i class="fa-solid fa-plus me-1"></i> Join Trip
+                                </a>
+                            {% else %}
+                                <div class="d-flex align-items-center">
+                                    <span class="text-muted small me-2">Your Request Status </span>
+                                    
+                                    {% if user_status == 'Approved' %}
+                                        <span class="badge bg-success-subtle text-success border border-success px-3">Accepted</span>
+                                    {% elif user_status == 'Rejected' %}
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-3">Rejected</span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning border border-warning px-3">Pending</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
                         {% endif %}
                     </div>
                 </div>
@@ -156,7 +171,7 @@
                 </div>
             </div>
         </div>
-
+<!--
         <div class="col-12 col-lg-4">
             <div class="card custom-card">
                 <h3 class="section-title fs-4">
@@ -185,8 +200,119 @@
                 {% endif %}
             </div>
         </div>
+    -->
+        <div class="col-12 col-lg-4">
+    <div class="card custom-card">
+        <h3 class="section-title fs-4">
+            <i class="fa-solid fa-user me-2"></i> Rider Information
+        </h3>
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <img src="{{ rider.avatar.url }}" class="rounded-circle avatar" width="80" height="80">
+            <div>
+                <h5 class="fw-bold mb-1">{{ rider.user.username }}</h5>
+                <span class="badge bg-secondary-subtle text-secondary">{{ rider.gender }}</span>
+                <!--<small class="d-block text-muted">Trip Owner</small>-->
+            </div>
+        </div>
+
+        <div class="info-box bg-white p-3 rounded-3 border mb-3">
+            <p class="small text-muted mb-2">Joined Riders</p>
+            <div class="d-flex flex-wrap gap-2">
+                {% for r in join_requests %}
+                    {% if r.rider_status == 'APPROVED' %}
+                        <div class="text-center" title="{{ r.rider.user.username }}">
+                            <img src="{{ r.rider.avatar.url }}" 
+                                 class="rounded-circle border border-2 border-success" 
+                                 width="45" height="45" 
+                                 style="object-fit: cover;">
+                            <p class="mb-0" style="font-size: 10px;">{{ r.rider.user.username }}</p>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <p class="small text-muted mb-0">No riders joined yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    <!--
+        <div class="info-box bg-white p-3 rounded-3 border mb-3">
+            <p class="small text-muted mb-1">Owner Phone</p>
+            <p class="fw-bold mb-0 text-dark">{{ rider.phone }}</p>
+        </div>
+    -->
+        <hr class="my-4 opacity-25">
+        
+        {% if rider_request.status == 'accept' %}
+            <div class="alert alert-success py-2">
+                <small>Accepted by: <strong>{{ rider_request.driver.user.username }}</strong></small>
+            </div>
+        {% endif %}
     </div>
 </div>
+    </div>
+</div>
+</div> 
+{% if rider_request.rider.user == request.user %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card custom-card p-4 shadow-sm">
+                <h5 class="section-title mb-4">
+                    <i class="fa-solid fa-users me-2"></i> Join Requests
+                </h5>
+                
+                {% if join_requests %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr style="color:#474341;">
+                                <th>User</th>
+                                <th>Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in join_requests %}
+                            <tr>
+                                <td class="fw-semibold">{{ r.rider.user.username }}</td>
+                                <td>
+                                    {% if r.rider_status == 'APPROVED' %}
+                                        <span class="badge bg-success-subtle text-success border border-success px-3">Accepted</span>
+                                    {% elif r.rider_status == 'REJECTED' %}
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-3">Rejected</span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning border border-warning px-3">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if r.rider_status == 'PENDING' %}
+                                    <form method="POST" action="{% url 'rider_request:update_status' r.id 'APPROVED' %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success px-3 fw-bold">Accept</button>
+                                    </form>
+                                    <form method="POST" action="{% url 'rider_request:update_status' r.id 'REJECTED' %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-3 fw-bold">Reject</button>
+                                    </form>
+                                    {% else %}
+                                        <small class="text-muted">Action Completed</small>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">No join requests yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div> 
+
+
 
 {% include "rider_request/component/comment_block.html" %}
 

@@ -3,7 +3,7 @@
 /* تنسيق الخلفية */
 .auth-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
+    background: linear-gradient(135deg, #f8f7f5 0%, #9db1dbaa 90%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,18 +69,18 @@
 .auth-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #f2c235 0%, #e0b020 100%);
+    background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    box-shadow: 0 5px 15px rgba(242, 194, 53, 0.3);
+    box-shadow: 0 5px 15px rgba(26, 35, 126, 0.18);
 }
 
 .auth-icon i {
     font-size: 2.5rem;
-    color: #474341;
+    color: #fff;
 }
 
 /* تنسيق الفورم */
@@ -111,8 +111,8 @@
 
 .auth-form .form-control:focus,
 .auth-form .form-select:focus {
-    border-color: #f2c235;
-    box-shadow: 0 0 0 0.2rem rgba(242, 194, 53, 0.25);
+    border-color: #1a237e;
+    box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.18);
     outline: none;
     background-color: white;
 }
@@ -144,19 +144,48 @@
     border-radius: 8px;
     transition: all 0.3s ease;
     border: none;
+    position: relative;
+    background: #fff;
 }
 
 .auth-btn-primary {
-    background: linear-gradient(135deg, #f2c235 0%, #e0b020 100%);
-    color: #474341;
+    color: #474341 !important;
+    text-shadow: 0 1px 6px #0f0f1282, 0 1px 2px #e0b02044;
     font-weight: 700;
+    border: 2px solid transparent;
+    z-index: 2;
+    overflow: visible;
+    background-clip: padding-box;
+}
+
+.auth-btn-primary::before {
+    content: "";
+    position: absolute;
+    top: -3px; left: -3px; right: -3px; bottom: -3px;
+    z-index: 1;
+    border-radius: 12px;
+    padding: 3px; /* سمك الحد */
+    background: linear-gradient(270deg, #b6b8ca, #0e25b5, #ffffff, #3949ab);
+    background-size: 400% 400%;
+    animation: borderMove 3s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude; /* يظهر فقط الحد */
+    pointer-events: none;
+}
+
+
+@keyframes borderMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }
 
 .auth-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(242, 194, 53, 0.4);
-    background: linear-gradient(135deg, #e0b020 0%, #d0a010 100%);
-    color: #474341;
+    box-shadow: 0 8px 20px rgba(26, 35, 126, 0.10);
+    background: #1a237e;
+    color: #fff;
+    border: 2px solid #1a237e;
 }
 
 /* أقسام الفورم */
@@ -166,7 +195,7 @@
     font-size: 1.1rem;
     margin: 30px 0 20px;
     padding-bottom: 10px;
-    border-bottom: 3px solid #f2c235;
+    border-bottom: 3px solid #1a237e;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -178,7 +207,7 @@
 
 .form-section-title i {
     font-size: 1.3rem;
-    color: #f2c235;
+    color: #1a237e;
 }
 
 /* تنسيق الروابط السفلية */
@@ -186,7 +215,7 @@
     text-align: center;
     margin-top: 30px;
     padding-top: 25px;
-    border-top: 2px solid #a3a2a2;
+    border-top: 2px solid #1a237e;
 }
 
 .auth-footer p {
@@ -237,9 +266,9 @@
 }
 
 .alert-warning-custom {
-    background: #fffbf0;
-    color: #474341;
-    border-left-color: #f2c235;
+    background: #e8eaf6;
+    color: #283593;
+    border-left-color: #1a237e;
 }
 
 .alert-danger-custom {
@@ -252,11 +281,12 @@
 .form-control[type="file"] {
     padding: 10px;
     cursor: pointer;
+    
 }
 
 .form-control[type="file"]::file-selector-button {
-    background: linear-gradient(135deg, #f2c235 0%, #e0b020 100%);
-    color: #474341;
+    background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+    color: #fff;
     border: none;
     padding: 8px 16px;
     border-radius: 6px;
@@ -268,7 +298,7 @@
 
 .form-control[type="file"]::file-selector-button:hover {
     transform: scale(1.05);
-    background: linear-gradient(135deg, #e0b020 0%, #d0a010 100%);
+    background: linear-gradient(135deg, #3949ab 0%, #283593 100%);
 }
 
 /* تنسيق Small Text */
@@ -367,13 +397,13 @@
     margin-bottom: 0 !important;
 }
 
-.auth-form input:focus,
-.auth-form select:focus,
-.auth-form textarea:focus {
-    border-color: #f2c235;
-    background-color: white;
-    box-shadow: 0 0 0 .2rem rgba(242, 194, 53, 0.25);
-    outline: none;
+    .auth-form input:focus,
+    .auth-form select:focus,
+    .auth-form textarea:focus {
+        border-color: #1a237e;
+        background-color: white;
+        box-shadow: 0 0 0 .2rem rgba(26, 35, 126, 0.18);
+        outline: none;
 }
 
 /* labels */
@@ -383,18 +413,15 @@
     font-size: 0.95rem;
     margin-bottom: 8px;
 }
-
-/* spacing between fields */
-.auth-form .mb-3,
 .auth-form .mb-4 {
     margin-bottom: 1.6rem !important;
 }
 
 /* upload button */
 .auth-form input[type="file"]::file-selector-button {
-    background: linear-gradient(135deg, #f2c235 0%, #e0b020 100%);
+    background: linear-gradient(135deg, #1a227e98 0%, #3949ab 100%);
     border: none;
-    color: #474341;
+    color: #fff;
     font-weight: 600;
     border-radius: 6px;
     padding: 8px 14px;
@@ -405,21 +432,16 @@
 .auth-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #f2c235 0%, #e0b020 100%);
+    background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    box-shadow: 0 5px 15px rgba(242, 194, 53,0.3);
+    box-shadow: 0 5px 15px rgba(26, 35, 126, 0.18);
 }
 
 .auth-icon i {
     font-size: 2.5rem;
-    color: #474341;
+    color: #fff;
 }
-
-
-
-
-

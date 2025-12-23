@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponseForbidden
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .forms import RiderRequestForm
-from .models import RiderRequest, CommentRiderRequest
+from .models import RiderRequest, CommentRiderRequest, JoinRequestTrip
 from riders.models import Rider
 from main.models import City, Neighborhood, Day
 
@@ -62,11 +62,33 @@ def detail_rider_request(request:HttpRequest,  rider_request_id):
     rider = rider_request.rider
     comments = rider_request.comments.filter(parent__isnull=True).order_by('-created_at')
 
+    #لعرض_طلبات_الانضمام
+    join_requests = rider_request.all_join_requests.all()
+    #لحساب_عدد_الركاب_المقبولين
+    approved_count = rider_request.all_join_requests.filter(rider_status='APPROVED').count()
+    #حساب_عدد_المقاعد_المتبقية
+    remaining_seats = max(0, rider_request.total_riders - approved_count)
+
+    has_joined = False
+    #لعرض_حالة_الطلب_لصاحب_الطلب
+    user_status = None
+
+    if request.user.is_authenticated and hasattr(request.user, 'rider'):
+   
+        join_req = JoinRequestTrip.objects.filter(
+            rider_request=rider_request, 
+            rider=request.user.rider
+        ).first()
+        
+        if join_req:
+            has_joined = True
+            user_status = join_req.get_rider_status_display()
+
     
     # ⭐ هل المستخدم الحالي سائق؟
     is_driver_user = hasattr(request.user, "driver")  # ⭐
 
-    return render(request, "rider_request/rider_request_detail.html", {'rider_request':rider_request,'rider':rider,  "comments": comments, "is_driver_user": is_driver_user})
+    return render(request, "rider_request/rider_request_detail.html", {'rider_request':rider_request,'rider':rider,  "comments": comments, "is_driver_user": is_driver_user, 'has_joined': has_joined, 'user_status': user_status, 'join_requests': join_requests, 'remaining_seats': remaining_seats})
 
 #Allowing driver to change the request status
 def accept_rider_request(request, rider_request_id):
@@ -76,7 +98,34 @@ def accept_rider_request(request, rider_request_id):
     rider_request.driver = request.user.driver
     rider_request.save()
     
-    return redirect('rider_request:detail_rider_request', rider_request_id=rider_request_id, )
+    return redirect('rider_request:detail_rider_request', rider_request_id=rider_request_id)
+
+#طلب_انضمام
+@login_required
+def join_trip_action(request, rider_request_id):
+ 
+    rider_req_ad = get_object_or_404(RiderRequest, id=rider_request_id)
+    
+    if hasattr(request.user, 'rider') and rider_req_ad.rider != request.user.rider:
+        JoinRequestTrip.objects.get_or_create(
+            rider=request.user.rider,
+            rider_request=rider_req_ad,
+            defaults={'rider_status': 'PENDING'}
+        )
+    
+    return redirect('rider_request:detail_rider_request', rider_request_id=rider_request_id)
+
+#تحديث_حالة_الطلب_من _قبل_المعلن
+@login_required
+def update_request_status(request, join_id, status):
+    join_req = get_object_or_404(JoinRequestTrip, id=join_id)
+    
+    if join_req.rider_request.rider == request.user.rider:
+        if status in ['APPROVED', 'REJECTED']:
+            join_req.rider_status = status
+            join_req.save()
+            
+    return redirect('rider_request:detail_rider_request', rider_request_id=join_req.rider_request.id)
 
 
 #update the rider request ads form
@@ -96,13 +145,7 @@ def update_rider_request(request, pk):
       
         form = RiderRequestForm(instance=rider_request)
 
-    context = {
-        'rider_request_form': form,
-        'rider_request': rider_request,
-        'cities': City.objects.all(),
-        'neighborhoods': Neighborhood.objects.all(),
-        'days': Day.objects.all(),
-        'status': RiderRequest.Status.choices
+    context = { 'rider_request_form': form,'rider_request': rider_request, 'cities': City.objects.all(),'neighborhoods': Neighborhood.objects.all(),'days': Day.objects.all(),'status': RiderRequest.Status.choices
     }
     return render(request, "rider_request/rider_request_update_form.html", context)
 

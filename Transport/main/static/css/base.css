@@ -1,11 +1,5 @@
 /* Page transition animation for main content */
-.fadein-page {
-    opacity: 0;
-    transform: translateY(40px);
-    animation: fadeinPageAnim 0.9s cubic-bezier(.4,0,.2,1) forwards;
-    box-shadow: none !important;
-    background: none !important;
-}
+
 
 @keyframes fadeinPageAnim {
     to {
@@ -76,23 +70,28 @@
     box-sizing: border-box;
 }
 
+/* خلي الصفحة مخفية من البداية */
 body {
-    font-family: Arial, sans-serif;
+    background: #121213; /* لون خلفية الصفحة الرئيسي */
+    color: #e3e8f7;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-bottom: 0;
-main {
-    flex: 1 0 auto;
+    opacity: 0;          /* مخفية في البداية */
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
-.footer-box {
-    flex-shrink: 0;
+
+/* بعد التحميل، نضيف الكلاس اللي يظهر الصفحة تدريجيًا */
+body.page-loaded {
+    opacity: 1;
+    transform: translateY(0);
 }
-}
+
+
 /* Navbar slide-down animation */
 .navbar {
-    transform: translateY(-100px);
-    opacity: 0;
+  
     transition: transform 1.2s cubic-bezier(.4,0,.2,1), opacity 1.2s cubic-bezier(.4,0,.2,1);
 }
 .navbar.navbar-visible {
@@ -497,7 +496,7 @@ main {
     background: none;
     border: none;
     font-size: 1.7rem;
-    color: #fdfdffb8;
+    color: #474a9274;
     cursor: pointer;
     margin-left: 10px;
     margin-right: 0;
