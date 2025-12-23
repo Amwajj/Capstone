@@ -14,6 +14,7 @@ from trips.models import Trip, JoinTrip
 from django.contrib.auth.decorators import login_required
 from django.db import transaction  
 from django.utils.http import url_has_allowed_host_and_scheme  
+from django.contrib import messages
 
 from django.db.models import Count, Q
 
@@ -312,8 +313,9 @@ def profile_rider(request: HttpRequest, rider_id=None):
     
     
     has_rejected = joined_trips.filter(rider_status='REJECTED').exists()
-
-    return render(request, 'accounts/profile_rider.html', {'rider': rider,'joined_trips':joined_trips,'has_rejected':has_rejected, 'subscriptions':subscriptions, 'joined_trips':joined_trips})
+    if has_rejected:
+        messages.warning(request, "Attention: You have rejected join requests. Please check the details in your joined trips list.")
+    return render(request, 'accounts/profile_rider.html', {'rider': rider,'has_rejected':has_rejected, 'subscriptions':subscriptions, 'joined_trips':joined_trips})
 
 @login_required
 def edit_rider_profile(request: HttpRequest):
