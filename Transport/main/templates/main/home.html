@@ -109,13 +109,13 @@
     </div>
     <div class="row g-4">
         {% for ads in rider_requests %}
-            <div class="col-md-6 col-lg-6 ">
+            <div class="col-md-6 col-lg-4">
                 <div class="card shadow-sm border-0 position-relative overflow-hidden card-content">
 
                     <div class="card-body p-4">
                         <div class="d-flex flex-column align-items-center justify-content-center mb-3">
-                            <div class="d-flex align-items-center justify-content-center  icon-box bg-warning-subtle rounded-circle p-2 " id="icon-bg">
-                                <i class="fa-solid fa-location-dot"></i>
+                            <div class="d-flex align-items-center justify-content-center  icon-box bg-primary-subtle rounded-circle p-2 " id="icon-bg">
+                                <i class="fa-solid fa-location-dot text-primary"></i>
                             </div>
                             <div>
                                 <h3 class="mb-0 fw-bold">{{ ads.city.name }}</h3> 
@@ -134,7 +134,7 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <a href="{% url 'rider_request:detail_rider_request' ads.id %}" class="btn btn-outline-warning rounded-pill">
+                            <a href="{% url 'rider_request:detail_rider_request' ads.id %}" class="btn btn-outline-primary rounded-pill">
                                 View Details
                             </a>    
                         </div>
