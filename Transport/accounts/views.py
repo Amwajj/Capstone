@@ -107,7 +107,7 @@ def sign_up_rider(request: HttpRequest):
             request,
             f'Welcome {username}! You are registered as a Rider.'
         )
-        return redirect('accounts:sign_in')  
+        return redirect('main:home_view')  
 
     # GET
     form = RiderForm()
@@ -192,7 +192,7 @@ def sign_up_driver(request: HttpRequest):
             f'Welcome {username}! You are registered as a Driver. Your account is pending approval.',
             "alert-info"
         )
-        return redirect('accounts:sign_in')  
+        return redirect('main:home_view')  
 
 
 
@@ -365,7 +365,7 @@ def edit_rider_profile(request: HttpRequest):
         if rider_form.is_valid():
             rider_form.save()
             messages.success(request, 'Profile updated successfully!', "alert-success")
-            return redirect('accounts:profile_rider')
+            return redirect('accounts:profile_rider', rider_id=rider.id)
         else:
             messages.error(request, 'Please correct the errors below.', "alert-danger")
     else:

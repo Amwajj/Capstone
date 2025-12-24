@@ -73,7 +73,389 @@
     .profile-info-row i { margin-right: 8px; color: #3949ab; font-size: 1.2em; }
 </style>
 {% if request.user == driver.user %}
-{% include "drivers/component/driver_owner.html" %}
+<div class="tp-profile-page">
+    <div class="tp-shell">
+        <div class="tp-inner">
+            <div class="row g-4">
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="tp-sidebar d-flex flex-column align-items-center justify-content-center" style="text-align:center; background: linear-gradient(135deg, #e3e8f7 0%, #c5cae9 100%); border-radius: 18px; box-shadow: 0 2px 16px #3949ab22; padding: 32px 18px 28px 18px; min-height: 480px;">
+
+                        <div class="tp-avatar mb-3" style="box-shadow: 0 4px 18px #3949ab22; border-radius: 50%; background: #e3e8f7; padding: 8px; margin-bottom: 18px;">
+                            {% if driver.avatar and driver.avatar.url != '/media/images/avatars/avatar.webp' %}
+                                <img src="{{ driver.avatar.url }}" alt="Driver Avatar" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #3949ab;">
+                            {% else %}
+                                <i class="fa-solid fa-user fa-4x text-muted" style="margin-bottom: 10px;"></i>
+                            {% endif %}
+                        </div>
+
+                        <div class="tp-name" style="font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; color: #1a237e; letter-spacing: 0.5px;">
+                            {{ driver.user.first_name }} {{ driver.user.last_name }}
+                        </div>
+
+                        <div class="tp-username" style="font-size: 1.08rem; color: #3949ab; margin-bottom: 10px;">
+                            @{{ driver.user.username }}
+                        </div>
+                    <!----- RATING ----->
+                        <div class="tp-rating mb-3" style="font-size: 1.15rem; color: #f2c235;">
+                            {% if driver.rating %}
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= driver.rating %}
+                                        <i class="fa-solid fa-star"></i>
+                                    {% else %}
+                                        <i class="fa-regular fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span style="color: #3949ab; font-size: 1.05rem; margin-left: 6px;">{{ driver.rating }}/5</span>
+                            {% else %}
+                                <span style="color: #aaa;">No rating</span>
+                            {% endif %}
+                        </div>
+                    <!--ِENDRATING-->
+                        <div class="tp-info-list w-100" style="font-size: 1.13rem; margin-bottom: 18px;">
+                            {% if driver.phone %}
+                                <div class="mb-2" style="background: #e3e8f7; border-radius: 8px; padding: 7px 0; color: #1a237e;"><i class="fa-solid fa-phone me-1"></i> {{ driver.phone }}</div>
+                            {% endif %}
+                            {% if driver.gender %}
+                                <div class="mb-2" style="background: #c5cae9; border-radius: 8px; padding: 7px 0; color: #3949ab;"><i class="fa-solid fa-venus-mars me-1"></i> {{ driver.get_gender_display }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="tp-email mb-2" style="font-size: 1.13rem; background: #e3e8f7; border-radius: 8px; padding: 7px 0; margin-bottom: 18px;">
+                            {% if driver.user.email %}
+                                <a href="mailto:{{ driver.user.email }}" target="_blank" style="color: #1a237e; text-decoration: underline;">
+                                    <i class="fa-solid fa-envelope me-1" style="color:#3949ab;"></i> - {{ driver.user.email }}
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <span class="tp-badge {% if driver.status == 'PENDING' %}pending{% elif driver.status == 'APPROVED' %}approved{% elif driver.status == 'REJECTED' %}rejected{% endif %}" style="font-size: 1.09rem; padding: 8px 26px; margin-top: 10px; display: inline-block; border-radius: 16px; background: linear-gradient(90deg, #121213 0%, #c5cae9 100%); color: #fff; font-weight: 600; letter-spacing: 0.5px;">
+                            {{ driver.get_status_display }}
+                        </span>
+
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-lg-8">
+
+                    <div class="tp-header">
+                        <div>
+                            <div class="tp-header-title">
+                                Driver Profile
+                            </div>
+                        </div>
+
+                        <div>
+                            <a href="{% url 'accounts:edit_driver_profile' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%); color: #fff; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 500;">
+                                <i class="fa-solid fa-pen" style="font-size: 0.8rem;"></i> Edit Profile
+                            </a>
+                            <a href="{% url 'drivers:driver_car' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%); color: #fff; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 500;">
+                                {% if driver.car %}
+                                    <i class="fa-solid fa-pen-to-square me-2"></i>
+                                    Edit Car Information
+                                {% else %}
+                                    <i class="fa-solid fa-plus me-2"></i>
+                                    Add Your Car
+                                {% endif %}
+                            </a>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Tabs -->
+                    <ul class="nav nav-pills tp-tabs mb-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#personal-info">
+                                <i class="fa-solid fa-user me-1"></i> Personal Info
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#vehicle">
+                                <i class="fa-solid fa-car me-1"></i> Vehicle
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#trips">
+                                <i class="fa-solid fa-route me-1"></i> Trips
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content mt-3">
+
+                        <!-- Personal Info Tab -->
+                        <div class="tab-pane fade show active" id="personal-info">
+                            <div class="tp-card">
+                                <h6 class="tp-card-title">Personal Information</h6>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Phone Number:</div>
+                                    <div class="tp-info-value">{{ driver.phone|default:"Not provided" }}</div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">National ID / Iqama:</div>
+                                    <div class="tp-info-value">{{ driver.national_id_or_iqama|default:"Not provided" }}</div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Gender:</div>
+                                    <div class="tp-info-value">{{ driver.get_gender_display }}</div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Date of Birth:</div>
+                                    <div class="tp-info-value">
+                                        {% if driver.date_of_birth %}
+                                            {{ driver.date_of_birth|date:"Y-m-d" }}
+                                        {% else %}
+                                            Not provided
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">City:</div>
+                                    <div class="tp-info-value">
+                                        {% if driver.city %}
+                                            <span class="badge bg-secondary">{{ driver.city.name }}</span>
+                                        {% else %}
+                                            Not provided
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Driving License:</div>
+                                    <div class="tp-info-value">
+                                        {% if driver.licenses %}
+                                            <a href="{{ driver.licenses.url }}" target="_blank">
+                                                <img src="{{ driver.licenses.url }}" alt="License" class="tp-image-preview">
+                                            </a>
+                                        {% else %}
+                                            Not uploaded
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                               
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Tab   معلومات السياره-->
+                        <div class="tab-pane fade" id="vehicle">
+                            <div class="tp-card">
+                                <h6 class="tp-card-title">Vehicle Information</h6>
+
+                                <form>
+                                    {% if car %}
+                                    <div class="tp-info-row">
+                                        <div class="tp-info-label">Company:</div>
+                                        <div class="tp-info-value">{{ car.company.name }}</div>
+                                    </div>
+
+                                    <div class="tp-info-row">
+                                        <div class="tp-info-label">Model:</div>
+                                        <div class="tp-info-value">{{ car.model }}</div>
+                                    </div>
+
+                                    <div class="tp-info-row">
+                                        <div class="tp-info-label">Year:</div>
+                                        <div class="tp-info-value">{{ car.year }}</div>
+                                    </div>
+
+                                    <div class="tp-info-row">
+                                        <div class="tp-info-label">Color:</div>
+                                        <div class="tp-info-value">{{ car.color }}</div>
+                                    </div>
+
+                                    <div class="tp-info-row">
+                                        <div class="tp-info-label">Plate Number:</div>
+                                        <div class="tp-info-value">{{ car.plate_number }}</div>
+                                    </div>
+
+                                    <div class="tp-info-row">
+                                        <div class="tp-info-label">Seats Count:</div>
+                                        <div class="tp-info-value">{{ car.seats_count }}</div>
+                                    </div>
+                                    <div class="tp-info-row">
+                                    <div class="tp-info-label">Car Registration (Istimara):</div>
+                                    <div class="tp-info-value">
+                                        {% if driver.car and driver.car.car_registration %}
+                                            <a href="{{ driver.car.car_registration.url }}" target="_blank">
+                                                <img src="{{ driver.car.car_registration.url }}" alt="Car Registration" class="tp-image-preview">
+                                            </a>
+                                        {% else %}
+                                            Not uploaded
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                    {% else %}
+                                    <p class="tp-empty-text">
+                                        No vehicle information available. Please add your vehicle details.
+                                    </p>
+                                    {% endif %}
+                                </form>
+                                
+                            </div>
+                        </div>
+                        <!-- Trips Tab -->
+                        <div class="tab-pane fade" id="trips">
+                            <div class="d-flex container justify-content-between">
+                                    <h4 class="">Trip History</h4>
+                                    <a href="{% url 'trips:create_trip_view' %}" class="btn btn-sm mb-3" style="background: linear-gradient(135deg, #f2c235 0%, #f8d66d 100%); color: #474341; border: none; padding: 6px 14px; font-size: 0.8rem; border-radius: 20px; font-weight: 500;">
+                                        + Create Trip
+                                    </a>
+                                </div>
+                            <div class="tp-card">
+                                
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="tp-card-title">Trip status</h6>
+                                    
+                                </div>
+                                {% if trips %}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Trip</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Seats</th>
+                                                <th>Status</th> 
+                                                {% if has_rejected %}
+                                                <th>Reject Comment</th>
+                                                {%endif%}
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for trip in trips %}
+                                            {% if trip.admin_status != 'APPROVED'%}
+                                            <tr>
+                                                <!-- زر تفاصيل الرحلة -->
+                                                <td>
+                                                    <a href="{% url 'trips:trip_detail_view' trip.id %}"
+                                                        class="btn btn-sm btn-outline-primary">
+                                                        Trip Details
+                                                    </a>
+                                                </td>
+                                                
+
+                                                <td>{{ trip.start_date }}</td>
+
+                                                <td>{{ trip.end_date }}</td>
+
+                                                <td>
+                                                    {{trip.total_riders}}
+                                                </td>
+                                                <td>
+                                                    
+                                                    {% if trip.admin_status == 'PENDING' %}
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                    {% elif trip.admin_status == 'REJECTED'%}
+                                                    <span class="badge bg-danger">Rejected</span>
+                                                    {% endif %}
+                                                </td>
+
+
+                                                {% if trip.admin_status == 'REJECTED' %}
+                                                <td class="text-muted">
+                                                    {{ trip.rejection_reason|default:"—" }}
+                                                </td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                            
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                {% else %}
+                                
+                                <p class="tp-empty-text">
+                                    No trips available yet. Trip history will appear here once you complete your first ride.
+                                </p>
+                                {% endif %}
+                            </div>
+
+
+                            <div class="tp-card">
+                                
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="tp-card-title">Trip History</h6>
+                                    <a href="{% url 'trips:create_trip_view' %}" class="btn btn-sm" style="background: linear-gradient(135deg, #3949ab 0%, #1a237e 100%); color: #fff; border: none; padding: 6px 14px; font-size: 0.8rem; border-radius: 20px; font-weight: 500;">
+                                        + Create Trip
+                                    </a>
+                                    <h6 class="tp-card-title">Trip Accepted</h6>
+                                </div>
+                                {% if subscriptions %}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Trip</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Status</th> 
+                                                <th>Seats</th>
+                                                <th>Subscribers</th>      
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for trip in subscriptions %}
+                                    
+                                            <tr>
+                                                <!-- زر تفاصيل الرحلة -->
+                                                <td>
+                                                    <a href="{% url 'trips:trip_detail_view' trip.id %}"
+                                                        class="btn btn-sm btn-outline-primary">
+                                                        Trip Details
+                                                    </a>
+                                                </td>
+                                                
+
+                                                <td>{{ trip.start_date }}</td>
+
+                                                <td>{{ trip.end_date }}</td>
+
+                                                <td>  
+                                                    <span class="badge bg-success text-white">Accepted</span>
+                                                </td>
+
+                                                <td>
+                                                    {{trip.total_riders}}
+                                                </td>
+
+                                               <td>{{trip.subscribed_count}}</td>
+                                            </tr>
+                                           
+                                            {% endfor %}
+                                            
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                {% else %}
+                                
+                                <p class="tp-empty-text">
+                                    No trips available yet. Trip history will appear here once you complete your first ride.
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {%endif%}
 
 {% if request.user != driver.user %}
