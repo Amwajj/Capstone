@@ -199,7 +199,57 @@
                                     <div class="error-text">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                            <a href="" class="text-primary d-flex align-items-center justify-content-center">Terms and conditions</a>
+<!-- Terms & Privacy (Inline) -->
+<div style="
+    margin-top:16px;
+    padding:12px 14px;
+    border:1px solid rgba(0,0,0,.12);
+    border-radius:10px;
+    background: rgba(255,255,255,.65);
+    display:flex;
+    align-items:center;
+    gap:10px;
+">
+    <input
+        type="checkbox"
+        name="accept_terms"
+        id="accept_terms"
+        required
+        style="
+            width:18px;
+            height:18px;
+            margin:0;
+            accent-color:#f2c235;
+            flex:0 0 auto;
+        "
+    >
+    <label for="accept_terms" style="
+        margin:0;
+        line-height:1.6;
+        color:#474341;
+        font-size:14px;
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+        align-items:center;
+    ">
+        <span>I agree to the</span>
+        <a href="{% url 'main:terms' %}" target="_blank" style="
+            color:#474341;
+            font-weight:700;
+            text-decoration:none;
+            border-bottom:1px solid rgba(71,67,65,.35);
+        ">Terms & Conditions</a>
+        <span>and</span>
+        <a href="{% url 'main:privacy' %}" target="_blank" style="
+            color:#474341;
+            font-weight:700;
+            text-decoration:none;
+            border-bottom:1px solid rgba(71,67,65,.35);
+        ">Privacy Policy</a>
+    </label>
+</div>
+
                             <button type="submit" class="btn auth-btn auth-btn-primary w-100 mt-4">
                                 <i class="fa-solid fa-car-side me-2"></i>Create Driver Account
                             </button>

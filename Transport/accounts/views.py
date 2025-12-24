@@ -43,6 +43,16 @@ def sign_up_rider(request: HttpRequest):
 
 
     if request.method == 'POST':
+        
+        if not request.POST.get('accept_terms'):
+            messages.error(
+                request,
+                'You must agree to the Terms & Conditions and Privacy Policy.'
+            )
+            rider_form = RiderForm(request.POST, request.FILES)
+            return _render_rider_signup(request, rider_form)
+
+        
         # بيانات الحساب
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -135,6 +145,17 @@ def sign_up_driver(request: HttpRequest):
 
 
     if request.method == 'POST':
+
+        
+        # ✅ تحقق من الموافقة
+        if not request.POST.get('accept_terms'):
+            messages.error(
+                request,
+                'You must agree to the Terms & Conditions and Privacy Policy.'
+            )
+            driver_form = DriverForm(request.POST, request.FILES)
+            return _render_driver_signup(request, driver_form)
+
         # بيانات الحساب
         username = request.POST.get('username')
         password = request.POST.get('password')
