@@ -175,6 +175,7 @@
         <div class="col-lg-4">
             <div class="card custom-card p-4 h-100">
                 <h5 class="section-title"><i class="fa-solid fa-user me-2"></i>Driver Information</h5>
+                <a href="{% url 'accounts:profile_driver' driver.id %}" class="text-decoration-none text-dark">
                 <div class="d-flex align-items-center gap-3 mb-3">
                     <img src="{{ driver.avatar.url }}" class="rounded-circle avatar" width="90" height="90">
                     <div>
@@ -182,6 +183,7 @@
                         <small class="text-muted">{{ driver.gender }}</small>
                     </div>
                 </div>
+            </a>
                 <p class="info-text"><strong>Phone:</strong> {{ driver.phone }}</p>
                 <hr style="border-color:#a3a2a2; opacity:.3; margin:22px 0;">
                 {% if car %}

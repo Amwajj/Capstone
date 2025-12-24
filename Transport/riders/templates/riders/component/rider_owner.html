@@ -97,7 +97,7 @@
 
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#car-requests">
-                                <i class="fa-solid fa-car me-1"></i> My Car Requests
+                                <i class="fa-solid fa-car me-1"></i>Trip Requests
                             </a>
                         </li>
                         <li class="nav-item">
@@ -170,23 +170,9 @@
                         </div>
 
 
-                        <!-- Car Requests Tab -->
+                        <!-- Requests private Tab -->
                         <div class="tab-pane fade" id="car-requests">
-                            <div class="tp-card">
-                                <h6 class="tp-card-title">My Car Requests</h6>
-                                {% if rider.car_requests.exists %}
-                                {% for req in rider.car_requests.all %}
-                                <div class="tp-info-row">
-                                    <div class="tp-info-label">Status:</div>
-                                    <div class="tp-info-value"><span class="badge bg-info">{{ req.get_status_display
-                                            }}</span></div>
-                                </div>
-                                {% endfor %}
-                                {% else %}
-                                <p class="tp-empty-text">No car requests yet. Your car requests will appear here once
-                                    you make a request.</p>
-                                {% endif %}
-                            </div>
+                            {% include "riders/component/req_tab_profile.html" %}
                         </div>
 
                         <!-- Joined Trips Tab -->

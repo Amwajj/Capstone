@@ -8,9 +8,10 @@ from rider_request.models import JoinRequestTrip
 
 class TripSubscription(models.Model):
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
-    join_trip = models.OneToOneField(JoinTrip, on_delete=models.CASCADE, related_name='subscription')
-    join_request_trip = models.OneToOneField(JoinRequestTrip, on_delete=models.CASCADE, null=True, blank=True, related_name='subscription')
+    join_trip = models.OneToOneField(JoinTrip, on_delete=models.CASCADE, null=True, blank=True, related_name='subscription')
+    join_request_trip = models.ForeignKey(JoinRequestTrip, on_delete=models.CASCADE, null=True, blank=True, related_name='subscriptions')
     created_at = models.DateTimeField(auto_now_add=True)
     
-    
+    class Meta:
+        unique_together = ('rider', 'join_request_trip')
 

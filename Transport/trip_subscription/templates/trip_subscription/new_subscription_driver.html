@@ -1,1 +1,29 @@
-good
+{% extends 'main/mail/email_base.html' %}
+
+{% block title %}
+New Subscriber!
+{% endblock %}
+
+{% block subtitle %}
+Latest Updates
+{% endblock %}
+
+{% block subject %}
+A new trainee has joined your trip
+{% endblock %}
+
+{% block content %}
+Dear {{ driver.user.first_name }},<br><br>
+
+A new ridder has joined your trip<br><br>
+
+<strong>Rider Name:</strong><br>
+{{ rider.user.first_name }} {{ rider.user.last_name }}<br><br>
+
+<strong>Trip Period:</strong><br>
+Start Date: {{ start_date }}<br>
+End Date: {{ end_date }}<br><br>
+
+Please check your dashboard for more details.<br>
+Thank you for being part of our platform.
+{% endblock %}

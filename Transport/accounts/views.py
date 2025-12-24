@@ -322,28 +322,28 @@ def profile_rider(request: HttpRequest, rider_id=None):
             rider=rider
         ).order_by('-created_at')
     
-    req_trips = JoinRequestTrip.objects.select_related(
+    join_requests = JoinRequestTrip.objects.select_related(
         'rider_request',
         'rider_request__driver',
         'rider_request__city'
     ).filter(rider=rider).order_by('-rider_request__start_date')
+
+    owned_requests = JoinRequestTrip.objects.select_related(
+        'rider_request',
+        'rider_request__driver'
+    ).filter(rider_request__rider=rider)
     
+    req_trips = (join_requests | owned_requests).distinct()
+
     subscriptions = TripSubscription.objects.filter(
             rider=rider
         ).values_list('join_trip_id', flat=True)
+    
     req_subscriptions = TripSubscription.objects.filter(
         rider=rider
         ).values_list('join_request_trip_id', flat=True)
 
-    for jt in req_trips:
-        rr = jt.rider_request
-        if rr.status == RiderRequest.Status.A and rr.end_date <= date.today() and jt.id not in subscriptions:
-            jt.display_status = 'Accepted'
-            jt.show_payment_button = True
-        else:
-            jt.display_status = jt.get_rider_status_display()
-            jt.show_payment_button = False
-
+  
     has_rejected = joined_trips.filter(rider_status='REJECTED').exists()
     if has_rejected:
         messages.warning(request, "Attention: You have rejected join requests. Please check the details in your joined trips list.")

@@ -1,1 +1,29 @@
-done
+done{% extends 'main/mail/email_base.html' %}
+
+{% block title %}
+Subscription Confirmed!
+{% endblock %}
+
+{% block subtitle %}
+Thank you for joining
+{% endblock %}
+
+{% block subject %}
+Your subscription has been confirmed
+{% endblock %}
+
+{% block content %}
+Dear {{ rider.user.first_name }},<br><br>
+
+Your subscription has been successfully completed 🎉<br><br>
+
+<strong>Trip Details:</strong><br>
+Driver: {{ driver.user.first_name }}<br>
+Start Date: {{ start_date }}<br>
+End Date: {{ end_date }}<br>
+Number of Days: {{ days }}<br>
+Total Price: {{ price }}<br><br>
+
+We wish you a safe and pleasant trip.<br>
+If you have any questions, feel free to contact us anytime.
+{% endblock %}
