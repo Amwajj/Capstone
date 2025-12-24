@@ -1,11 +1,12 @@
-# Capstone
 
 # Wesal
+
+
+<img width="1900" height="993" alt="Image" src="https://github.com/user-attachments/assets/1f5dbf91-a54d-4a8f-9c53-fd81897bdfb3" />
 
 ## Project Name
 **Wesal – Organized Transportation System**
 
----
 
 ## Project Description
 Wesal is a technology-based transportation system designed for recurring,
@@ -16,7 +17,7 @@ alternative to on-demand transportation.
 Instead of requesting a ride for every trip, users subscribe to an organized
 transportation plan that ensures consistency, reliability, and advance planning.
 
----
+
 
 ## Problem & Solution
 
@@ -32,7 +33,7 @@ built on advance planning. By offering fixed routes, scheduled commute times,
 and transparent pricing, the platform ensures consistent availability,
 schedule reliability, and a more stable transportation experience.
 
----
+
 
 ## Key Features
 • Subscription-based transportation (weekly or monthly)  
@@ -41,14 +42,18 @@ schedule reliability, and a more stable transportation experience.
 • Stable and transparent pricing throughout the subscription period  
 • Consistent driver assignment to enhance safety and reliability  
 
----
+
 
 ## Target Users
 • Employees  
 • Students  
 • Users with recurring commuting needs  
 
----
+
+## User Stories 
+[User Stories.pdf](https://github.com/user-attachments/files/24333112/User.Stories.pdf)
+## UML
+<img width="2564" height="1694" alt="Image" src="https://github.com/user-attachments/assets/011a0327-5410-4d80-84d3-ae89ab67dda1" />
 
 ## Team Members
 • Maha Saud Alharbi  
@@ -56,7 +61,7 @@ schedule reliability, and a more stable transportation experience.
 • Amwaj Alzahrani  
 • Hissah Alkharboush  
 
----
+
 
 ## Platform Identity
 Designed and developed in Saudi Arabia  
