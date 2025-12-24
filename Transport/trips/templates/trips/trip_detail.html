@@ -6,47 +6,47 @@
 {% block style %}
 <style>
     body {
-        background: linear-gradient(135deg, #f8f7f5 0%, #f8e7c57d 90%);
-        color: #474341;
+        background: linear-gradient(135deg, #0a2342 0%, #274472 100%);
+        color: #1a2639;
     }
 
     .page-title {
         font-weight: 700;
-        color: #474341;
+        color: #0a2342;
     }
 
     .custom-card {
         border-radius: 18px;
         border: none;
-        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
-        background: #f8f7f5;
+        box-shadow: 0 12px 25px rgba(10, 35, 66, 0.10);
+        background: #f4f8fb;
     }
 
     .section-title {
         font-weight: 600;
-        color: #474341;
-        border-bottom: 2px solid #f2c235;
+        color: #19335c;
+        border-bottom: 2px solid #274472;
         padding-bottom: 8px;
         margin-bottom: 20px;
     }
 
     .info-text {
-        color: #a3a2a2;
+        color: #274472;
         margin-bottom: 10px;
     }
 
     .info-text strong {
-        color: #474341;
+        color: #0a2342;
     }
 
     .price {
-        color: #f2c235;
+        color: #19335c;
         font-weight: 700;
         font-size: 1.1rem;
     }
 
     .avatar {
-        border: 3px solid #f2c235;
+        border: 3px solid #274472;
     }
 
     .car-img {
@@ -88,7 +88,7 @@
                     <div class="d-flex gap-2">
                         {% if request.user == trip.driver.user %}
                         <a href="{% url 'trips:update_trip_view' trip.id %}"
-                            class="btn btn-sm btn-outline-warning fw-bold">
+                            class="btn btn-sm btn-outline-primary fw-bold" style="border-color:#274472;color:#274472;">
                             <i class="fa-solid fa-pen me-1"></i> Edit
                         </a>
                         <form method="POST" action="{% url 'trips:delete_trip_view' trip.id %}" style="display:inline;">
@@ -99,7 +99,7 @@
                             </button>
                         </form>
                         {% elif request.user.is_authenticated and request.user.rider and not has_joined %}
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-primary" style="background:#274472;border:none;" data-bs-toggle="modal"
                             data-bs-target="#joinTripModal">
                             <i class="fa-solid fa-plus me-1"></i> Join Trip
                         </button>
@@ -133,7 +133,7 @@
                 </p>
                 <p class="info-text mb-0"><strong>Price:</strong> <span class="price">{{ trip.price }} SAR</span></p>
 
-                <hr style="border-color:#a3a2a2; opacity:.3; margin:22px 0;">
+                <hr style="border-color:#274472; opacity:.15; margin:22px 0;">
                 <div class="d-flex justify-content-between section-title align-items-center mb-3">
                     <!-- Participating Riders -->
                     <h5 class="m-0 mb-2">
@@ -230,7 +230,7 @@
                                 <td class="text-muted">{{ r.comment|default:"—" }}</td>
                                 <td>
 
-                                    <span class="badge bg-secondary">Pending</span>
+                                    <span class="badge bg-primary" style="background:#274472;">Pending</span>
 
                                 </td>
                                 <td>
@@ -246,7 +246,7 @@
                                             class="form-control form-control-sm reject-comment"
                                             placeholder="Reason for rejection" style="display: none;">
 
-                                        <button type="submit" class="btn btn-sm btn-primary fw-bold">Update</button>
+                                        <button type="submit" class="btn btn-sm btn-primary fw-bold" style="background:#274472;border:none;">Update</button>
                                     </form>
 
                                 </td>
@@ -295,7 +295,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-warning w-100">
+                    <button type="submit" class="btn btn-primary w-100" style="background:#274472;border:none;">
                         <i class="fa-solid fa-plus me-2"></i>Send Request
                     </button>
                     <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>

@@ -284,9 +284,9 @@
                                     <div class="tp-info-row">
                                     <div class="tp-info-label">Car Registration (Istimara):</div>
                                     <div class="tp-info-value">
-                                        {% if driver.car_registration %}
-                                            <a href="{{ driver.car_registration.url }}" target="_blank">
-                                                <img src="{{ driver.car_registration.url }}" alt="Car Registration" class="tp-image-preview">
+                                        {% if driver.car and driver.car.car_registration %}
+                                            <a href="{{ driver.car.car_registration.url }}" target="_blank">
+                                                <img src="{{ driver.car.car_registration.url }}" alt="Car Registration" class="tp-image-preview">
                                             </a>
                                         {% else %}
                                             Not uploaded
