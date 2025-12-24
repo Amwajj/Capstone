@@ -145,3 +145,9 @@ def manager_view(request: HttpRequest):
     return render(request, "main/manager.html", {"drivers": drivers_page_obj, "trips": trips_page_obj})
 
 
+
+def terms_view(request):
+    return render(request, "main/terms.html")
+
+def privacy_view(request):
+    return render(request, "main/privacy.html")

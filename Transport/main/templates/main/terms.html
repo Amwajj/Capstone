@@ -1,0 +1,85 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Terms & Conditions | Wesal{% endblock %}
+
+{% block content %}
+<section class="policy-page py-5">
+  <div class="container" style="max-width: 1000px;">
+
+    <div class="mb-4 text-center">
+      <h1 class="fw-bold mb-2">Terms & Conditions</h1>
+      <p class="text-muted mb-0">
+    Last updated: {% now "F d, Y" %}
+</p>
+
+    </div>
+
+    <div class="bg-white rounded-4 shadow-sm p-4 p-md-5">
+
+      <h4 class="fw-bold mt-0">1) Acceptance of Terms</h4>
+      <p class="text-muted">
+        By accessing or using Wesal, you agree to these Terms & Conditions. If you do not agree,
+        you must not use the platform.
+      </p>
+
+      <h4 class="fw-bold">2) Service Overview</h4>
+      <p class="text-muted">
+        Wesal provides scheduled transportation services based on routes, times, and subscription
+        periods (weekly or monthly) as available in the platform.
+      </p>
+
+      <h4 class="fw-bold">3) Eligibility & Account</h4>
+      <ul class="text-muted">
+        <li>You must provide accurate information during registration.</li>
+        <li>You are responsible for maintaining the confidentiality of your account.</li>
+        <li>Wesal may suspend accounts that violate these terms or applicable laws.</li>
+      </ul>
+
+      <h4 class="fw-bold">4) Subscriptions & Payments</h4>
+      <ul class="text-muted">
+        <li>Subscription fees and billing details are displayed before confirmation.</li>
+        <li>Prices may vary by route and duration, and are shown clearly in the platform.</li>
+        <li>Refunds/cancellations (if applicable) follow the rules shown at checkout and within your subscription details.</li>
+      </ul>
+
+      <h4 class="fw-bold">5) User Responsibilities</h4>
+      <ul class="text-muted">
+        <li>Respect drivers and other users; harassment and abuse are not tolerated.</li>
+        <li>Arrive on time for pickup according to your schedule.</li>
+        <li>Do not misuse the service or attempt unauthorized access.</li>
+      </ul>
+
+      <h4 class="fw-bold">6) Driver Commitments (if applicable)</h4>
+      <p class="text-muted">
+        Drivers are expected to follow the agreed schedule and route, and comply with platform standards
+        and safety requirements.
+      </p>
+
+      <h4 class="fw-bold">7) Safety & Liability</h4>
+      <p class="text-muted">
+        Wesal works to maintain a safe and reliable experience. However, service availability may be affected
+        by external factors (traffic, weather, emergencies). To the maximum extent permitted by law, Wesal
+        is not liable for indirect or consequential losses.
+      </p>
+
+      <h4 class="fw-bold">8) Content, Ratings & Reviews</h4>
+      <p class="text-muted">
+        Reviews must be honest and respectful. Wesal may remove content that violates policies or laws.
+      </p>
+
+      <h4 class="fw-bold">9) Changes to the Service or Terms</h4>
+      <p class="text-muted">
+        Wesal may update these Terms from time to time. Continued use of the platform after updates means you accept
+        the revised Terms.
+      </p>
+
+      <h4 class="fw-bold">10) Contact</h4>
+      <p class="text-muted mb-0">
+        For questions about these Terms, contact us through the support channels provided in the platform.
+      </p>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

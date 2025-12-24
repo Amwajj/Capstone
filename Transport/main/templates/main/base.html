@@ -150,8 +150,13 @@
 
         <div class="footer-col">
             <p class="footer-topic">Legal</p>
-            <p class="footer-link">Terms & Conditions</p>
-            <p class="footer-link">Privacy Policy</p>
+           <a href="{% url 'main:terms' %}" class="footer-link">
+    Terms & Conditions
+</a>
+
+<a href="{% url 'main:privacy' %}" class="footer-link">
+    Privacy Policy
+</a>
     </div>
 </footer>
 

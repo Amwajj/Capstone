@@ -547,28 +547,15 @@ footer {
     transform: translateY(40px) scale(0.97) !important;
 }
 
-.timeline-step:nth-child(2) .timeline-card,
-.timeline-step:nth-child(4) .timeline-card {
-    margin-left: auto !important;
-    margin-right: 0 !important;
-    align-self: flex-end;
-}
+
 /* الكارد الأول يتحرك لليمين فقط على الشاشات الكبيرة */
-.timeline-step:nth-child(1) .timeline-card {
-        margin-right: 0 !important;
-        margin-left: 70px !important;
-        align-self: flex-start;
-}
+
 @media (max-width: 600px) {
     .timeline-step:nth-child(1) .timeline-card {
         margin-left: 0 !important;
     }
 }
-.timeline-step:nth-child(3) .timeline-card {
-    margin-right: 0 !important;
-    margin-left: 35px !important;
-    align-self: flex-start;
-}
+
 .animate-timeline {
   opacity: 1 !important;
   transform: translateY(0) scale(1) !important;
@@ -680,3 +667,78 @@ footer {
     }
 }
 
+/* HERO */
+.hero-content { margin-top: 0; }
+.hero-overlay { align-items: center; }
+
+/* TIMELINE FIX */
+.timeline-step:nth-of-type(odd) .timeline-card {
+    margin-left: 1px;
+    margin-right: auto;
+}
+.timeline-step:nth-of-type(even) .timeline-card {
+    margin-right:1px;
+    margin-left: auto;
+}
+
+/* CARDS */
+.card-content {
+    width: 300px;
+    min-height: 400px;
+    height: auto;
+}
+
+/* MOBILE TIMELINE */
+/* =========================
+   TIMELINE – MOBILE FIX
+   ========================= */
+@media (max-width: 500px) {
+
+    /* container */
+    .timeline-features {
+        max-width: 100%;
+        padding: 1.5rem 0;
+    }
+
+    /* الخط بالنص */
+    .timeline-line {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2.5px;
+        opacity: 0.6;
+    }
+
+    /* كل خطوة */
+    .timeline-step {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+        min-height: unset;
+    }
+
+    /* الدائرة */
+    .timeline-circle {
+        position: static;
+        transform: none;
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    /* الكارد */
+    .timeline-card {
+        margin: 0 auto !important;
+        max-width: 92%;
+        min-width: unset;
+        padding: 1rem 1.1rem;
+        text-align: center;
+    }
+
+    /* إلغاء أي يمين/يسار */
+    .timeline-step:nth-of-type(odd) .timeline-card,
+    .timeline-step:nth-of-type(even) .timeline-card {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}

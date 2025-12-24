@@ -12,4 +12,6 @@ urlpatterns=[
     path('message/',views.contact_message_view, name="contact_message_view"),
     path('about/', views.about_view, name="about_view"),
     path('manager/',views.manager_view,name="manager_view"),
+    path("terms/", views.terms_view, name="terms"),
+    path("privacy/", views.privacy_view, name="privacy"),
 ]
