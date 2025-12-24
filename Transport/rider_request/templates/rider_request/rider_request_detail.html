@@ -126,11 +126,7 @@
                             {% endif %}
 
                         {% endif %}
-                         {% if rider_request.status == 'pending' %}
-                            <a href="{% url 'rider_request:accept_rider_request' rider_request.id %}" class="btn btn-sm btn-success text-white px-3">
-                                Accept Request
-                            </a>
-                            {%endif%}
+               
                     </div>
                 </div>
 
