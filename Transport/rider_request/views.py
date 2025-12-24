@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponseForbidden
 from django.contrib import messages
@@ -20,8 +20,8 @@ def create_rider_request(request:HttpRequest):
     try:
         rider = Rider.objects.get(user=request.user)
     except Rider.DoesNotExist:
-        messages.error(request, "Must be rider to create rider request ads")
-        return redirect('accounts:sign_in')
+        return render(request, "403.html", status=403)  # ⭐
+
 
     if request.method == "POST":
         rider_request_form = RiderRequestForm(request.POST)
@@ -58,7 +58,10 @@ def list_rider_request(request:HttpRequest):
    # Showing the details of rider request ads
 def detail_rider_request(request:HttpRequest, rider_request_id):
 
-    rider_request = get_object_or_404(RiderRequest, id = rider_request_id)
+    rider_request = RiderRequest.objects.filter(id=rider_request_id).first()
+    if not rider_request:
+        return render(request, "404.html", status=404)  # ⭐
+    
     rider = rider_request.rider
     comments = rider_request.comments.filter(parent__isnull=True).order_by('-created_at')
     
@@ -103,48 +106,92 @@ def detail_rider_request(request:HttpRequest, rider_request_id):
     })
 
 #Allowing driver to change the request status
+@login_required   # ⭐
 def accept_rider_request(request, rider_request_id):
-    
-    rider_request = get_object_or_404(RiderRequest, id=rider_request_id)
+
+    rider_request = RiderRequest.objects.filter(id=rider_request_id).first()
+    if not rider_request:
+        return render(request, "404.html", status=404)  
+
+    if not hasattr(request.user, "driver"):
+        return render(request, "403.html", status=403)  
+
     rider_request.status = RiderRequest.Status.A
     rider_request.driver = request.user.driver
     rider_request.save()
-    
-    return redirect('rider_request:detail_rider_request', rider_request_id=rider_request_id)
+
+    return redirect(
+        'rider_request:detail_rider_request',
+        rider_request_id=rider_request_id
+    )
+
 
 #طلب_انضمام
 @login_required
 def join_trip_action(request, rider_request_id):
- 
-    rider_req_ad = get_object_or_404(RiderRequest, id=rider_request_id)
-    
-    if hasattr(request.user, 'rider') and rider_req_ad.rider != request.user.rider:
-        JoinRequestTrip.objects.get_or_create(
-            rider=request.user.rider,
-            rider_request=rider_req_ad,
-            defaults={'rider_status': 'PENDING'}
-        )
-    
-    return redirect('rider_request:detail_rider_request', rider_request_id=rider_request_id)
+
+    # ⭐ جلب الإعلان
+    rider_req_ad = RiderRequest.objects.filter(id=rider_request_id).first()
+    if not rider_req_ad:
+        return render(request, "404.html", status=404)  # ⭐ إعلان غير موجود
+
+    # ⭐ هنا بالضبط نحط شرط الراكب
+    if not hasattr(request.user, "rider"):
+        return render(request, "403.html", status=403)  # ⭐ مو راكب
+
+    # ⭐ الراكب ما يقدر ينضم لإعلانه نفسه
+    if rider_req_ad.rider == request.user.rider:
+        return render(request, "403.html", status=403)  # ⭐ صلاحيات
+
+    # ⭐ إنشاء طلب الانضمام
+    JoinRequestTrip.objects.get_or_create(
+        rider=request.user.rider,
+        rider_request=rider_req_ad,
+        defaults={'rider_status': 'PENDING'}
+    )
+
+    return redirect(
+        'rider_request:detail_rider_request',
+        rider_request_id=rider_request_id
+    )
+
 
 #تحديث_حالة_الطلب_من _قبل_المعلن
 @login_required
 def update_request_status(request, join_id, status):
-    join_req = get_object_or_404(JoinRequestTrip, id=join_id)
-    
-    if join_req.rider_request.rider == request.user.rider:
-        if status in ['APPROVED', 'REJECTED']:
-            join_req.rider_status = status
-            join_req.save()
-            
-    return redirect('rider_request:detail_rider_request', rider_request_id=join_req.rider_request.id)
 
+    join_req = JoinRequestTrip.objects.filter(id=join_id).first()
+    if not join_req:
+        return render(request, "404.html", status=404)  # ⭐ صفحة 404 الخاصة
+
+    if not hasattr(request.user, "rider"):
+        return render(request, "403.html", status=403)  # ⭐ مو راكب
+
+    if join_req.rider_request.rider != request.user.rider:
+        return render(request, "403.html", status=403)  # ⭐ مو صاحب الإعلان
+
+    if status not in ['APPROVED', 'REJECTED']:
+        return render(request, "403.html", status=403)  # ⭐ أكشن غير مسموح
+
+    join_req.rider_status = status
+    join_req.save()
+
+    return redirect(
+        'rider_request:detail_rider_request',
+        rider_request_id=join_req.rider_request.id
+    )
 
 #update the rider request ads form
 @login_required
 def update_rider_request(request, pk):
   
-    rider_request = get_object_or_404(RiderRequest, pk=pk, rider__user=request.user)
+    rider_request = RiderRequest.objects.filter(
+        pk=pk,
+        rider__user=request.user
+    ).first()
+
+    if not rider_request:
+        return render(request, "404.html", status=404)  # ⭐
     
     if request.method == "POST":
        
@@ -164,7 +211,13 @@ def update_rider_request(request, pk):
 @login_required
 def delete_rider_request(request, pk):
    
-    rider_request = get_object_or_404(RiderRequest, pk=pk, rider__user=request.user)
+    rider_request = RiderRequest.objects.filter(
+        pk=pk,
+        rider__user=request.user
+    ).first()
+
+    if not rider_request:
+        return render(request, "404.html", status=404)  # ⭐
     
     if request.method == "POST":
         rider_request.delete()
@@ -179,9 +232,13 @@ def delete_rider_request(request, pk):
 def add_comment(request: HttpRequest, rider_request_id):
 
     if request.method != "POST":
-        return HttpResponseForbidden()
+        return render(request, "403.html", status=403)  # ⭐
 
-    rider_request = get_object_or_404(RiderRequest, id=rider_request_id)
+
+    rider_request = RiderRequest.objects.filter(id=rider_request_id).first()
+    if not rider_request:
+        return render(request, "404.html", status=404)  # ⭐
+    
     rider_owner = rider_request.rider.user  #  صاحب الإعلان (الراكب)
 
     content = (request.POST.get("comment") or "").strip()
@@ -207,13 +264,19 @@ def add_comment(request: HttpRequest, rider_request_id):
 
     if parent_id:
         #  الرد لازم يكون على آخر رسالة في السلسلة (يعني نمنع الرد على رسالة قديمة)
-        parent = get_object_or_404(CommentRiderRequest, id=parent_id, rider_request=rider_request)
+        parent = CommentRiderRequest.objects.filter(
+            id=parent_id,
+            rider_request=rider_request
+        ).first()
+
+        if not parent:
+            return render(request, "404.html", status=404)  # ⭐
         root = get_root(parent)  
         thread_driver = root.user  #  السائق اللي بدأ المحادثة
 
         #  تمنع سائق ثاني يدخل يرد على محادثة مو له
         if request.user != rider_owner and request.user != thread_driver:
-            return HttpResponseForbidden()
+            return render(request, "403.html", status=403)  # ⭐
 
         #  نفرض الرد يكون على آخر رسالة فقط
         last_msg = get_last_in_chain(root)  
@@ -226,11 +289,13 @@ def add_comment(request: HttpRequest, rider_request_id):
         if parent.user == thread_driver:
             # آخر رسالة سائق - الآن لازم الراكب
             if request.user != rider_owner:
-                return HttpResponseForbidden()
+                return render(request, "403.html", status=403)  # ⭐
+
         else:
             # آخر رسالة راكب - الآن لازم نفس السائق
             if request.user != thread_driver:
-                return HttpResponseForbidden()
+                return render(request, "403.html", status=403)  # ⭐
+
 
         #  أنشئ الرد
         CommentRiderRequest.objects.create(
@@ -243,7 +308,8 @@ def add_comment(request: HttpRequest, rider_request_id):
     else:
         #  Root Comment: فقط السائق يكتب، الراكب (صاحب الإعلان) ممنوع يبدأ
         if request.user == rider_owner:
-            return HttpResponseForbidden()
+            return render(request, "403.html", status=403)  # ⭐
+
 
         #  أنشئ تعليق رئيسي (بداية محادثة)
         CommentRiderRequest.objects.create(

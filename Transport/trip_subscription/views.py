@@ -19,16 +19,18 @@ def checkout_srtipe_view(request:HttpRequest, join_trip_id):
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
     #الباقة
-    try:
-        join_trip =JoinTrip.objects.select_related('trip','rider','trip__driver').get(pk=join_trip_id, rider=request.user.rider)
-    except JoinTrip.DoesNotExist:
-        messages.error(request,"Requested join does not exit","alert-danger")
-        return redirect(request.META.get('HTTP_REFERER'),"/")
+    join_trip = JoinTrip.objects.select_related(
+        'trip','rider','trip__driver'
+    ).filter(pk=join_trip_id, rider=request.user.rider).first()
+
+    if not join_trip:
+        return render(request, "404.html", status=404)  # ⭐
+
     
     
     if join_trip.rider_status != 'APPROVED':
-        messages.warning(request, "You cannot proceed with payment until your trip request is approved.","alert-warning")
-        return redirect("accounts:profile_rider", rider_id=join_trip.rider.id)
+        return render(request, "403.html", status=403)  # ⭐
+
     
     trip = join_trip.trip
 
@@ -42,8 +44,8 @@ def checkout_srtipe_view(request:HttpRequest, join_trip_id):
     remaining_riders =trip.total_riders - active_subscriptions
 
     if remaining_riders <= 0:
-        messages.error(request,"Sorry, all seats for this trip are already booked.", "alert-warning")
-        return redirect(request.META.get('HTTP_REFERER') or "/")
+        return render(request, "403.html", status=403)  # ⭐
+
     
     #حساب السعر على حسب عدد الايام الي حددها الراكب
     days_count = (join_trip.end_date - join_trip.start_date).days + 1
@@ -94,11 +96,13 @@ def payment_trip_success(request:HttpRequest):
     join_trip_id = session.metadata.get("join_trip_id")
     rider_id = session.metadata.get("rider_id")
 
-    try:
-        join_trip =JoinTrip.objects.select_related('trip','rider').get(pk=join_trip_id, rider_id=rider_id)
-    except JoinTrip.DoesNotExist:
-        messages.error(request,"","alert-danger")
-        return redirect(request.META.get('HTTP_REFERER'),"/")
+    join_trip = JoinTrip.objects.select_related(
+        'trip','rider'
+    ).filter(pk=join_trip_id, rider_id=rider_id).first()
+
+    if not join_trip:
+        return render(request, "404.html", status=404)  # ⭐
+
     
     
     if join_trip.rider_status != 'APPROVED':
@@ -276,5 +280,5 @@ def payment_join_request_success(request: HttpRequest):
 @login_required
 def payment_trip_cancel(request:HttpRequest):
     messages.warning(request, "The payment process has been cancelled.", "alert-warning")
-    return redirect(request.META.get('HTTP_REFERER') or "/")
+    return render(request, "403.html", status=403)  # ⭐
    

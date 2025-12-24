@@ -75,7 +75,11 @@ def all_trip_view(request: HttpRequest):
 
 
 def trip_detail_view(request:HttpRequest, trip_id):
-    trip = get_object_or_404(Trip, id=trip_id, admin_status='APPROVED')
+
+    trip = Trip.objects.filter(id=trip_id, admin_status='APPROVED').first()
+    if not trip:
+        return render(request, "404.html", status=404)  # ⭐
+    
     join_requests = JoinTrip.objects.filter(trip=trip)
     has_rejected = join_requests.filter(rider_status='REJECTED').exists()
 
@@ -119,11 +123,10 @@ def trip_detail_view(request:HttpRequest, trip_id):
 
 @login_required
 def create_trip_view(request:HttpRequest):
-    try:
-        driver = Driver.objects.get(user=request.user)
-    except Driver.DoesNotExist:
-        messages.error(request, "Must be driver to create trip")
-        return redirect('accounts:sign_in')
+    driver = Driver.objects.filter(user=request.user).first()
+    if not driver:
+        return render(request, "403.html", status=403)  # ⭐
+
 
 
     if driver.status != 'APPROVED':
@@ -160,11 +163,13 @@ def create_trip_view(request:HttpRequest):
 @login_required
 def update_trip_view(request:HttpRequest , trip_id):
 
-    trip=get_object_or_404(Trip, id=trip_id)
+    trip = Trip.objects.filter(id=trip_id).first()
+    if not trip:
+        return render(request, "404.html", status=404)  # ⭐
          
     if trip.driver.user != request.user:
-        messages.error(request, "You are not allowed to edit this trip")
-        return redirect('main:home_view')
+        return render(request, "403.html", status=403)  # ⭐
+
     
     if request.method =="POST":
         form = TripForm(request.POST, instance=trip)
@@ -184,11 +189,14 @@ def update_trip_view(request:HttpRequest , trip_id):
 
 @login_required
 def delete_trip_view(request, trip_id):
-    trip = get_object_or_404(Trip, id=trip_id)
+
+    trip = Trip.objects.filter(id=trip_id).first()
+    if not trip:
+        return render(request, "404.html", status=404)  # ⭐
 
     if trip.driver.user != request.user:
-        messages.error(request, "You are not allowed to delete this trip", "alert-warning")
-        return redirect('trips:trip_detail_view', trip_id=trip_id)
+        return render(request, "403.html", status=403)  # ⭐
+
 
     if request.method == "POST":
         try:
@@ -209,7 +217,9 @@ def join_trip_view(request:HttpRequest, trip_id):
         return redirect('trips:trip_detail_view', trip_id=trip.id)
 
 
-    trip = get_object_or_404(Trip, id= trip_id)
+    trip = Trip.objects.filter(id=trip_id).first()
+    if not trip:
+        return render(request, "404.html", status=404)  # ⭐
     
     if JoinTrip.objects.filter(trip=trip, rider= rider).exists():
         messages.warning(request, "You have already requested to join this trip.","alert-warning")
@@ -235,13 +245,15 @@ def join_trip_view(request:HttpRequest, trip_id):
         
     return redirect('trips:trip_detail_view', trip_id=trip.id)
 
+@login_required  # ⭐
 def update_request_status_view(request, join_id):
-    join_req = get_object_or_404(JoinTrip, id=join_id)
-
-    if request.user !=join_req.trip.driver.user:
-        messages.error(request, "You are not authorized to update this request.", "alert-danger")
-        return redirect('trips:trip_detail_view', trip_id=join_req.trip.id)
+    join_req = JoinTrip.objects.filter(id=join_id).first()
+    if not join_req:
+        return render(request, "404.html", status=404)  # ⭐
     
+    if request.user != join_req.trip.driver.user:
+        return render(request, "403.html", status=403)  # ⭐
+
     if request.method =="POST":
         status = request.POST.get('status')
         reject_comment = request.POST.get('reject_comment','').strip()
