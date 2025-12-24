@@ -1,0 +1,44 @@
+<div class="container tp-profile-page py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="profile-hero-minimal mb-4" id="profileHero">
+                <div class="profile-hero-content d-flex align-items-center gap-4">
+                    <img src="{{ rider.avatar.url }}" alt="Avatar" class="profile-avatar" id="profileAvatar" />
+                    <div>
+                        <div class="profile-name">{{ rider.user.first_name }} {{ rider.user.last_name }} <span
+                                class="profile-badge">Rider</span></div>
+                        <div class="profile-username"><i class="fa-solid fa-user"></i> @{{ rider.user.username }}</div>
+                        <div class="profile-bio">{{ rider.bio }}</div>
+                        <div class="profile-email"><i class="fa-solid fa-envelope"></i> <a
+                                href="mailto:{{ rider.user.email }}">{{ rider.user.email }}</a></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="profile-card" id="profileCard">
+                <div class="ms-auto">
+                    <div class="profile-info-row">
+                        <div class="profile-info-label"><i class="fa-solid fa-venus-mars"></i> Gender</div>
+                        <div class="profile-info-value">{{ rider.get_gender_display }}</div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-label"><i class="fa-solid fa-cake-candles"></i> Date of Birth</div>
+                        <div class="profile-info-value">{{ rider.date_of_birth|date:'Y-m-d' }}</div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-label"><i class="fa-solid fa-phone"></i> Phone Number</div>
+                        <div class="profile-info-value">{{ rider.phone }}</div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-label"><i class="fa-solid fa-car"></i> Car Size</div>
+                        <div class="profile-info-value">{{ rider.get_size_car_display }}</div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-label"><i class="fa-solid fa-city"></i> City</div>
+                        <div class="profile-info-value">{{ rider.city.name }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

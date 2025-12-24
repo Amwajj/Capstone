@@ -1,0 +1,201 @@
+<div class="tp-profile-page">
+    <div class="tp-shell">
+        <div class="tp-inner">
+            <div class="row g-4">
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="tp-sidebar d-flex flex-column align-items-center justify-content-center"
+                        style="text-align:center; background: #f8f9fa; border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); padding: 32px 18px 28px 18px; min-height: 480px;">
+
+                        <div class="tp-avatar mb-3"
+                            style="box-shadow: 0 4px 18px rgba(0,0,0,0.10); border-radius: 50%; background: #fff; padding: 8px; margin-bottom: 18px;">
+                            {% if rider.avatar and rider.avatar.url != '/media/images/avatars/avatar.webp' %}
+                            <img src="{{ rider.avatar.url }}" alt="Rider Avatar"
+                                style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #f2c235;">
+                            {% else %}
+                            <i class="fa-solid fa-user fa-4x text-muted" style="margin-bottom: 10px;"></i>
+                            {% endif %}
+                        </div>
+
+
+                        <div class="tp-name"
+                            style="font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; color: #474341; letter-spacing: 0.5px;">
+                            {{ rider.user.first_name }} {{ rider.user.last_name }}
+                        </div>
+
+                        <div class="tp-username" style="font-size: 1.08rem; color: #7c7c7c; margin-bottom: 10px;">
+                            @{{ rider.user.username }}
+                        </div>
+                        <!----- RATING ----->
+                        <div class="tp-rating mb-3" style="font-size: 1.15rem; color: #f2c235;">
+                            {% if rider.rating %}
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= rider.rating %} <i class="fa-solid fa-star"></i>
+                                {% else %}
+                                <i class="fa-regular fa-star"></i>
+                                {% endif %}
+                                {% endfor %}
+                                <span style="color: #474341; font-size: 1.05rem; margin-left: 6px;">{{ rider.rating
+                                    }}/5</span>
+                                {% else %}
+                                <span style="color: #aaa;">No rating</span>
+                                {% endif %}
+                        </div>
+                        <!--ِENDRATING-->
+                        <div class="tp-info-list w-100" style="font-size: 1.13rem; margin-bottom: 18px;">
+                            {% if rider.phone %}
+                            <div class="mb-2"
+                                style="background: #fffbe6; border-radius: 8px; padding: 7px 0; color: #b48a00;"><i
+                                    class="fa-solid fa-phone me-1"></i> {{ driver.phone }}</div>
+                            {% endif %}
+                            {% if rider.gender %}
+                            <div class="mb-2"
+                                style="background: #eaf6ff; border-radius: 8px; padding: 7px 0; color: #302e22a3;"><i
+                                    class="fa-solid fa-venus-mars me-1"></i> {{ driver.get_gender_display }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="tp-email mb-2"
+                            style="font-size: 1.13rem; background: #f3f3f3; border-radius: 8px; padding: 7px 0; margin-bottom: 18px;">
+                            {% if rider.user.email %}
+                            <a href="mailto:{{ rider.user.email }}" target="_blank"
+                                style="color: #474341; text-decoration: underline;">
+                                <i class="fa-solid fa-envelope me-1" style="color:#f2c235;"></i> - {{ rider.user.email
+                                }}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-lg-8">
+
+                    <div class="tp-header">
+                        <div>
+                            <div class="tp-header-title">
+                                Rider Profile
+                            </div>
+                        </div>
+                        <div>
+                            <a href="{% url 'accounts:edit_rider_profile' %}" class="btn btn-sm"
+                                style="background: linear-gradient(135deg, #f2c235 0%, #f8d66d 100%); color: #474341; border: none; padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 500;">
+                                <i class="fa-solid fa-pen" style="font-size: 0.8rem;"></i> Edit Profile
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <ul class="nav nav-pills tp-tabs mb-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#personal-info">
+                                <i class="fa-solid fa-user me-1"></i> Personal Info
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#car-requests">
+                                <i class="fa-solid fa-car me-1"></i> My Car Requests
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#joined-trips">
+                                <i class="fa-solid fa-route me-1"></i> Joined Trips
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content mt-3">
+
+                        <!-- Personal Info Tab -->
+                        <div class="tab-pane fade show active" id="personal-info">
+                            <div class="tp-card">
+                                <h6 class="tp-card-title">Personal Information</h6>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Phone Number:</div>
+                                    <div class="tp-info-value">{{ rider.phone|default:"Not provided" }}</div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">National ID / Iqama:</div>
+                                    <div class="tp-info-value">{{ rider.national_id_or_iqama|default:"Not provided" }}
+                                    </div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Gender:</div>
+                                    <div class="tp-info-value">{{ rider.get_gender_display }}</div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Date of Birth:</div>
+                                    <div class="tp-info-value">
+                                        {% if rider.date_of_birth %}
+                                        {{ rider.date_of_birth|date:"Y-m-d" }}
+                                        {% else %}
+                                        Not provided
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">City:</div>
+                                    <div class="tp-info-value">
+                                        {% if rider.city %}
+                                        <span class="badge bg-secondary">{{ rider.city.name }}</span>
+                                        {% else %}
+                                        Not provided
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#vehicle">
+                                    Preferred
+                                </a>
+                            </li>
+                            <div class="tp-card">
+
+                                <div class="profile-info-row">
+                                    <div class="profile-info-label"><i class="fa-solid fa-car"></i> Car Size</div>
+                                    <div class="profile-info-value">{{ rider.get_size_car_display }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Car Requests Tab -->
+                        <div class="tab-pane fade" id="car-requests">
+                            <div class="tp-card">
+                                <h6 class="tp-card-title">My Car Requests</h6>
+                                {% if rider.car_requests.exists %}
+                                {% for req in rider.car_requests.all %}
+                                <div class="tp-info-row">
+                                    <div class="tp-info-label">Status:</div>
+                                    <div class="tp-info-value"><span class="badge bg-info">{{ req.get_status_display
+                                            }}</span></div>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <p class="tp-empty-text">No car requests yet. Your car requests will appear here once
+                                    you make a request.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Joined Trips Tab -->
+                        {% include "riders/component/trips_tab_profile.html" %}
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

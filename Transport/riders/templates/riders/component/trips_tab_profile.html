@@ -1,0 +1,290 @@
+<div class="tab-pane fade" id="joined-trips">
+    <div class="tp-card">
+        <h6 class="tp-card-title">Joined Trips</h6>
+        {% if joined_trips %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Trip</th>
+                        <th>Driver</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        {% if has_rejected %}
+                        <th>Reject Comment</th>
+                        {%endif%}
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for join in joined_trips %}
+                    {% if join.id not in subscriptions%}
+                    <tr>
+                        <!-- زر تفاصيل الرحلة -->
+                        <td>
+                            <a href="{% url 'trips:trip_detail_view' join.trip.id %}"
+                                class="btn btn-sm btn-outline-primary">
+                                View Trip
+                            </a>
+                        </td>
+                        <td>{{ join.trip.driver.user.username }}</td>
+
+                        <td>{{ join.start_date }}</td>
+
+                        <td>{{ join.end_date }}</td>
+
+                        <td>
+                            {% if join.rider_status == 'APPROVED' and join.id not in subscriptions %}
+                            <span class="badge bg-success">Approved</span>
+                            {% elif join.rider_status == 'PENDING' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% else %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% endif %}
+                        </td>
+
+                        {% if join.rider_status == 'APPROVED' and join.id not in subscriptions %}
+                        <td>
+                            <a href="{% url 'trip_subscription:checkout_srtipe_view' join.id %}"
+                                class="btn btn-sm btn-success">
+                                Pay & Join Trip
+                            </a>
+                        </td>
+                        {% elif join.rider_status == 'REJECTED' %}
+                        <td>
+                            <span class="badge bg-danger">
+                                Denied
+                            </span>
+                        </td>
+                        {%else%}
+                        <td>
+                            <span class="badge bg-warning">
+                                In-Review
+                            </span>
+                        </td>
+                        {% endif %}
+
+                        {% if join.rider_status == 'REJECTED' %}
+                        <td class="text-muted">
+                            {{ join.reject_Comment|default:"—" }}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+        </div>
+        {% else %}
+        <p class="tp-empty-text">
+            No joined trips yet. Your joined trips will appear here once you participate in a
+            trip.
+        </p>
+        {% endif %}
+
+    </div>
+
+    <!--Subscribed Trips-->
+    <div class="tp-card">
+        <h6 class="tp-card-title">Subscribed Trips</h6>
+        {% if joined_trips %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Trip</th>
+                        <th>Driver</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Subscription</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for join in joined_trips %}
+                    <tr>
+                        {% if join.id in subscriptions %}
+                        <!-- زر تفاصيل الرحلة -->
+                        <td>
+                            <a href="{% url 'trips:trip_detail_view' join.trip.id %}"
+                                class="btn btn-sm btn-outline-primary">
+                                View Trip
+                            </a>
+                        </td>
+                        <td>{{ join.trip.driver.user.username }}</td>
+
+                        <td>{{ join.start_date }}</td>
+
+                        <td>{{ join.end_date }}</td>
+
+                        <td>
+                            <span class="badge bg-success">Approved</span>
+                        </td>
+
+
+                        <td>
+                            <span class="badge bg-success">
+                                Subscribed
+                            </span>
+                        </td>
+
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+        {% else %}
+        <p class="tp-empty-text">
+            No subscribed trips yet. Your joined trips will appear here once you participate in a
+            trip.
+        </p>
+        {% endif %}
+    </div>
+
+
+
+
+    <!-- req Trips -->
+    <div class="tp-card">
+        <h6 class="tp-card-title">Joined Trips</h6>
+        {% if req_trips %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Trip</th>
+                        <th>Driver</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        {% if has_rejected %}
+                        <th>Reject Comment</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for join in req_trips %}
+                    {% if join.id not in req_subscriptions %}
+                    <tr>
+                        <!-- زر تفاصيل الرحلة -->
+                        <td>
+                            <a href="{% url 'trips:trip_detail_view' join.rider_request.id %}"
+                                class="btn btn-sm btn-outline-primary">
+                                View Trip
+                            </a>
+                        </td>
+                        <td>{{ join.rider_request.driver.user.username }}</td>
+                        <td>{{ join.rider_request.start_date }}</td>
+                        <td>{{ join.rider_request.end_date }}</td>
+
+                        <!-- حالة الرحلة -->
+                        <td>
+                            {% if join.show_payment_button %}
+                            <span class="badge bg-success">Accepted</span>
+                            {% else %}
+                            {% if join.rider_status == 'APPROVED' %}
+                            <span class="badge bg-success">Approved</span>
+                            {% elif join.rider_status == 'PENDING' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% else %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+
+                        <!-- زر الدفع -->
+                        <td>
+                            {% if join.show_payment_button %}
+                            <a href="{% url 'trip_subscription:checkout_srtipe_view' join.id %}"
+                                class="btn btn-sm btn-success">
+                                Pay & Join Trip
+                            </a>
+                            {% elif join.rider_status == 'REJECTED' %}
+                            <span class="badge bg-danger">Denied</span>
+                            {% else %}
+                            <span class="badge bg-warning">In-Review</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- تعليق الرفض -->
+                        {% if join.rider_status == 'REJECTED' %}
+                        <td class="text-muted">
+                            {{ join.reject_Comment|default:"—" }}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="tp-empty-text">
+            No joined trips yet. Your joined trips will appear here once you participate in a trip.
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- Subscribed Trips -->
+    <div class="tp-card">
+        <h6 class="tp-card-title">Subscribed Trips</h6>
+        {% if req_subscriptions %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Trip</th>
+                        <th>Driver</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Subscription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for join in req_trips %}
+                    {% if join.id in req_subscriptions %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'trips:trip_detail_view' join.rider_request.id %}"
+                                class="btn btn-sm btn-outline-primary">
+                                View Trip
+                            </a>
+                        </td>
+                        <td>{{ join.rider_request.driver.user.username }}</td>
+                        <td>{{ join.rider_request.start_date }}</td>
+                        <td>{{ join.rider_request.end_date }}</td>
+                        <td>
+                            <span class="badge bg-success">Approved</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">Subscribed</span>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="tp-empty-text">
+            No subscribed trips yet. Your subscribed trips will appear here once you pay and join a trip.
+        </p>
+        {% endif %}
+    </div>
+
+
+</div>

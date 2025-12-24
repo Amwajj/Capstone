@@ -13,7 +13,6 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 #for authentications (superuser)
-from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.http import require_POST
@@ -67,7 +66,8 @@ def contact_view(request:HttpRequest):
 def contact_message_view(request:HttpRequest):
 
     if not request.user.is_authenticated or not request.user.is_superuser:
-        return HttpResponseForbidden("Access Denied: You do not have the required permissions to view this page.")
+            return render(request, "403.html", status=403)
+
 
     msg = Contact.objects.all().order_by("-created_at")
 
@@ -83,17 +83,24 @@ def about_view(request: HttpRequest):
 def manager_view(request: HttpRequest):
 
     if not request.user.is_authenticated or not request.user.is_superuser:
-        return HttpResponseForbidden("Access Denied: You do not have the required permissions to view this page.")
+            return render(request, "403.html", status=403)
     
     if request.method == "POST":
         action = request.POST.get('action')
+
+        if not action:  # هنا الإضافة لاكثر امان 
+            messages.error(request, "Invalid action.")
+            return redirect('main:manager_view')
+        
         driver_id = request.POST.get('driver_id')
         trip_id = request.POST.get('trip_id')
         
         rejection_reason = request.POST.get('rejection_reason')
 
         if driver_id:
-            driver = get_object_or_404(Driver, id=driver_id)
+            driver = Driver.objects.filter(id=driver_id).first()
+            if not driver:
+                return render(request, "404.html", status=404)  # ⭐
             
             if action == "approve":
                 driver.status = 'APPROVED'
@@ -106,7 +113,10 @@ def manager_view(request: HttpRequest):
                 messages.error(request, f"Driver {driver.user.username} has been rejected.")
         
         elif trip_id:
-            trip = get_object_or_404(Trip, id=trip_id)
+            trip = Trip.objects.filter(id=trip_id).first()
+            if not trip:
+                return render(request, "404.html", status=404)  # ⭐
+
             if action == "approve":
                 trip.admin_status = 'APPROVED'
                 messages.success(request, f"Trip #{trip.id} approved!")

@@ -1,0 +1,72 @@
+<div class="container tp-profile-page py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="profile-hero-minimal mb-4" id="profileHero">
+                <div class="profile-hero-content d-flex align-items-center gap-4">
+                    {% if driver.avatar and driver.avatar.url and driver.avatar.url != '/media/images/avatars/avatar.webp' %}
+                        <img src="{{ driver.avatar.url }}" alt="Avatar" class="profile-avatar" id="profileAvatar" />
+                    {% else %}
+                        <img src="{% static 'images/avatars/avatar.webp' %}" alt="Avatar" class="profile-avatar" id="profileAvatar" />
+                    {% endif %}
+                    <div>
+                        <div class="profile-name">{{ driver.user.first_name }} {{ driver.user.last_name }} <span class="profile-badge">Driver</span></div>
+                        <div class="profile-username"><i class="fa-solid fa-user"></i> @{{ driver.user.username }}</div>
+                        <div class="profile-bio">{{ driver.bio }}</div>
+                        <div class="profile-email"><i class="fa-solid fa-envelope"></i> <a href="mailto:{{ driver.user.email }}">{{ driver.user.email }}</a></div>
+                    </div>
+        
+                </div>
+            </div>
+            <div class="profile-card" id="profileCard">
+                <div class="ms-auto">
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-venus-mars"></i> Gender</div>
+                    <div class="profile-info-value">{{ driver.get_gender_display }}</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-cake-candles"></i> Date of Birth</div>
+                    <div class="profile-info-value">{{ driver.date_of_birth|date:'Y-m-d' }}</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-phone"></i> Phone Number</div>
+                    <div class="profile-info-value">{{ driver.phone }}</div>
+                </div>
+                {% if car %}
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-car"></i> Car Company</div>
+                    <div class="profile-info-value">{{ driver.car.company.name }}</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-car-side"></i> Model</div>
+                    <div class="profile-info-value">{{ car.model }}</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-calendar"></i> Year</div>
+                    <div class="profile-info-value">{{ car.year }}</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-palette"></i> Color</div>
+                    <div class="profile-info-value">{{ car.color }}</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-id-card"></i> Plate Number</div>
+                    <div class="profile-info-value">{{ car.plate_number }}</div>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-users"></i> Seats Count</div>
+                    <div class="profile-info-value">{{ car.seats_count }}</div>
+                </div>
+                        {% else %}
+                        <p class="tp-empty-text">
+                            No vehicle information available. Please add your vehicle details.
+                        </p>
+                {% endif %}
+                <div class="profile-info-row">
+                    <div class="profile-info-label"><i class="fa-solid fa-city"></i> City</div>
+                    <div class="profile-info-value">{{ driver.city.name }}</div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
