@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
-from .models import Driver, Car
+from .models import Driver
 from .forms import CarForm
 from django.contrib import messages
 
@@ -28,6 +28,8 @@ def driver_car_view(request: HttpRequest) -> HttpResponse:
             driver.save()
             messages.success(request, "Car information updated successfully.")
             return redirect("accounts:profile_driver",driver_id=driver.id)
+        else:
+            messages.error(request, "Please correct the errors below.") 
     else:
         form = CarForm(instance=car)
 

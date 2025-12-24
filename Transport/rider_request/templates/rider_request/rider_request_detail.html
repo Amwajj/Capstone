@@ -226,7 +226,8 @@
         <h3 class="section-title fs-4">
             <i class="fa-solid fa-user me-2"></i> Rider Information
         </h3>
-
+<a href="{% url 'accounts:profile_rider' rider.id %}"
+   class="text-decoration-none text-dark">
         <div class="d-flex align-items-center gap-3 mb-4">
             <img src="{{ rider.avatar.url }}" class="rounded-circle avatar" width="80" height="80">
             <div>
@@ -235,6 +236,7 @@
                 <small class="d-block text-muted">Trip Owner</small>
             </div>
         </div>
+    </a>
 
         <div class="info-box bg-white p-3 rounded-3 border mb-3">
             <p class="small text-muted mb-2">Joined Riders</p>

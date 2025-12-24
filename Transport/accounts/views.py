@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.models import User
@@ -159,9 +159,9 @@ def sign_up_driver(request: HttpRequest):
             return _render_driver_signup(request, driver_form)
 
 
-        try:  # ⭐
-            with transaction.atomic():  # ⭐
-                # إنشاء User (كما هو)
+        try:  
+            with transaction.atomic():  
+                # إنشاء User 
                 user = User.objects.create_user(username=username, password=password, email=email)
                 user.first_name = request.POST.get('first_name', '')
                 user.last_name = request.POST.get('last_name', '')
@@ -176,7 +176,7 @@ def sign_up_driver(request: HttpRequest):
                 else:
                     print("❌ Driver form errors:", driver_form.errors)
                     messages.error(request, "Driver information is invalid.")
-                    raise ValueError("Invalid driver form")  # ⭐
+                    raise ValueError("Invalid driver form")  
 
         except ValueError:
             # أخطاء الفورم - نرجّع نفس الصفحة مع البيانات
@@ -184,7 +184,7 @@ def sign_up_driver(request: HttpRequest):
 
         except Exception:
             # أي خطأ غير متوقع
-            return render(request, '403.html', status=403)  # ⭐
+            return render(request, '403.html', status=403)  
 
         login(request, user)
         messages.success(
@@ -198,7 +198,10 @@ def sign_up_driver(request: HttpRequest):
 
     # GET request
     form = DriverForm()
-    return _render_driver_signup(request, form)
+    cities = City.objects.all()
+    nationalities = Nationality.objects.all()
+    return render(request, 'accounts/signup_driver.html', { 'form': form, 'cities': cities, 'nationalities': nationalities })
+
 
 
 
@@ -216,25 +219,29 @@ def sign_in(request: HttpRequest):
         if user is not None:
             login(request, user)
 
-    # ⭐ حماية من open redirect
+    #  حماية من open redirect
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
-                return redirect(next_url)  # ⭐
+                return redirect(next_url)  
 
-            return redirect("main:home_view")  # ⭐
+            return redirect("main:home_view")  
         
         else:
             messages.error(request, 'Invalid username or password.', "alert-danger")
-            return render(request, 'accounts/signin.html')
+            return render(
+                request,
+                'accounts/signin.html',
+                {'next': next_url}  
+            )
 
     return render(request, 'accounts/signin.html')
 
 
 def log_out(request: HttpRequest):
 
-    next_url = request.GET.get('next')  # ⭐
+    next_url = request.GET.get('next')  
     logout(request)
     messages.success(request, 'You have been logged out.', "alert-warning")
-    return redirect(next_url or 'main:home_view')  # ⭐
+    return redirect(next_url or 'main:home_view')  
 
 
 @login_required
@@ -245,9 +252,9 @@ def profile_driver(request: HttpRequest, driver_id=None):
         else:
             driver = request.user.driver
     except Driver.DoesNotExist:
-        return render(request, '404.html', status=404)  # ⭐
+        return render(request, '404.html', status=404)  
     except AttributeError:
-        return render(request, '403.html', status=403)  # ⭐
+        return render(request, '403.html', status=403)  
  
     car = driver.car if hasattr(driver, 'car') else None
     # جلب جميع الرحلات التي أنشأها السائق
@@ -269,8 +276,11 @@ def profile_driver(request: HttpRequest, driver_id=None):
 @login_required
 def edit_driver_profile(request: HttpRequest):
     """تعديل بروفايل السائق"""
-    driver = request.user.driver
-
+    try:
+        driver = request.user.driver
+    except AttributeError:
+        return render(request, '403.html', status=403)  
+    
     if request.method == 'POST':
         driver_form = DriverForm(request.POST, request.FILES, instance=driver)
         if driver_form.is_valid():
@@ -300,9 +310,9 @@ def profile_rider(request: HttpRequest, rider_id=None):
         else:
             rider = request.user.rider
     except Rider.DoesNotExist:
-        return render(request, '404.html', status=404)  # ⭐
+        return render(request, '404.html', status=404)  
     except AttributeError:
-        return render(request, '403.html', status=403)  # ⭐
+        return render(request, '403.html', status=403)  
 
     joined_trips = JoinTrip.objects.select_related(
             'trip',
@@ -345,8 +355,11 @@ def profile_rider(request: HttpRequest, rider_id=None):
 @login_required
 def edit_rider_profile(request: HttpRequest):
     """تعديل بروفايل الراكب"""
-    rider = request.user.rider
-
+    try:
+        rider = request.user.rider
+    except AttributeError:
+        return render(request, '403.html', status=403)  
+    
     if request.method == 'POST':
         rider_form = RiderForm(request.POST, request.FILES, instance=rider)
         if rider_form.is_valid():
