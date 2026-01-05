@@ -4,6 +4,9 @@
 /* Sticky footer for all pages */
 html, body {
     height: 100%;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
 }
 body {
     display: flex;
@@ -429,7 +432,7 @@ footer {
 @media (max-width: 900px) {
   .divider-content { flex-direction: column; gap: 1.5rem; }
   .divider-text-big { font-size: 1.3rem; }
-    .divider-img-animate { max-width: 370px; max-height: 320px; }
+    .divider-img-animate { max-width: 290px; max-height: 210px; }
     }
 
 /* Responsive */
